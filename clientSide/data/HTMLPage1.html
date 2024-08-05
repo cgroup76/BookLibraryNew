@@ -131,6 +131,7 @@
         var booksAPI = "https://localhost:7225/api/Books";
 
         var allBooks = [];
+        var top5Books = [];
 
         $(document).ready(function () {
 
@@ -310,17 +311,26 @@
 
             if (allBooks.length == 0) {
                 ajaxCall("GET", booksAPI, null, BooksToShow, errorToLoadBooks);
-                ajaxCall("GET", booksAPI + '/showTop5BooksByRating', null, top5booksByRating, errorToLoadBooks);
 
             }
-            else { BooksToShow(allBooks); top5booksByRating(books); }
+            else { BooksToShow(allBooks); }
+
+            showTop5Books(); 
         }
-        function top5booksByRating(books) {
+        function showTop5Books() {
+            if (top5Books.length == 0) {
+                ajaxCall("GET", booksAPI + '/showTop5BooksByRating', null, top5booksByRating, errorToLoadBooks);
+            }
+            else { top5booksByRating(top5Books); }
+        }
+
+        function top5booksByRating(top5Books) {
+            top5Books = top5Books;
             const BooksTop5RatingBooksContainer = document.getElementById('top5Books');
             let booksRatingHtml = '';
             const buyer = JSON.parse(localStorage.getItem("loginUserDetails"));
 
-            books.forEach((book) => {
+            top5Books.forEach((book) => {
                 booksRatingHtml += `
                     <div class='col-md-4'>
                         <div class='card mb-4 book-card'>
@@ -367,6 +377,7 @@
         }
 
         function BooksToShow(books) {
+            allBooks = books;
             const BooksContainer = document.getElementById('topBooks');
             let booksHtml = '';
             const buyer = JSON.parse(localStorage.getItem("loginUserDetails"));

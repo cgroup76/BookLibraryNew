@@ -158,7 +158,7 @@
                 <div class='card-body' id='markAsRead-${book.Id}'>
                     <h5 class='card-title'>${book.Title}</h5>`;
                 if (book.IsRead == 'False') {
-                    booksHtml += `<a class='btn btn-primary' onclick='ReadTheBook(${book.UserId}, ${book.Id}, "${book.Title}")'>Mark as read</a>`;
+                    booksHtml += `<a class='btn btn-primary' onclick="ReadTheBook(${book.UserId}, ${book.Id})">Mark as read</a>`;
                 } else {
                     booksHtml += `<a class='btn btn-primary'>Already read this book</a>
             <div id='rating-${book.Id}'>
@@ -187,9 +187,11 @@
             Swal.fire('Error', 'Failed to load books. Please try again.', 'error');
         }
 
-        function ReadTheBook(userId, bookId, bookTitle) {
+        function ReadTheBook(userId, bookId) {
             currentBookId = bookId;
-            currentBookTitle = bookTitle;
+
+            let currentBook = allBooks.find(book => book.Id === bookId);
+            currentBookTitle = currentBook.Title;
 
             ajaxCall("PUT", `${usersAPI}/readBookByUser?bookId=${bookId}&userId=${userId}`, null, successToMarkAsRead, errorToMarkAsRead);
         }
