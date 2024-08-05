@@ -74,7 +74,10 @@
         var usersAPI = "https://localhost:7225/api/IUsers";
         var booksAPI = "https://localhost:7225/api/Books";
 
-        var allBooks = [];
+        var allMyBooks = [];
+
+        var bookIdToRate;
+        var bookRating;
 
         $(document).ready(function () {
 
@@ -98,19 +101,39 @@
             });
         }
         function rateBook(bookId) {
-            let rating = document.getElementById(`ratingSelect-${bookId}`).value;
-            let rateBookData = {
-                bookId: bookId,
-                rating: rating
-            };
+            bookRating = Number(document.getElementById(`ratingSelect-${bookId}`).value);
+            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+            bookIdToRate = bookId;
 
-            ajaxCall("PUT", `${booksAPI}/RateBook`, JSON.stringify(rateBookData), successRating, errorRating);
+            ajaxCall("PUT", `${booksAPI}/RateBook?bookID=${bookIdToRate}&newRating=${bookRating}&userID=${userId}`, null, successRating, errorRating);
+
+            document.getElementById(`ratingSelect-${bookId}`).value = 1;
+
         }
+
         function errorRating(err) {
-            console.log(err);
+            Swal.fire('Error', "Could not submit your raitng - please try again later", 'error');
         }
-        function successRating() {
 
+        function successRating() {
+            Swal.fire('Success', "Thank you for submiting a rating for this book!", 'success');
+
+            $(`#rating-${bookIdToRate}`).hide();
+
+             // SET IN TOO HERE THE WAS RATED - THE DB DOES IT AUTOMATICLY
+            for (let i = 0; i < allMyBooks.length; i++) {
+
+                if (allMyBooks[i].Id == bookIdToRate) {
+
+                    allMyBooks[i].WasRated = 1;
+
+                    let munOfRatings = allMyBooks[i].NumOfReviews;
+                    let oldRating = allMyBooks[i].Rating;
+                    allMyBooks[i].Rating = ((oldRating * munOfRatings) + bookRating) / (munOfRatings + 1);
+                }
+
+            }
+            showMyBooks();
         }
         function logoutUser() {
             let user = JSON.parse(localStorage.getItem("loginUserDetails"));
@@ -135,11 +158,16 @@
         }
 
         function showMyBooks() {
+
             let userDetails = JSON.parse(localStorage.getItem("loginUserDetails"));
-            if (allBooks.length == 0) {
+
+            if (allMyBooks.length == 0) {
+
                 ajaxCall("GET", `${usersAPI}?userId=${userDetails.userId}`, null, BooksToShow, errorToLoadBooks);
-            } else {
-                BooksToShow(allBooks);
+            }
+            else {
+
+                BooksToShow(allMyBooks);
             }
         }
         var currentBookTitle = "";
@@ -148,18 +176,19 @@
         function BooksToShow(books) {
             const booksContainer = document.getElementById('myBooks');
             let booksHtml = "";
-            allBooks = books;
+            allMyBooks = books;
 
-            allBooks.forEach((book) => {
+            allMyBooks.forEach((book) => {
                 booksHtml += `
         <div class='col-md-4'>
             <div class='card mb-4 book-card'>
                 <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
                 <div class='card-body' id='markAsRead-${book.Id}'>
-                    <h5 class='card-title'>${book.Title}</h5>`;
+                    <h5 class='card-title'>${book.Title}</h5>
+                    <p>${book.Rating}</p>`;
                 if (book.IsRead == 'False') {
                     booksHtml += `<a class='btn btn-primary' onclick="ReadTheBook(${book.UserId}, ${book.Id})">Mark as read</a>`;
-                } else {
+                } else if (book.WasRated == 0) {
                     booksHtml += `<a class='btn btn-primary'>Already read this book</a>
             <div id='rating-${book.Id}'>
                 Rating:
@@ -172,6 +201,9 @@
                 </select>
                 <button onclick='rateBook(${book.Id})'>Rate</button>
             </div>`;
+                }
+                else {
+                    booksHtml += `<a class='btn btn-primary'>Already read this book</a>`
                 }
                 booksHtml += `
                 </div>
@@ -190,7 +222,7 @@
         function ReadTheBook(userId, bookId) {
             currentBookId = bookId;
 
-            let currentBook = allBooks.find(book => book.Id === bookId);
+            let currentBook = allMyBooks.find(book => book.Id === bookId);
             currentBookTitle = currentBook.Title;
 
             ajaxCall("PUT", `${usersAPI}/readBookByUser?bookId=${bookId}&userId=${userId}`, null, successToMarkAsRead, errorToMarkAsRead);

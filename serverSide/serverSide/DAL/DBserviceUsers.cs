@@ -393,6 +393,7 @@ public class DBservicesUsers
                 book.TextSnippet = Convert.ToString(dataReader["textSnippet"]);
                 book.UserId = Convert.ToString(dataReader["userid"]);
                 book.IsRead = Convert.ToString(dataReader["isRead"]);
+                book.WasRated = Convert.ToByte(dataReader["wasRated"]);
                 userBooks.Add(book);
 
             }

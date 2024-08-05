@@ -132,14 +132,14 @@ li {
 .card-img-top{
     height: 250px
 }
-
-
-
+#pinkStars {
+    color: #ff0083
+}
 /* Ensure the dropdown is wide enough and contents are aligned */
 .dropdown-menu {
-    width: 300px; 
-    max-height: 400px; 
-    overflow-y: auto; 
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
     white-space: normal;
 }
 
@@ -234,4 +234,10 @@ li {
 #submit-quiz {
     color: black;
     background-color: #d63384;
+}
+
+/*my books*/
+.disabled {
+    pointer-events: none; /* Prevents any mouse events */
+    opacity: 0.5; /* Makes the div appear faded */
 }

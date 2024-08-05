@@ -73,7 +73,7 @@
     <section class="books py-5">
         <div class="container">
             <h2 class="text-center text-white mb-5">Recommended Books</h2>
-            <div class="row" id="topBooks">
+            <div class="row" id="allBooks">
 
             </div>
         </div>
@@ -132,6 +132,8 @@
 
         var allBooks = [];
         var top5Books = [];
+
+        var currentBookId;
 
         $(document).ready(function () {
 
@@ -310,77 +312,37 @@
         function showBooks() {
 
             if (allBooks.length == 0) {
-                ajaxCall("GET", booksAPI, null, BooksToShow, errorToLoadBooks);
+                ajaxCall("GET", booksAPI, null, showAllBooks, errorToLoadBooks);
 
             }
-            else { BooksToShow(allBooks); }
+            else { BooksToShow(allBooks, 'allBooks'); }
 
             showTop5Books(); 
         }
+
+        function showAllBooks(books) {
+            allBooks = books;
+            BooksToShow(allBooks, 'allBooks');
+        }
+
         function showTop5Books() {
             if (top5Books.length == 0) {
                 ajaxCall("GET", booksAPI + '/showTop5BooksByRating', null, top5booksByRating, errorToLoadBooks);
             }
-            else { top5booksByRating(top5Books); }
+            else { BooksToShow(top5Books,'top5Books'); }
         }
 
-        function top5booksByRating(top5Books) {
-            top5Books = top5Books;
-            const BooksTop5RatingBooksContainer = document.getElementById('top5Books');
-            let booksRatingHtml = '';
-            const buyer = JSON.parse(localStorage.getItem("loginUserDetails"));
-
-            top5Books.forEach((book) => {
-                booksRatingHtml += `
-                    <div class='col-md-4'>
-                        <div class='card mb-4 book-card'>
-                            <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
-                            <div class='card-body'>
-                                <h5 class='card-title'>${book.Title}</h5>
-                                <p class='card-text'>${book.Price}$</p>`;
-
-                if (buyer != null) {
-                    const buyerId = buyer.userId;
-
-                    // If someone already bought the book
-                    if (book.IsAvailable == 0) {
-                        if (book.UserId == buyerId) { // The logged-in user bought this book
-                            booksRatingHtml += `<a class='btn btn-primary'>You already bought this book</a>
-                                          </div>
-                                          </div>
-                                          </div>`;
-                        } else {
-                            const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
-                            booksRatingHtml += `<a class='btn btn-primary' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
-                                          </div>
-                                          </div>
-                                          </div>`;
-                        }
-                    } else {
-                        // If the book is available for purchase
-                        booksRatingHtml += `<a class='btn btn-primary' onclick='buyABook(${book.Id})'>Buy</a>
-                                      </div>
-                                      </div>
-                                      </div>`;
-                    }
-                } else {
-                    // If the user is not logged in, there's no need to show the purchase option
-                    booksRatingHtml += `<a class='btn btn-primary' onclick='buyABook(${book.Id})'>Buy</a>
-                                  </div>
-                                  </div>
-                                  </div>`;
-                }
-            });
-            BooksTop5RatingBooksContainer.innerHTML = booksRatingHtml;
-
-
+        function top5booksByRating(topBooks) {
+            top5Books = topBooks;
+            BooksToShow(top5Books, 'top5Books');
         }
 
-        function BooksToShow(books) {
+        function BooksToShow(books,containerId) {
             allBooks = books;
-            const BooksContainer = document.getElementById('topBooks');
+            const BooksContainer = document.getElementById(containerId);
             let booksHtml = '';
             const buyer = JSON.parse(localStorage.getItem("loginUserDetails"));
+            const rating = stars => '★★★★★☆☆☆☆☆'.slice(5 - stars, 10 - stars);
 
             books.forEach((book) => {
                 booksHtml += `
@@ -389,6 +351,7 @@
                             <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
                             <div class='card-body'>
                                 <h5 class='card-title'>${book.Title}</h5>
+                                <p id='pinkStars'>${rating(book.Rating)} - ${(book.Rating).toFixed(1)}</p>
                                 <p class='card-text'>${book.Price}$</p>`;
 
                 if (buyer != null) {
@@ -427,12 +390,13 @@
             BooksContainer.innerHTML = booksHtml;
         }
 
-
         function errorToLoadBooks(message) { console.log(message); }
 
         // buy a book
 
         function buyABook(bookId) {
+
+            currentBookId = bookId;
 
             var buyer = JSON.parse(localStorage.getItem("loginUserDetails"))
 
@@ -447,10 +411,14 @@
         }
 
         function successToBuyABook(status) {
-            Swal.fire("The book has been successfully purchased");
-            console.log(status);
+            Swal.fire('Success', "The book has been successfully purchased", 'success');
+
+            setBooksDetails(allBooks);
+            setBooksDetails(top5Books);
+
             showBooks();
         }
+
         function errorBuyABook(error) {
             if (error.status == 401) {
 
@@ -459,10 +427,20 @@
                 localStorage.clear();
 
                 checkForLoginUser();
+
+                showLoginForm();
             }
             else { Swal.fire("Error to buy a book"); }
         }
-
+        // set the book details
+        function setBooksDetails(books) {
+            for (let i = 0; i < books.length; i++) {
+                if (books[i].Id == currentBookId) {
+                    books[i].IsAvailable = 0;
+                    books[i].UserId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+                }
+            }
+        }
         //send request
         function sendRequest(buyerId, sellerId, bookId, sellerName) {
             const swalWithBootstrapButtons = Swal.mixin({
