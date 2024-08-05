@@ -1,0 +1,71 @@
+﻿body {
+    background-color: #000;
+    font-family: 'Reddit Mono', monospace;
+}
+
+header {
+    background-color: #111;
+}
+
+.booksbyAuthor-body {
+    padding-top: 20px;
+}
+
+h2 {
+    color: #fff;
+}
+
+.book-card {
+    background-color: #222;
+    border: 1px solid #444;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+    .book-card:hover {
+        transform: scale(1.05);
+    }
+
+    .book-card img {
+        width: 100%;
+        height: auto;
+    }
+
+    .book-card .card-body {
+        color: #fff;
+    }
+
+
+/* nav bar */
+li {
+    cursor: pointer;
+}
+
+.author{
+    cursor : pointer;
+}
+
+/* author */
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #2c2c2c;
+    color: #fff;
+}
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(255, 255, 255, 0.2);
+    }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+

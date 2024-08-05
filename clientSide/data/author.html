@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Authors - Book Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="authors.css">
+    <!--JQuery-->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <!-- sweet aleret -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+    <header class="bg-dark text-white py-3">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="logo">
+                    <h1 class="h3">Book Store</h1>
+                </div>
+                <nav>
+                    <ul class="nav">
+                        <li class="nav-item"><a class="nav-link text-white" href="HTMLPage1.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#">My Books</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Authors</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
+                        <li class="nav-item loginBox"><a class="nav-link text-white login">login</a></li>
+                        <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
+                        <li class="nav-item logoutBox"><a class="nav-link text-white logout">logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <div class="container booksbyAuthor-body mt-4">
+        <h2 class="text-center text-black">All books by:</h2>
+        <h2 class="text-center text-black authorName"></h2>
+        <div id="authors-books" class="row"></div>
+    </div>
+    <div id="overlay" class=""></div>
+    <div id="loader-wrapper"><div id="loader"></div></div>
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- JQuary -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+            crossorigin="anonymous"></script>
+
+    <script>
+        var usersAPI = "https://localhost:7225/api/IUsers";
+        var booksAPI = "https://localhost:7225/api/Books";
+        var authorsAPI = "https://localhost:7225/api/Authors";
+        var allAuthors = [];
+
+        $(document).ready(function () {
+
+            checkForLoginUser();
+
+            showAuthors();
+
+            $('.logout').click(logoutUser);
+
+        });
+
+        function showAuthors() {
+            if (allAuthors.length == 0) {
+                ajaxCall("GET", authorsAPI, null, authorsToShow, errorToLoadAuthors);
+            } else {
+                authorsToShow(allAuthors);
+            }
+        }
+
+        function errorToLoadAuthors(err) {
+            console.log(err);
+        }
+
+        function authorsToShow(authors) {
+            const authorsContainer = document.getElementById('authors-books');
+            let authorsHtml = '';
+
+            allAuthors = authors;
+
+            allAuthors.forEach((author) => {
+                authorsHtml += `
+                    <div class='col-md-4 mb-4 author' onclick='showAthourDetails(${author.id})' id='${author.id}'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <p class='card-text'>${author.name}</p>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            authorsContainer.innerHTML = authorsHtml;
+        }
+
+        function ajaxCall(method, api, data, successCB, errorCB) {
+            $.ajax({
+                type: method,
+                url: api,
+                data: data,
+                cache: false,
+                contentType: "application/json",
+                dataType: "json",
+                success: successCB,
+                error: errorCB
+            });
+        }
+        function checkForLoginUser() {
+            var loginUser = JSON.parse(localStorage.getItem("loginUserDetails"))
+
+            if (loginUser != null) {
+                $('.userNameBox').show();
+                $('.logoutBox').show();
+                $('.loginBox').hide();
+                $('.userName').text(loginUser.userName);
+                $('.myBooks').show();
+            }
+            else {
+                $('.userNameBox').hide();
+                $('.logoutBox').hide();
+                $('.loginBox').show();
+                $('.userName').text("");
+                $('.myBooks').hide();
+            }
+        }
+
+        function logoutUser() {
+            let user = JSON.parse(localStorage.getItem("loginUserDetails"));
+            if (user) {
+                let userIdToLogout = user.userId;
+                ajaxCall("PUT", `${usersAPI}/logoutUser`, JSON.stringify(userIdToLogout), successLogout, errorLogout);
+            }
+        }
+
+        function successLogout(status) {
+            if (status) {
+
+                localStorage.clear();
+
+                window.location.href = "HTMLPage1.html";
+            }
+        }
+
+        function errorLogout(errorMessage) {
+            console.log(errorMessage);
+            Swal.fire('Error', 'Failed to logout. Please try again.', 'error');
+        }
+
+        function showAthourDetails(authorId) {
+
+            var authorDiv = document.getElementById(authorId);
+            var author = allAuthors.find(author => author.id === authorId);
+
+            authorDiv.innerHTML = `
+                        <div class='card'>
+                            <div class='card-body'>
+                                <h4 class='card-text'>${author.name}</h4>
+                                <p class='card-text'>${author.dateOfBirth}</p>
+                                <p class='card-text'>${author.dateOfDeath}</p>
+                                <p class='card-text'>${author.age}</p>
+                                <p class='card-text'>${author.nationality}</p>
+                                <p class='card-text'>${author.notableWork}</p>
+                                <p class='card-text'>${author.awards}</p>
+                                <p class='card-text'>${author.description}</p>
+                            </div>
+                        </div>`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Store</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- JQuary -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+            crossorigin="anonymous"></script>
+
+    <!-- sweet aleret -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+    <header class="bg-dark text-white py-3">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="logo">
+                    <h1 class="h3">Book Store</h1>
+                </div>
+                <nav>
+                    <ul class="nav">
+                        <li class="nav-item"><a class="nav-link text-white" href="HTMLPage1.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="author.html">Authors</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
+                        <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
+                        <li class="nav-item logoutBox"><a class="nav-link text-white logout">logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero text-center py-5">
+        <div class="container">
+            <h2 class="display-4">My Libary</h2>
+            <p class="lead">All of my books:</p>
+        </div>
+    </section>
+
+
+    <section class="books py-5">
+        <div class="container">
+            <h2 class="text-center text-white mb-5">Recommended Books</h2>
+            <div class="row" id="myBooks">
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-white py-3">
+        <div class="container text-center">
+            <p>All rights reserved © 2024 Book Store</p>
+        </div>
+    </footer>
+
+
+    <div id="overlay" class=""></div>
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+    </div>
+    <!---------------->
+
+
+    <script>
+
+        var usersAPI = "https://localhost:7225/api/IUsers";
+        var booksAPI = "https://localhost:7225/api/Books";
+
+        var allBooks = [];
+
+        $(document).ready(function () {
+
+            checkForLoginUser();
+
+            showMyBooks();
+
+            $('.logout').click(logoutUser);
+        });
+
+        function ajaxCall(method, api, data, successCB, errorCB) {
+            $.ajax({
+                type: method,
+                url: api,
+                data: JSON.stringify(data),
+                cache: false,
+                contentType: "application/json",
+                dataType: "json",
+                success: successCB,
+                error: errorCB
+            });
+        }
+        function rateBook(bookId) {
+            let rating = document.getElementById(`ratingSelect-${bookId}`).value;
+            let rateBookData = {
+                bookId: bookId,
+                rating: rating
+            };
+
+            ajaxCall("PUT", `${booksAPI}/RateBook`, JSON.stringify(rateBookData), successRating, errorRating);
+        }
+        function errorRating(err) {
+            console.log(err);
+        }
+        function successRating() {
+
+        }
+        function logoutUser() {
+            let user = JSON.parse(localStorage.getItem("loginUserDetails"));
+            if (user) {
+                let userIdToLogout = user.userId;
+                ajaxCall("PUT", `${usersAPI}/logoutUser`, JSON.stringify(userIdToLogout), successLogout, errorLogout);
+            }
+        }
+
+        function successLogout(status) {
+            if (status) {
+
+                localStorage.clear();
+
+                window.location.href = "HTMLPage1.html";
+            }
+        }
+
+        function errorLogout(errorMessage) {
+            console.log(errorMessage);
+            Swal.fire('Error', 'Failed to logout. Please try again.', 'error');
+        }
+
+        function showMyBooks() {
+            let userDetails = JSON.parse(localStorage.getItem("loginUserDetails"));
+            if (allBooks.length == 0) {
+                ajaxCall("GET", `${usersAPI}?userId=${userDetails.userId}`, null, BooksToShow, errorToLoadBooks);
+            } else {
+                BooksToShow(allBooks);
+            }
+        }
+        var currentBookTitle = "";
+        var currentBookId;
+
+        function BooksToShow(books) {
+            const booksContainer = document.getElementById('myBooks');
+            let booksHtml = "";
+            allBooks = books;
+
+            allBooks.forEach((book) => {
+                booksHtml += `
+        <div class='col-md-4'>
+            <div class='card mb-4 book-card'>
+                <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
+                <div class='card-body' id='markAsRead-${book.Id}'>
+                    <h5 class='card-title'>${book.Title}</h5>`;
+                if (book.IsRead == 'False') {
+                    booksHtml += `<a class='btn btn-primary' onclick='ReadTheBook(${book.UserId}, ${book.Id}, "${book.Title}")'>Mark as read</a>`;
+                } else {
+                    booksHtml += `<a class='btn btn-primary'>Already read this book</a>
+            <div id='rating-${book.Id}'>
+                Rating:
+                <select id='ratingSelect-${book.Id}'>
+                    <option value='1'>1</option>
+                    <option value='2'>2</option>
+                    <option value='3'>3</option>
+                    <option value='4'>4</option>
+                    <option value='5'>5</option>
+                </select>
+                <button onclick='rateBook(${book.Id})'>Rate</button>
+            </div>`;
+                }
+                booksHtml += `
+                </div>
+            </div>
+        </div>`;
+            });
+
+            booksContainer.innerHTML = booksHtml;
+        }
+
+        function errorToLoadBooks(errorMessage) {
+            console.log(errorMessage);
+            Swal.fire('Error', 'Failed to load books. Please try again.', 'error');
+        }
+
+        function ReadTheBook(userId, bookId, bookTitle) {
+            currentBookId = bookId;
+            currentBookTitle = bookTitle;
+
+            ajaxCall("PUT", `${usersAPI}/readBookByUser?bookId=${bookId}&userId=${userId}`, null, successToMarkAsRead, errorToMarkAsRead);
+        }
+
+        function successToMarkAsRead() {
+            const bookElement = document.getElementById(`markAsRead-${currentBookId}`);
+            let bookHtml = `
+                <h5 class='card-title'>${currentBookTitle}</h5>
+                 <a class='btn btn-primary'>Already read this book</a>
+                <div id='rating-${currentBookId}' style='display:block;'>
+                 Rating:
+                <select id='ratingSelect-${currentBookId}'>
+                <option value='1'>1</option>
+                <option value='2'>2</option>
+                <option value='3'>3</option>
+                <option value='4'>4</option>
+                <option value='5'>5</option>
+                </select>
+                <button onclick='rateBook(${currentBookId})'>Rate</button>
+                </div>`;
+            bookElement.innerHTML = bookHtml;
+            Swal.fire('Success', 'Book marked as read.', 'success');
+        }
+
+        function errorToMarkAsRead(errorMessage) {
+            if (errorMessage.status == 401) {
+                Swal.fire("Connection time ended - Please login first").then(() => successLogout(true));
+            } else {
+                Swal.fire('Error', 'Failed to mark the book as read. Please try again.', 'error');
+            }
+        }
+        function checkForLoginUser() {
+            var loginUser = JSON.parse(localStorage.getItem("loginUserDetails"))
+
+            if (loginUser != null) {
+                $('.userNameBox').show();
+                $('.logoutBox').show();
+                $('.loginBox').hide();
+                $('.userName').text(loginUser.userName);
+                $('.myBooks').show();
+            }
+            else {
+                $('.userNameBox').hide();
+                $('.logoutBox').hide();
+                $('.loginBox').show();
+                $('.userName').text("");
+                $('.myBooks').hide();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Store</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+        crossorigin="anonymous"></script>
+
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+
+<body>
+    <header class="bg-dark text-white py-3">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="logo">
+                    <h1 class="h3">Book Store</h1>
+                </div>
+                <nav>
+                    <ul class="nav">
+                        <li class="nav-item"><a class="nav-link text-white" href="HTMLPage1.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="author.html">Authors</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
+                        <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
+                        <li class="nav-item logoutBox"><a class="nav-link text-white logout">logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="admin-hero text-center py-5">
+        <div class="admin-grid-container">
+
+            <div class="admin-grid-item booksTable" onclick="showTable('Book Table')">
+                <h2 class="admin-display-4">Book Table</h2>
+            </div>
+
+            <div class="admin-grid-item userTable" onclick="showTable('User Table')">
+                <h2 class="admin-display-4">User Table</h2>
+            </div>
+
+            <div class="admin-grid-item authersTable" onclick="showTable('Authers Table')">
+                <h2 class="admin-display-4">Authers Table</h2>
+            </div>
+
+        </div>
+    </section>
+       <div class="table-container" id="bookTableContainer">
+          <div class="table-header">
+            <button data-close-button class="close-button closeTable">&times;</button> </div>       
+            <table class="adminBookTable table-striped table-bordered">
+             <thead>
+                <tr>
+                    <th>Book Cover</th>
+                    <th>The Book</th>
+                    <th>The Authors</th>
+                    <th>Owner</th>
+                </tr>
+             </thead>
+           <tbody id=booksTableInput>
+            <!-- Book rows will be inserted here by JavaScript -->
+             </tbody>
+         </table>
+        </div>
+
+    <div class="table-container" id="usersTableContainer">
+          <div class="table-header">
+            <button data-close-button class="close-button closeTable">&times;</button> </div>       
+            <table class="adminUsersTable table-striped table-bordered">
+             <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>User Email</th>
+                    <th>User Books</th>
+                    
+                </tr>
+             </thead>
+           <tbody id=usersTableInput>
+            <!-- Book rows will be inserted here by JavaScript -->
+             </tbody>
+         </table>
+        </div>
+
+
+
+
+    <footer class="bg-dark text-white py-3">
+        <div class="container text-center">
+            <p>All rights reserved � 2024 Book Store</p>
+        </div>
+    </footer>
+
+    <script>
+        var usersAPI = "https://localhost:7225/api/IUsers";
+        var booksAPI = "https://localhost:7225/api/Books";
+        var allBooks = [];
+        var allUsers= [];
+
+        $(document).ready(function () {
+            $('.logout').click(logoutUser);
+            $('.closeTable').click(closeTable);
+            $("#bookTableContainer").hide();
+            $("#usersTableContainer").hide();
+            showBooks();
+
+        });
+
+        function ajaxCall(method, api, data, successCB, errorCB) {
+            $.ajax({
+                type: method,
+                url: api,
+                data: JSON.stringify(data),
+                cache: false,
+                contentType: "application/json",
+                dataType: "json",
+                success: successCB,
+                error: errorCB
+            });
+        }
+
+        function logoutUser() {
+            let user = JSON.parse(localStorage.getItem("loginUserDetails"));
+            if (user) {
+                let userIdToLogout = user.userId;
+                ajaxCall("PUT", `${usersAPI}/logoutUser`, JSON.stringify(userIdToLogout), successLogout, errorLogout);
+            }
+        }
+
+        function successLogout(status) {
+            if (status) {
+                localStorage.clear();
+                window.location.href = "HTMLPage1.html";
+            }
+        }
+
+        function errorLogout(errorMessage) {
+            console.log(errorMessage);
+            Swal.fire('Error', 'Failed to logout. Please try again.', 'error');
+        }
+
+        function showBooks() {
+            if (allBooks.length == 0) {
+                ajaxCall("GET", booksAPI, null, BooksToShow, errorToLoad); 
+            }
+            else {
+                BooksToShow(allBooks);
+            }
+        }
+
+        function BooksToShow(books) {
+            allBooks = books;
+            const BooksContainer = document.getElementById('booksTableInput');
+            let booksHtml = "";
+
+            books.forEach((book) => {
+                booksHtml += `
+                    <tr>
+                        <td><img src='${book.SmallThumbnail}' alt='Thumbnail' width='50' height='75'></td>
+                        <td>
+                            ${book.Title} <br>
+                            ${book.Description}
+                        </td>
+                        <td>
+                            ${book.FirstAuthorName} <br>
+                            ${book.SecondAuthorName}
+                        </td>
+                        <td>${book.UserName}</td>
+                    </tr>`;
+            });
+
+            booksHtml += '</tbody></table></div>';
+            BooksContainer.innerHTML = booksHtml;
+        }
+
+
+        function showUsers()
+        {
+           if (allUsers.length == 0) {
+             ajaxCall("GET", usersAPI+"/GetAllIusers", null, userToShow, errorToLoad);
+                }
+           else {
+                userToShow(allUsers);
+                }
+        }
+
+
+     function userToShow(users) {
+        const UserContainer = document.getElementById('usersTableInput');
+        let usersHtml = "";
+
+         users.forEach((user) => {
+             var counter = 1;
+            usersHtml += `
+            <tr id="user-${user.Id}">
+                <td>${user.UserName}</td>
+                <td>${user.Email}</td>
+                <td id="userBooksAdminPage">`
+            allBooks.forEach((book) => {
+                if (book.UserId == user.Id) {
+                    usersHtml += `${counter++}. ${book.Title} </br>`
+                }
+            });
+         usersHtml += ` </td > </tr>`
+          });
+
+         UserContainer.innerHTML = usersHtml
+    }
+        
+    function showBooksPerUser(books) {
+        const booksCell = document.getElementById(`user-books-${userId}`);
+        let booksPerUserHtml = "";
+
+        if (books.length > 0) 
+        {
+            books.forEach((book) => {
+                booksPerUserHtml += `${book.Title} <br>`;
+             });
+         } 
+        else
+        {
+        booksPerUserHtml = "No books purchased";
+        }
+
+        booksCell.innerHTML = booksPerUserHtml;
+    }
+       
+
+        function errorToLoad(message) {
+            console.log(message);
+        }
+
+        function showTable(table) 
+        {
+            if (table === 'Book Table') {
+               
+                $("#bookTableContainer").show();
+                $(".userTable").hide();
+                $(".authersTable").hide();
+                $(".booksTable").hide();
+                showBooks();
+
+            }
+            else if(table ==='User Table')
+            {
+                $("#usersTableContainer").show();
+                $(".userTable").show();
+                $(".authersTable").hide();
+                $(".booksTable").hide();
+                showUsers();
+            }
+        }
+
+        function closeTable() {
+            $("#bookTableContainer").hide();
+            $("#usersTableContainer").hide();
+
+            $(".userTable").show();
+            $(".authersTable").show();
+            $(".booksTable").show();
+        }
+    </script>
+</body>
+
+</html>
