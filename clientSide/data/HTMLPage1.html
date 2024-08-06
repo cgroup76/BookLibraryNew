@@ -346,13 +346,13 @@
 
             books.forEach((book) => {
                 booksHtml += `
-                    <div class='col-md-4'>
+                    <div class='col-md-3'>
                         <div class='card mb-4 book-card'>
                             <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
                             <div class='card-body'>
-                                <h5 class='card-title'>${book.Title}</h5>
+                                <h6 class='card-title'>${book.Title}</h6>
                                 <p id='pinkStars'>${rating(book.Rating)} - ${(book.Rating).toFixed(1)}</p>
-                                <p class='card-text'>${book.Price}$</p>`;
+                                <span class='card-text'>${book.Price}$       </span>`;
 
                 if (buyer != null) {
                     const buyerId = buyer.userId;
@@ -360,27 +360,27 @@
                     // If someone already bought the book
                     if (book.IsAvailable == 0) {
                         if (book.UserId == buyerId) { // The logged-in user bought this book
-                            booksHtml += `<a class='btn btn-primary'>You already bought this book</a>
+                            booksHtml += `<a class='btn btn-primary buyABookBtn'>You already bought this book</a>
                                           </div>
                                           </div>
                                           </div>`;
                         } else {
                             const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
-                            booksHtml += `<a class='btn btn-primary' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
+                            booksHtml += `<a class='btn btn-primary buyABookBtn' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
                                           </div>
                                           </div>
                                           </div>`;
                         }
                     } else {
                         // If the book is available for purchase
-                        booksHtml += `<a class='btn btn-primary' onclick='buyABook(${book.Id})'>Buy</a>
+                        booksHtml += `<a class='btn btn-primary buyABookBtn' onclick='buyABook(${book.Id})'>Buy</a>
                                       </div>
                                       </div>
                                       </div>`;
                     }
                 } else {
                     // If the user is not logged in, there's no need to show the purchase option
-                    booksHtml += `<a class='btn btn-primary' onclick='buyABook(${book.Id})'>Buy</a>
+                    booksHtml += `<a class='btn btn-primary buyABookBtn' onclick='buyABook(${book.Id})'>Buy</a>
                                   </div>
                                   </div>
                                   </div>`;

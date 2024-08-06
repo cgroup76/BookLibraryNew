@@ -8,7 +8,7 @@
 }
 
 .hero {
-    background: url('https://via.placeholder.com/1500x500') no-repeat center center;
+    /*background: url('https://via.placeholder.com/1500x500') no-repeat center center;*/
     color: #fff;
     padding: 100px 0;
 }
@@ -130,11 +130,21 @@ li {
 
 /* books */
 .card-img-top{
-    height: 250px
+    height: 150px;
+    width: 100px;
+}
+.book-card {
+    height: 350px;
+    width: 250px;
+    align-items: center
+}
+.buyABookBtn {
+    float: right;
 }
 #pinkStars {
     color: #ff0083
 }
+
 /* Ensure the dropdown is wide enough and contents are aligned */
 .dropdown-menu {
     width: 300px;

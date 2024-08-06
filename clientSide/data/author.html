@@ -38,7 +38,12 @@
         </div>
     </header>
     <div class="container booksbyAuthor-body mt-4">
-        <h2 class="text-center text-black">All books by:</h2>
+        <label for="authorsDataList" class="form-label pink">Search author: </label>
+        <input class="form-control" list="authorsNames" id="authorsNamesInput" placeholder="Type author name to search...">
+        <datalist id="authorsNames">
+        </datalist>
+        <h2 class="text-center text-black">---------------------</h2>
+        <div class="author-details"></div>
         <h2 class="text-center text-black authorName"></h2>
         <div id="authors-books" class="row"></div>
     </div>
@@ -68,6 +73,42 @@
             $('.logout').click(logoutUser);
 
         });
+        // search author by name
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('authorsNamesInput');
+            var selectedAuthor = "";
+
+            searchInput.addEventListener('input', () => {
+                const selectedValue = searchInput.value;
+                allAuthors.forEach(author => {
+                    if (author.name === selectedValue) {
+                        selectedAuthor = author;
+                    }
+                });
+                if (selectedAuthor == "") { $(".author-details").html(''); } // If no author name was selected 
+                else {
+                    showSearchedAuthor(selectedAuthor);
+                    selectedAuthor = "";
+                }
+            });
+        });
+        //---------------
+        function showSearchedAuthor(author) {
+            $(".author-details").html(`
+                        <div class='card'>
+                            <div class='card-body'>
+                                <h4 class='card-text'>${author.name}</h4>
+                                <p class='card-text'>${author.dateOfBirth}</p>
+                                <p class='card-text'>${author.dateOfDeath}</p>
+                                <p class='card-text'>${author.age}</p>
+                                <p class='card-text'>${author.nationality}</p>
+                                <p class='card-text'>${author.notableWork}</p>
+                                <p class='card-text'>${author.awards}</p>
+                                <p class='card-text'>${author.description}</p>
+                            </div>
+                        </div>`
+            );
+        }
 
         function showAuthors() {
             if (allAuthors.length == 0) {
@@ -83,11 +124,16 @@
 
         function authorsToShow(authors) {
             const authorsContainer = document.getElementById('authors-books');
+            var authorsSearch = '';
             let authorsHtml = '';
 
             allAuthors = authors;
 
             allAuthors.forEach((author) => {
+
+                authorsSearch += `<option value='${author.name}'>`
+
+                $("#authorsNames").innerHTML
                 authorsHtml += `
                     <div class='col-md-4 mb-4 author' onclick='showAthourDetails(${author.id})' id='${author.id}'>
                         <div class='card'>
@@ -98,6 +144,7 @@
                     </div>`;
             });
             authorsContainer.innerHTML = authorsHtml;
+            $("#authorsNames").html(authorsSearch);
         }
 
         function ajaxCall(method, api, data, successCB, errorCB) {
