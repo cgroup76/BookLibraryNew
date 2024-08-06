@@ -195,7 +195,7 @@ public class DBservicesBooks
                     book.UserId = Convert.ToInt32(dataReader["userid"]);
                     book.IsRead = (Convert.ToInt32(dataReader["isRead"]) == 1);
                 }
-            
+
                 Books.Add(book);
 
             }
@@ -412,6 +412,77 @@ public class DBservicesBooks
         return cmd;
     }
 
+    //--------------------------------------------------------------------------------------------------
+    // This method change Book Activity
+    //--------------------------------------------------------------------------------------------------
+
+    public int changeBookActivity(int bookId)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+        SqlParameter returnValue = new SqlParameter();
+
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedurechangeBookActivity("changeBookActivity", con, bookId);             // create the command
+        returnValue.ParameterName = "@RETURN_VALUE";
+        returnValue.Direction = ParameterDirection.ReturnValue;
+        cmd.Parameters.Add(returnValue);
+        try
+        {
+            cmd.ExecuteNonQuery(); // execute the command
+            int numEffected = (int)cmd.Parameters["@RETURN_VALUE"].Value;
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+
+    //---------------------------------------------------------------------------------
+    //  This method change Book Activity
+    //---------------------------------------------------------------------------------
+
+    private SqlCommand CreateCommandWithStoredProcedurechangeBookActivity(String spName, SqlConnection con, int bookId)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+
+        cmd.Parameters.AddWithValue("@bookId", bookId);
+
+        return cmd;
+    }
 
 }
-

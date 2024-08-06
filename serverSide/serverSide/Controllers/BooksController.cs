@@ -39,9 +39,10 @@ namespace serverSide.Controllers
         }
 
         // PUT api/<BooksController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("changeBookActivity")]
+        public bool Put(int bookId)
         {
+            return Book.changeBookActivity(bookId);
         }
         // PUT RateBook
         [HttpPut("RateBook")]

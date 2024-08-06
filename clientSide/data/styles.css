@@ -195,7 +195,7 @@ li {
     font-size: 2.5rem;
 }
 
-.adminBookTable, .adminUsersTable {
+.adminBookTable, .adminUsersTable, .adminAuthorTable {
     width: 100%;
     margin: 0 auto;
     background-color: #121212;
@@ -229,10 +229,16 @@ li {
     box-sizing: border-box;
 }
 
-#userBooksAdminPage{
+#userBooksAdminPage {
     text-align: left;
     padding-left: 15px;
 }
+
+#activityBtn {
+    color: #ff0083;
+    background-color: #2c2c2c;
+}
+/*quiz*/
 .question {
     background-color: #343a40; /* Dark background color */
     color: #ffffff; /* White text color */
