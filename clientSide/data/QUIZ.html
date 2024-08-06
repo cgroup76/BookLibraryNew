@@ -1,125 +1,184 @@
-﻿  <!DOCTYPE html>
-    <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Book Quiz</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        <link rel="stylesheet" href="styles.css">
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Quiz</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
 
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.1.min.js"
-                integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
-                crossorigin="anonymous"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+            crossorigin="anonymous"></script>
 
-        <!-- SweetAlert2 -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <style>
-            .question {
-                color: black;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="quiz-container" id="quiz">
-                <h2 class="text-center text-dark">Book Quiz</h2>
-                <div id="question-container"></div>
-                <button class="btn btn-submit btn-block mt-3 " id="submit-quiz">Submit Quiz</button>
-            </div>
+    <style>
+        .question {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="quiz-container" id="quiz">
+            <h2 class="text-center text-dark">Book Quiz</h2>
+            <div id="question-container"></div>
+            <button class="btn btn-submit btn-block mt-3" id="submit-quiz" onclick="createQuiz()">Submit Quiz</button>
         </div>
+    </div>
 
-        <script>const usersAPI = "https://localhost:7225/api/IUsers";
+    <script>
+        const usersAPI = "https://localhost:7225/api/IUsers";
         const booksAPI = "https://localhost:7225/api/Books";
-        const authorsAPI = "https://localhost:7225/api/IUsers";
+        const authorsAPI = "https://localhost:7225/api/Authors";
 
+        let gameScore= 0
         let allBooks = [];
         let allAuthors = [];
+        let questions = ['Who is the author of the book', 'When was the book'];
+        let numOFQuestion = 0;
+        const NUMOFQ = 4;
+        const NUMOFA = 4;
+        const randomIntegerInRange = (min, max) => Math.floor(Math.random() * (max - min+1)) + min;
 
         $(document).ready(function () {
             loadBooks();
+            loadAuthors();
         });
+        //function gameScore() {
+        //    if()
+        //}
+        function ajaxCall(method, api, data, successCB, errorCB) {
+            $.ajax({
+                type: method,
+                url: api,
+                data: JSON.stringify(data),
+                cache: false,
+                contentType: "application/json",
+                dataType: "json",
+                success: successCB,
+                error: errorCB
+            });
+        }
 
         function loadBooks() {
-            $.ajax({
-                url: booksAPI,
-                method: 'GET',
-                success: function (books) {
-                    allBooks = books;
-                    loadAuthors(); // Load authors after books
-                },
-                error: function (error) {
-                    console.log('Error loading books:', error);
-                    Swal.fire('Error loading books. Please check the server connection.');
-                }
-            });
+            if (allBooks.length == 0) {
+                ajaxCall("GET", booksAPI, null, SuccessLoadBooks, errorLoadBooks);
+            }
         }
-
-        function loadAuthors() {
-            $.ajax({
-                url: authorsAPI,
-                method: 'GET',
-                success: function (authors) {
-                    allAuthors = authors;
-                    createQuiz(allBooks, allAuthors); // Ensure this is called after books and authors are loaded
-                },
-                error: function (error) {
-                    console.log('Error loading authors:', error);
-                    Swal.fire('Error loading authors. Please check the server connection.');
-                }
-            });
-        }
-
-        function createQuiz(books, authors) {
-            var questionContainer = $('#question-container');
-            questionContainer.empty();
-
-            var authorOptions = authors.map(author => author.name);
-
-            // Shuffle and pick 10 unique books
-            var selectedBooks = shuffle(books).slice(0, 10);
-
-            selectedBooks.forEach(function (book, index) {
-                // Filter out the correct author and get a list of other authors
-                var otherAuthors = authors.filter(author => author.name !== book.author);
-
-                // Get 2 random incorrect authors
-                var incorrectAuthors = getRandomSubset(otherAuthors, 2);
-
-                // Combine the correct author with incorrect authors and shuffle
-                var shuffledOptions = shuffle([book.author, ...incorrectAuthors.map(author => author.name)]);
-
-                // Generate the question HTML
-                var questionHtml = `
-                <div class="question mb-4">
-                    <h5>${index + 1}. Who is the author of the book "${book.title}"?</h5>
-                    ${shuffledOptions.map((option, i) => `
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="question${index}" id="question${index}option${i}" value="${option}">
-                            <label class="form-check-label" for="question${index}option${i}">
-                                ${option}
-                            </label>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-                questionContainer.append(questionHtml);
-            });
-        }
-
         function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+            let index = array.length;
+
+            while (index != 0) {
+
+                let randomIndex = randomIntegerInRange(0, index--);
+
+                [array[index], array[randomIndex]] = [array[randomIndex], array[index]]
             }
             return array;
         }
+        
 
-        function getRandomSubset(array, size) {
-            const shuffled = shuffle(array.slice());
-            return shuffled.slice(0, size);
-        }</script>
-    </body>
+            function loadAuthors() {
+                if (allAuthors.length == 0) {
+                    ajaxCall("GET", authorsAPI, null, SuccessLoadAuthors, errorLoadAuthors);
+                }
+            }
+        
+
+        function SuccessLoadBooks(books) {
+            allBooks = books;
+        }
+
+        function SuccessLoadAuthors(authors) {
+            allAuthors = authors;
+        }
+
+        function errorLoadBooks(error) {
+            console.log(error);
+            Swal.fire('Error loading books. Please check the server connection.');
+        }
+
+        function errorLoadAuthors(error) {
+            console.log('Error loading authors:', error);
+            Swal.fire('Error loading authors. Please check the server connection.');
+        }
+        function generateAnswers(correctBook, questionInfo) {
+            let Answers = [];
+            Answers.push(correctBook[questionInfo]);
+            
+            while (Answers.length < NUMOFA) {
+                let randomBookIndex = randomIntegerInRange(0, allBooks.length-1);
+                let wrongAnswer = (allBooks[randomBookIndex])[questionInfo];
+
+                if (Answers.indexOf(wrongAnswer) == -1) {
+                    Answers.push(wrongAnswer);
+                 }
+            }
+            return Answers;
+        }
+
+        function createQuiz() {
+            let questionHTML = "";
+            while (numOFQuestion++ < NUMOFQ) {
+
+                let chooseRandomQuestion = randomIntegerInRange(0,questions.length -1);
+                let generateRandomBook = allBooks[randomIntegerInRange(0, allBooks.length-1)];
+                let answerRandomIndex = shuffle([0, 1, 2, 3])
+                let index = 0;
+
+                switch (questions[chooseRandomQuestion]) {
+                    case 'Who is the author of the book':
+                        {
+                            let Answers = generateAnswers(generateRandomBook, 'FirstAuthorName');
+                            let CorrectAnswer = Answers[0];
+                            questionHTML += `<div class="question-${numOFQuestion} mb-4">
+                            <h5>${questions[chooseRandomQuestion]} "${generateRandomBook.Title}"?</h5></div>`
+
+                            Answers.forEach((ans) => {
+                                let answer = Answers[answerRandomIndex[index++]];
+                                questionHTML += `
+                                      <div class="form-check">
+                                     <input class="form-check-input" type="checkbox" value="${answer}" name="answer-${numOFQuestion}">
+                                     <label class="form-check-label" for="answer-${numOFQuestion}">
+                                     ${answer}
+                                    </label>
+                                </div>`;
+                            })
+                            break;
+                        }
+                    case 'When was the book':
+                        {
+                            let Answers = generateAnswers(generateRandomBook, 'PublishDate');
+                            let CorrectAnswer = Answers[0];
+
+                            questionHTML += `<div class="question-${numOFQuestion} mb-4">
+                            <h5>${questions[chooseRandomQuestion]} "${generateRandomBook.Title}" was puplished?</h5></div>`
+
+                            Answers.forEach((ans) => {
+                                let answer = Answers[answerRandomIndex[index++]];
+                                questionHTML += `
+                                 <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="${answer}" name="answer-${numOFQuestion}">
+                                    <label class="form-check-label" for="answer-${numOFQuestion}">
+                                     ${answer}
+                                    </label>
+                                   </div>`;
+                            })
+                            break;
+                        }
+                }
+
+            }
+            $('#question-container').html(questionHTML)
+            numOFQuestion = 0;
+        }
+
+
+    </script>
+</body>
 </html>

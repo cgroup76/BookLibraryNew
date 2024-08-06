@@ -351,7 +351,7 @@
                             <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
                             <div class='card-body'>
                                 <h6 class='card-title'>${book.Title}</h6>
-                                <p id='pinkStars'>${rating(book.Rating)} - ${(book.Rating).toFixed(1)}</p>
+                                <p id='pinkStars'>${rating(book.Rating)} ${(book.Rating).toFixed(1)}</p>
                                 <span class='card-text'>${book.Price}$       </span>`;
 
                 if (buyer != null) {
