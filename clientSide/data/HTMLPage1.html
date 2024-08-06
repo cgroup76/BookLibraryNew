@@ -44,7 +44,8 @@
                                 </svg>
                             </button>
                             <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" id="request" href="#"> </a>
+                                <div class="send"> </div>
+                                <div class="got"> </div>
                             </div>
                         </li>
                     </ul>
@@ -156,8 +157,7 @@
             $('.logout').click(logoutUser);
 
             //user requst
-            $('.requestBox').click(showRequests);
-
+            $('.requestBox').click(showAllRequests);
         })
 
         // login or signup form
@@ -366,7 +366,7 @@
                                           </div>`;
                         } else {
                             const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
-                            booksHtml += `<a class='btn btn-primary buyABookBtn' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
+                            booksHtml += `<a class='btn btn-primary buyABookBtn' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id},"${userName}")'>Buy</a>
                                           </div>
                                           </div>
                                           </div>`;
@@ -442,7 +442,8 @@
             }
         }
         //send request
-        function sendRequest(buyerId, sellerId, bookId, sellerName) {
+        function sendRequest(buyerId,sellerId,bookId,sellerName) {
+            console.log(sellerName)
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     confirmButton: "btn btn-success",
@@ -475,7 +476,6 @@
         }
         function successToSendRequest() {
             Swal.fire({
-                position: "top-end",
                 icon: "success",
                 title: "The request has been sent",
                 showConfirmButton: false,
@@ -524,32 +524,85 @@
         }
 
         //show user request
+        function showAllRequests() {
+            showRequests();
+            ShowRequestToBuy();
+        }
         function showRequests() {
-            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId
-
-            ajaxCall("GET", usersAPI + `/GetRequestsPerUser?userId=${userId}`, null, showMyRequests, showMyRequests)
+            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+            console.log(userId);
+            ajaxCall("GET", usersAPI + `/GetRequestsPerUser?userId=${userId}`, null, showMyRequests, errorShowRequest);
         }
 
         function showMyRequests(listOfRequest) {
-            const requestBox = $('.requestBox .dropdown-menu');
-            requestBox.empty();
-            let approved = "approved";
-            let denied = "denied";
+            if (listOfRequest.status == -1) {
 
-            if (listOfRequest.length === 0) {
-                requestBox.append('<a class="dropdown-item" href="#">No requests</a>');
-            } else {
-                let sellerId = JSON.parse(localStorage.getItem("loginUserDetails")).userId
-                listOfRequest.forEach(request => {
-                    requestBox.append(`<div class="dropdown-item">
-                                                    <strong>Book:</strong> ${request.bookName} <br>
-                                                    <strong>Want to buy:</strong> ${request.buyerName} <br>
-                                                    <strong>Status:</strong> ${request.status} <br>
-                                                    <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}')">Approve</button>
-                                                    <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}')">Reject</button>
-                                                </div>`);
-                });
+                Swal.fire("Connection time ended - Please login first");
+
+                logoutUser();
             }
+            else {
+                let requestBox = document.querySelector('.requestBox .dropdown-menu .got')
+                let htmlGot = "";
+                let approved = "approved";
+                let denied = "denied";
+                htmlGot += '<h3> Request you got </h3>';
+
+                if (listOfRequest.length === 0) {
+                    htmlGot += '<a class="dropdown-item" href="#">No requests was sent to you</a>';
+                }
+                else {
+                    let sellerId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+                    listOfRequest.forEach((request) => {
+                        htmlGot += `
+                                <div class="dropdown-item">
+                                    <strong>Book:</strong> ${request.bookName} <br>
+                                    <strong>Want to buy:</strong> ${request.buyerName} <br>
+                                    <strong>Status:</strong> ${request.status} <br>
+                                    <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}')">Approve</button>
+                                    <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}')">Reject</button>
+                                </div>`;
+                    });
+                }
+                requestBox.innerHTML = htmlGot;
+            }
+        }
+        function ShowRequestToBuy() {
+            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+
+            ajaxCall("GET", usersAPI + `/getMyRequestToBuyPerUser?userId=${userId}`, null, ShowMyRequestToBuy, errorShowRequest);
+        }
+
+        function ShowMyRequestToBuy(listOfRequest) {
+            if (listOfRequest.status == -1) {
+
+                Swal.fire("Connection time ended - Please login first");
+
+                logoutUser();
+            }
+            else {
+                let requestBox = document.querySelector('.requestBox .dropdown-menu .send');
+                let htmlSend = "";
+                htmlSend += `<h3> Request you send </h3>`
+                if (listOfRequest.length === 0) {
+                    htmlSend += '<a class="dropdown-item" href="#">You wasnt send any request</a>';
+                }
+                else {
+
+                    listOfRequest.forEach((request) => {
+                        htmlSend += `<div class="dropdown-item">
+                                <strong>Book:</strong> ${request.bookName} <br>
+                                <strong>you ask to buy from:</strong> ${request.sellerName} <br>
+                                <strong>Status:</strong> ${request.status} <br>
+                                </div>`
+                    });
+                }
+                requestBox.innerHTML = htmlSend;
+            }
+        }
+
+        function errorShowRequest() {
+            console.log("not good")
         }
         //approve or denied request
         function handleRequest(buyerId, sellerId, bookId, requestStatus) {

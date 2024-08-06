@@ -121,6 +121,12 @@ namespace serverSide.BL
 
             return dBservicesUsers.getRequestsPerUser(userId);
         } 
+        public static List<dynamic> getMyRequestToBuyPerUser(int userId)
+        {
+            DBservicesUsers dBservicesUsers = new DBservicesUsers();
+
+            return dBservicesUsers.getMyRequestToBuyPerUser(userId);
+        } 
         public static List<dynamic> GetAllIusers()
         {
             DBservicesUsers dBservicesUsers = new DBservicesUsers();

@@ -681,7 +681,7 @@ public class DBservicesUsers
     }
 
     //--------------------------------------------------------------------------------------------------
-    // This method reads all the requests for a user
+    // This method reads all the requests to sale for a user
     //--------------------------------------------------------------------------------------------------
 
     public List<dynamic> getRequestsPerUser(int userId)
@@ -751,7 +751,7 @@ public class DBservicesUsers
     }
 
     //---------------------------------------------------------------------------------
-    // Create the SqlCommand using a stored procedure to get all requests per user
+    // Create the SqlCommand using a stored procedure to get all requests to sale per user
     //---------------------------------------------------------------------------------
 
     private SqlCommand CreateCommandWithStoredProceduregetRequestsPerUser(String spName, SqlConnection con, int userId)
@@ -849,5 +849,91 @@ public class DBservicesUsers
         return cmd;
     }
 
+    //--------------------------------------------------------------------------------------------------
+    // This method reads all the requests to buy for a user
+    //--------------------------------------------------------------------------------------------------
 
+    public List<dynamic> getMyRequestToBuyPerUser(int userId)
+    {
+        SqlConnection con = null;
+        SqlCommand cmd;
+        List<dynamic> userRequestsToBuy = new List<dynamic>();
+
+        try
+        {
+            con = connect("myProjDB"); // Create the connection
+
+            // Create the command using the stored procedure
+            cmd = CreateCommandWithStoredProceduregetRequestToBuy("getMyRequestToBuy", con, userId);
+
+            // Add the return value parameter
+            SqlParameter returnValue = new SqlParameter
+            {
+                ParameterName = "@RETURN_VALUE",
+                Direction = ParameterDirection.ReturnValue
+            };
+            cmd.Parameters.Add(returnValue);
+
+            // Execute the command and read the data
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            // Read the data from the data reader
+            while (dataReader.Read())
+            {
+                dynamic requestToBuy = new ExpandoObject();
+                requestToBuy.userId = Convert.ToInt32(dataReader["sellerId"]);
+                requestToBuy.buyerId = Convert.ToInt32(dataReader["buyyerId"]);
+                requestToBuy.bookId = Convert.ToInt32(dataReader["bookId"]);
+                requestToBuy.sellerName = Convert.ToString(dataReader["userName"]);
+                requestToBuy.bookName = Convert.ToString(dataReader["title"]);
+                requestToBuy.status = Convert.ToString(dataReader["requestStatus"]);
+                userRequestsToBuy.Add(requestToBuy);
+            }
+
+            dataReader.Close(); // Ensure the data reader is closed
+
+            // Check the return value
+            int status = (int)cmd.Parameters["@RETURN_VALUE"].Value;
+            if (status == -1)
+            {
+                // Handle the case where the status is -1
+                dynamic requestToBuy = new ExpandoObject();
+                requestToBuy.status = status;
+                userRequestsToBuy.Add(requestToBuy);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Write to log
+            throw (ex);
+        }
+        finally
+        {
+            if (con != null)
+            {
+                // Close the database connection
+                con.Close();
+            }
+        }
+
+        return userRequestsToBuy;
+    }
+
+    //---------------------------------------------------------------------------------
+    // Create the SqlCommand using a stored procedure to get all requests to buy per user
+    //---------------------------------------------------------------------------------
+
+    private SqlCommand CreateCommandWithStoredProceduregetRequestToBuy(String spName, SqlConnection con, int userId)
+    {
+        SqlCommand cmd = new SqlCommand(); // Create the command object
+
+        cmd.Connection = con;              // Assign the connection to the command object
+        cmd.CommandText = spName;          // Can be Select, Insert, Update, Delete 
+        cmd.CommandTimeout = 10;           // Time to wait for the execution; the default is 30 seconds
+        cmd.CommandType = CommandType.StoredProcedure; // The type of the command
+
+        cmd.Parameters.AddWithValue("@userId", userId);
+
+        return cmd;
+    }
 }

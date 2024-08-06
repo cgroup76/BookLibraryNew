@@ -145,6 +145,7 @@ li {
     color: #ff0083
 }
 
+
 /* Ensure the dropdown is wide enough and contents are aligned */
 .dropdown-menu {
     width: 300px;
@@ -155,14 +156,28 @@ li {
 
 .dropdown-item {
     padding: 10px;
-    word-wrap: break-word; 
+    word-wrap: break-word;
 }
 
-    .dropdown-item button {
-        margin-top: 5px; 
+.dropdown-item button {
+        margin-top: 5px;
     }
 
+.dropdown-menu {
+    z-index: 1050; /* Default Bootstrap z-index value */
+}
 
+.requestBox .dropdown-menu {
+    min-width: 300px;
+}
+
+.requestBox .dropdown-item {
+    padding: 10px;
+}
+
+.requestBox .btn {
+    padding: 0.5rem 1rem;
+}
  /*admin page*/
 .admin-hero {
     background-color: #121212;
@@ -256,4 +271,7 @@ li {
 .disabled {
     pointer-events: none; /* Prevents any mouse events */
     opacity: 0.5; /* Makes the div appear faded */
+}
+h3 {
+    color: #ff0083
 }

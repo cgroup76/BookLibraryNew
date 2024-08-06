@@ -22,6 +22,11 @@ namespace serverSide.Controllers
         public List<dynamic> GetRequestsPerUser(int userId)
         {
             return IUser.getRequestsPerUser(userId);
+        } 
+        [HttpGet("getMyRequestToBuyPerUser")]
+        public List<dynamic> getMyRequestToBuyPerUser(int userId)
+        {
+            return IUser.getMyRequestToBuyPerUser(userId);
         }
 
         [HttpGet("GetAllIusers")]
