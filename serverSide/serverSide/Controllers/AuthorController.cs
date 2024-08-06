@@ -16,21 +16,21 @@ namespace serverSide.Controllers
             return Author.showAllAuthors();
         }
         // GET: find book By author Name
-        [HttpGet("findBookByAuthor/{authorName}")]
-        public IActionResult Get(string authorName)
+        [HttpGet("findBookByAuthor")]
+        public IActionResult Get(int authorId)
         {
-            List<Book> books = Author.findBookByAuthorName(authorName);
+            List<Object> books = Author.findBookByAuthorName(authorId);
             if (books == null || books.Count == 0)
             {
                 return NotFound("No books found for the given author.");
             }
             return Ok(books);
         }
-        // GET 
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET Libaries Per Author
+        [HttpGet("GetLibrariesPerAuthor")]
+        public List<dynamic> GetLibrariesPerAuthor()
         {
-            return "value";
+            return Author.getLibrariesPerAuthor();
         }
         // GET api/AuthorsController>/5
         [HttpGet("{name}")]

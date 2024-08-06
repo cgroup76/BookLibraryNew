@@ -1,4 +1,6 @@
-﻿namespace serverSide.BL
+﻿using System.Net;
+
+namespace serverSide.BL
 {
     public class Book
     {
@@ -77,7 +79,8 @@
             return 1 == dBserviecesBooks.AddNewBook(book);
         }
         //show all Books
-        public static List<object> showBooks(){
+        public static List<object> showBooks()
+        {
             DBservicesBooks dBserviecesBooks = new DBservicesBooks();
 
             return dBserviecesBooks.getAllBooks();
@@ -95,7 +98,12 @@
 
             return dBserviecesBooks.getTop5BooksByRating();
         }
+        public static bool changeBookActivity(int bookId)
+        {
+            DBservicesBooks dBserviecesBooks = new DBservicesBooks();
+
+            return 1 == dBserviecesBooks.changeBookActivity(bookId);
+        }
     }
 
 }
-

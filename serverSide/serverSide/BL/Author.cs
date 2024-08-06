@@ -38,11 +38,11 @@
         public string Awars { get => awars; set => awars = value; }
         public string Description { get => description; set => description = value; }
 
-        public static List<Book> findBookByAuthorName(string authorName)
+        public static List<Object> findBookByAuthorName(int authorId)
         {
             DBservicesAuthor dBservicesAuthor = new DBservicesAuthor();
 
-            return dBservicesAuthor.findBookByAuthorName(authorName);
+            return dBservicesAuthor.findBookByAuthorName(authorId);
 
         }
 
@@ -54,5 +54,11 @@
 
         }
         // public static Author addNewAuthor(int id, string name) { }
-    }
+        public static List<dynamic> getLibrariesPerAuthor()
+        {
+            DBservicesAuthor dBservicesAuthor = new DBservicesAuthor();
+
+            return dBservicesAuthor.UsersLibaryPerAuthor();
+        }
+    }
 }
