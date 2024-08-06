@@ -44,6 +44,7 @@
         const NUMOFQ = 4;
         const NUMOFA = 4;
         const randomIntegerInRange = (min, max) => Math.floor(Math.random() * (max - min+1)) + min;
+        let finalQuiz = [];
 
         $(document).ready(function () {
             loadBooks();
@@ -149,6 +150,7 @@
                                     </label>
                                 </div>`;
                             })
+                            finalQuiz.push(questionHTML);
                             break;
                         }
                     case 'When was the book':
@@ -169,13 +171,21 @@
                                     </label>
                                    </div>`;
                             })
+                            finalQuiz.push(questionHTML);
                             break;
                         }
                 }
 
             }
-            $('#question-container').html(questionHTML)
+            
             numOFQuestion = 0;
+            let q = 0;
+            while (q < finalQuiz.length) {
+                setTimeout((currentQ) => {
+                    $("#question-container").html(finalQuiz[currentQ]);
+                }, 10000 * q, q);
+                q++;
+            }
         }
 
 

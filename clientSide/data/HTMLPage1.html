@@ -484,13 +484,24 @@
             showRequests();
 
         }
-        function errorToSendRequest() {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "There was a problem sending the request, please try again",
+        function errorToSendRequest(error) {
+            if (error.status == 401) {
 
-            });
+                Swal.fire("Connection time ended - Please login first");
+
+                localStorage.clear();
+
+                checkForLoginUser();
+
+                showLoginForm();
+            }
+            else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "There was a problem sending the request, please try again",
+
+                }); }
 
         }
 
@@ -553,7 +564,6 @@
         }
         //approve or denied request
         function handleRequest(buyerId, sellerId, bookId, requestStatus) {
-            console.log(buyerId, sellerId, bookId, requestStatus);
             ajaxCall("PUT", `${usersAPI}/requestHandling?sellerId=${sellerId}&buyerId=${buyerId}&bookId=${bookId}&requeststatus=${requestStatus}`, null, successToHandle(requestStatus), errorToHandle)
         }
 
