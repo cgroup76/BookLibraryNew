@@ -13,8 +13,10 @@
             integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
             crossorigin="anonymous"></script>
 
+   
     <!-- sweet aleret -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 </head>
 <body>
@@ -31,6 +33,18 @@
                         <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
                         <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
                         <li class="nav-item logoutBox"><a class="nav-link text-white logout">logout</a></li>
+                        <li class="nav-item dropdown requestBox">
+                            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
+                                </svg>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton">
+                                <div class="send"> </div>
+                                <div class="got"> </div>
+
+                            </div>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -40,19 +54,19 @@
     <section class="hero text-center py-5">
         <div class="container">
             <h2 class="display-4">My Libary</h2>
-            <p class="lead">All of my books:</p>
+            <h2 class="text-center text-white mb-5">All of my books</h2>
+
         </div>
     </section>
 
 
     <section class="books py-5">
         <div class="container">
-            <h2 class="text-center text-white mb-5">Recommended Books</h2>
             <div class="row" id="myBooks">
 
-                </div>
             </div>
-     
+        </div>
+
     </section>
 
     <footer class="bg-dark text-white py-3">
@@ -62,11 +76,7 @@
     </footer>
 
 
-    <div id="overlay" class=""></div>
-    <div id="loader-wrapper">
-        <div id="loader"></div>
-    </div>
-    <!---------------->
+
 
 
     <script>
@@ -78,14 +88,16 @@
 
         var bookIdToRate;
         var bookRating;
-
+        const requestBox = $('.requestBox .dropdown-menu');
         $(document).ready(function () {
 
             checkForLoginUser();
 
             showMyBooks();
-
+            $('.requestBox').click(showAllRequests);
+      
             $('.logout').click(logoutUser);
+
         });
 
         function ajaxCall(method, api, data, successCB, errorCB) {
@@ -120,7 +132,7 @@
 
             $(`#rating-${bookIdToRate}`).hide();
 
-             // SET IN TOO HERE THE WAS RATED - THE DB DOES IT AUTOMATICLY
+            // SET IN TOO HERE THE WAS RATED - THE DB DOES IT AUTOMATICLY
             for (let i = 0; i < allMyBooks.length; i++) {
 
                 if (allMyBooks[i].Id == bookIdToRate) {
@@ -147,7 +159,8 @@
             if (status) {
 
                 localStorage.clear();
-
+                const requestBox = $('.requestBox .dropdown-menu');
+                requestBox.empty();
                 window.location.href = "HTMLPage1.html";
             }
         }
@@ -180,35 +193,35 @@
 
             allMyBooks.forEach((book) => {
                 booksHtml += `
-        <div class='col-md-4'>
-            <div class='card mb-4 book-card'>
-                <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
-                <div class='card-body' id='markAsRead-${book.Id}'>
-                    <h5 class='card-title'>${book.Title}</h5>
-                    <p>${book.Rating}</p>`;
+                        <div class='col-md-4'>
+                            <div class='card mb-4 book-card'>
+                                <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
+                                <div class='card-body' id='markAsRead-${book.Id}'>
+                                    <h5 class='card-title'>${book.Title}</h5>
+                                    <p>${book.Rating}</p>`;
                 if (book.IsRead == 'False') {
                     booksHtml += `<a class='btn btn-primary' onclick="ReadTheBook(${book.UserId}, ${book.Id})">Mark as read</a>`;
                 } else if (book.WasRated == 0) {
                     booksHtml += `<a class='btn btn-primary'>Already read this book</a>
-            <div id='rating-${book.Id}'>
-                Rating:
-                <select id='ratingSelect-${book.Id}'>
-                    <option value='1'>1</option>
-                    <option value='2'>2</option>
-                    <option value='3'>3</option>
-                    <option value='4'>4</option>
-                    <option value='5'>5</option>
-                </select>
-                <button onclick='rateBook(${book.Id})'>Rate</button>
-            </div>`;
+                            <div id='rating-${book.Id}'>
+                                Rating:
+                                <select id='ratingSelect-${book.Id}'>
+                                    <option value='1'>1</option>
+                                    <option value='2'>2</option>
+                                    <option value='3'>3</option>
+                                    <option value='4'>4</option>
+                                    <option value='5'>5</option>
+                                </select>
+                                <button onclick='rateBook(${book.Id})'>Rate</button>
+                            </div>`;
                 }
                 else {
                     booksHtml += `<a class='btn btn-primary'>Already read this book</a>`
                 }
                 booksHtml += `
-                </div>
-            </div>
-        </div>`;
+                                </div>
+                            </div>
+                        </div>`;
             });
 
             booksContainer.innerHTML = booksHtml;
@@ -231,19 +244,19 @@
         function successToMarkAsRead() {
             const bookElement = document.getElementById(`markAsRead-${currentBookId}`);
             let bookHtml = `
-                <h5 class='card-title'>${currentBookTitle}</h5>
-                 <a class='btn btn-primary'>Already read this book</a>
-                <div id='rating-${currentBookId}' style='display:block;'>
-                 Rating:
-                <select id='ratingSelect-${currentBookId}'>
-                <option value='1'>1</option>
-                <option value='2'>2</option>
-                <option value='3'>3</option>
-                <option value='4'>4</option>
-                <option value='5'>5</option>
-                </select>
-                <button onclick='rateBook(${currentBookId})'>Rate</button>
-                </div>`;
+                                <h5 class='card-title'>${currentBookTitle}</h5>
+                                 <a class='btn btn-primary'>Already read this book</a>
+                                <div id='rating-${currentBookId}' style='display:block;'>
+                                 Rating:
+                                <select id='ratingSelect-${currentBookId}'>
+                                <option value='1'>1</option>
+                                <option value='2'>2</option>
+                                <option value='3'>3</option>
+                                <option value='4'>4</option>
+                                <option value='5'>5</option>
+                                </select>
+                                <button onclick='rateBook(${currentBookId})'>Rate</button>
+                                </div>`;
             bookElement.innerHTML = bookHtml;
             Swal.fire('Success', 'Book marked as read.', 'success');
         }
@@ -255,24 +268,153 @@
                 Swal.fire('Error', 'Failed to mark the book as read. Please try again.', 'error');
             }
         }
-        function checkForLoginUser() {
-            var loginUser = JSON.parse(localStorage.getItem("loginUserDetails"))
 
+        function checkForLoginUser() {
+
+            var loginUser = JSON.parse(localStorage.getItem("loginUserDetails"))
             if (loginUser != null) {
                 $('.userNameBox').show();
                 $('.logoutBox').show();
                 $('.loginBox').hide();
                 $('.userName').text(loginUser.userName);
                 $('.myBooks').show();
+                $('.requestBox').show();
+                $('.adminPage').hide();
+                //check if the login user is admin and open the access to admin page
+                if (loginUser.userName == "admin") {
+                    $('.adminPage').show();
+                    $('.userNameBox').hide();
+                    $('.requestBox').show();
+                }
             }
+
             else {
                 $('.userNameBox').hide();
                 $('.logoutBox').hide();
                 $('.loginBox').show();
                 $('.userName').text("");
                 $('.myBooks').hide();
+                $('.requestBox').hide();
+                $('.adminPage').hide();
             }
         }
+        function showAllRequests()
+        {
+            showRequests();
+            ShowRequestToBuy();
+        }
+        function showRequests() {
+            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+            console.log(userId);
+            ajaxCall("GET", usersAPI + `/GetRequestsPerUser?userId=${userId}`, null, showMyRequests, errorShowRequest);
+        }
+
+        function showMyRequests(listOfRequest) {
+            if (listOfRequest.status == -1) {
+
+                Swal.fire("Connection time ended - Please login first");
+
+                logoutUser();
+            }
+            else {
+                let requestBox = document.querySelector('.requestBox .dropdown-menu .got')
+                let htmlGot = "";
+                let approved = "approved";
+                let denied = "denied";
+                htmlGot += '<h3> Request you got </h3>';
+
+                if (listOfRequest.length === 0) {
+                    htmlGot += '<a class="dropdown-item" href="#">No requests was sent to you</a>';
+                }
+                else {
+                    let sellerId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+                    listOfRequest.forEach((request) => {
+                        htmlGot += `
+                                        <div class="dropdown-item">
+                                            <strong>Book:</strong> ${request.bookName} <br>
+                                            <strong>Want to buy:</strong> ${request.buyerName} <br>
+                                            <strong>Status:</strong> ${request.status} <br>
+                                            <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}')">Approve</button>
+                                            <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}')">Reject</button>
+                                        </div>`;
+                    });
+                }
+                requestBox.innerHTML = htmlGot;
+            }
+        }
+        function ShowRequestToBuy()
+        {
+            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+
+            ajaxCall("GET", usersAPI + `/getMyRequestToBuyPerUser?userId=${userId}`, null, ShowMyRequestToBuy, errorShowRequest);
+        }
+
+        function ShowMyRequestToBuy(listOfRequest) {
+            if (listOfRequest.status == -1) {
+
+                Swal.fire("Connection time ended - Please login first");
+
+                logoutUser();
+            }
+            else {
+                let requestBox = document.querySelector('.requestBox .dropdown-menu .send');
+                let htmlSend = "";
+                htmlSend += `<h3> Request you send </h3>`
+                if (listOfRequest.length === 0) {
+                    htmlSend += '<a class="dropdown-item" href="#">You wasnt send any request</a>';
+                }
+                else {
+
+                    listOfRequest.forEach((request) => {
+                        htmlSend += `<div class="dropdown-item">
+                                        <strong>Book:</strong> ${request.bookName} <br>
+                                        <strong>you ask to buy from:</strong> ${request.sellerName} <br>
+                                        <strong>Status:</strong> ${request.status} <br>
+                                        </div>`
+                    });
+                }
+                requestBox.innerHTML = htmlSend;
+            }
+        }
+
+        function errorShowRequest() {
+            console.log("not good")
+        }
+
+        function handleRequest(buyerId, sellerId, bookId, requestStatus) {
+            console.log(buyerId, sellerId, bookId, requestStatus);
+            ajaxCall("PUT", `${usersAPI}/requestHandling?sellerId=${sellerId}&buyerId=${buyerId}&bookId=${bookId}&requeststatus=${requestStatus}`, null, successToHandle(requestStatus), errorToHandle);
+        }
+
+        function successToHandle(requestStatus) {
+            if (requestStatus == 'approved') {
+                Swal.fire({
+                    icon:"success",
+                    title: "The request was successfully approved"
+                });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "The request was successfully rejected"
+                });
+            }
+            showAllRequests();
+        }
+
+        function errorToHandle() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'There was an error handling the request. Please try again.'
+            });
+        }
+
     </script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <!-- Bootstrap Bundle (includes Popper) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+
 </body>
 </html>
