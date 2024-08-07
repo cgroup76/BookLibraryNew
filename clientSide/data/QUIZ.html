@@ -16,11 +16,6 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <style>
-        .question {
-            color: black;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -46,8 +41,8 @@
             <div id="questionContainer"></div>
             <button class="btn btn-outline-dark btn-block pinkB start-quiz">Start Quiz</button>
             <div class='btn-next-back'>
-                <button class='btn btn-outline-dark btn-block pinkB btn-back'>Back</button>
-                <button class='btn btn-outline-dark btn-block pinkB btn-next'>Next</button>
+                <button class='btn btn-outline-dark pinkB btn-back'>Back</button>
+                <button class='btn btn-outline-dark pinkB btn-next'>Next</button>
             </div>
         </div>
     </div>
@@ -66,6 +61,8 @@
         const NUMOFA = 4;
         const randomIntegerInRange = (min, max) => Math.floor(Math.random() * (max - min+1)) + min;
         let finalQuiz = [];
+        let userQuizAnswers = [];
+        let QuizCorrectAnswers = [];
         let questionNumInQuiz = 0;
 
         $(document).ready(function () {
@@ -100,14 +97,18 @@
             }
         }
         function shuffle(array) {
-            let index = array.length;
+            let index = array.length - 1;
 
             while (index != 0) {
 
-                let randomIndex = randomIntegerInRange(0, index--);
+                let randomIndex = randomIntegerInRange(0, index);
 
-                [array[index], array[randomIndex]] = [array[randomIndex], array[index]]
+                if (randomIndex != undefined) {
+                    [array[index], array[randomIndex]] = [array[randomIndex], array[index]];
+                    index--;
+                }
             }
+      
             return array;
         }
         
@@ -139,7 +140,7 @@
         function generateAnswers(correctBook, questionInfo) {
             let Answers = [];
             Answers.push(correctBook[questionInfo]);
-            
+           
             while (Answers.length < NUMOFA) {
                 let randomBookIndex = randomIntegerInRange(0, allBooks.length-1);
                 let wrongAnswer = (allBooks[randomBookIndex])[questionInfo];
@@ -148,6 +149,7 @@
                     Answers.push(wrongAnswer);
                  }
             }
+            console.log(Answers)
             return Answers;
         }
 
@@ -163,7 +165,7 @@
                     case 'Who is the author of the book':
                         {
                             let Answers = generateAnswers(generateRandomBook, 'FirstAuthorName');
-                            let CorrectAnswer = Answers[0];
+                            QuizCorrectAnswers[numOFQuestion - 1] = Answers[0];
                             questionHTML += "<div class='question'><div class='question-"+numOFQuestion+" w-100 clear-Q-div'>"+
                                 "<h5 class='pink'>" + questions[chooseRandomQuestion] + " '" + generateRandomBook.Title +"'?</h5></div><div class='answers'>"
 
@@ -184,7 +186,7 @@
                     case 'When was the book':
                         {
                             let Answers = generateAnswers(generateRandomBook, 'PublishDate');
-                            let CorrectAnswer = Answers[0];
+                            QuizCorrectAnswers[numOFQuestion - 1] = Answers[0];
 
                             questionHTML += "<div class='question'><div class='question-" + numOFQuestion + " w-100 clear-Q-div'>" +
                                 "<h5 class='pink'>" + questions[chooseRandomQuestion] + " '" + generateRandomBook.Title + "' published?</h5></div><div class='answers'>"
@@ -225,7 +227,9 @@
             $('.timer').html(" ");
             $(".btn-next-back").hide();
             $(".btn-back").hide();
-
+            document.getElementById("questionContainer").innerHTML = "";
+            questionNumInQuiz = 0;
+            finalQuiz = [];
         }
         function startQuiz() {
             let quizTimer = 60;
@@ -233,7 +237,25 @@
             $(".quis-instruction").hide();
             $(".start-quiz").hide();
 
-            intervalId = setInterval(() => { $('.timer').html(quizTimer--) }, 1000);
+            intervalId = setInterval(() => {
+
+                $('.timer').html(quizTimer--)
+
+                if (quizTimer < 15) { $('.timer').addClass('pink'); }
+                if (quizTimer < 10) { $('.timer').addClass('bold'); }
+                if (quizTimer < 0) {
+                    clearInterval(intervalId); // stop th interval
+
+                    let correctAns = checkQuizResults();
+
+                    $(".question").remove();
+                    document.getElementById("questionContainer").innerHTML += "<h1>Times Up - Game Over</h1>";
+                    document.getElementById("questionContainer").innerHTML += "<h3>you had " + correctAns + " correct answers!</h3>";
+                    document.getElementById("questionContainer").innerHTML += "<button class='btn btn-outline-dark btn-block pinkB' onclick='closeQuiz()'>End</button>";
+                    $(".btn-next-back").hide();
+                }
+
+            }, 1000);
 
             showQuestion(questionNumInQuiz); 
 
@@ -242,7 +264,12 @@
         function showQuestion(indexQuestionToShow) {
 
             if (indexQuestionToShow == NUMOFQ) {  //end quiz// 
-                document.getElementById("questionContainer").innerHTML = "the end";
+
+                let correctAns = checkQuizResults();
+
+                document.getElementById("questionContainer").innerHTML += "<h1>Game Over</h1>";
+                document.getElementById("questionContainer").innerHTML = "you had " + correctAns + " correct answers!";
+                document.getElementById("questionContainer").innerHTML += "<button class='btn btn-outline-dark btn-block pinkB' onclick='closeQuiz()'>End</button>";
                 $(".btn-next-back").hide();
             }
 
@@ -259,12 +286,10 @@
             // Get the checked radio button with a specific name
             var checkedRadio = $('input[name="answer"]:checked');
 
-            // Check if a radio button is checked
+            // Check if a radio button is checked and get the user answer
             if (checkedRadio.length) {
-                console.log('Checked value:', checkedRadio.val());
-            } else {
-                console.log('No radio button is selected');
-            }
+                userQuizAnswers[questionNumInQuiz] = checkedRadio.val();
+            } 
 
             finalQuiz[questionNumInQuiz] = document.querySelector(".question").outerHTML; // set the user choise
           
@@ -307,6 +332,17 @@
                 checkbox.removeAttribute("checked");
             })
 
+        }
+        function checkQuizResults() {
+            let index = 0;
+            let numOfCorrectAns = 0;
+            let correctAnsToQuestion = "";
+            console.log(userQuizAnswers, QuizCorrectAnswers)
+            while (index < NUMOFA) {
+                if (userQuizAnswers[index] == QuizCorrectAnswers[index]) { numOfCorrectAns++ }
+                index++;
+            }
+            return numOfCorrectAns;
         }
     </script>
 </body>
