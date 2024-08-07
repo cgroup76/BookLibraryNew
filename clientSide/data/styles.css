@@ -105,13 +105,14 @@ footer {
 .close-button {
     cursor: pointer;
     position: absolute;
-    top: 5px;
+    top: 3px;
     right: 5px;
     border: none;
     outline: none;
     background: none;
     font-size: 1.25em;
     font-weight: bold;
+    color: #343a40;
 }
 #logInButton{
     display:block;
@@ -203,16 +204,6 @@ li {
     text-align: center;
 }
 
-.close-button {
-    cursor: pointer;
-    border: none;
-    outline: none;
-    background: none;
-    font-size: 1.25em;
-    font-weight: bold;
-    color: #fff;
-}
-
 .table-header {
     position: relative;
     display: flex;
@@ -240,14 +231,14 @@ li {
 }
 /*quiz*/
 .question {
-    background-color: #343a40; /* Dark background color */
-    color: #ffffff; /* White text color */
+    background-color: #00000021;
+    color: #fff; 
     padding: 15px;
     border-radius: 5px;
     margin-bottom: 15px;
 }
 
-#submit-quiz {
+#show-quiz {
     color: black;
     background-color: #d63384;
 }
@@ -256,4 +247,43 @@ li {
 .disabled {
     pointer-events: none; /* Prevents any mouse events */
     opacity: 0.5; /* Makes the div appear faded */
+}
+#quiz-container {
+    position: fixed;
+    background-color: white;
+    color: black;
+    text-align: center;
+    height: 500px;
+    width: 500px;
+    max-height: 75%;
+    max-width: 50%;
+    top: 50%;
+    left: 50%;
+    padding: 1%;
+    transform: translate(-50%, -50%);
+    transition: 200ms ease-in-out;
+    border: 1px solid lightblue;
+    border-radius: 5px;
+    display: none;
+    z-index: 2;
+    overflow: hidden;
+}
+#quiz-container.active{
+    display: block;
+    transform: translate(-50%, -50%) scale(1);
+}
+.pink {
+    color: #ff0083;
+}
+.pinkB {
+    background-color: #ff0083;
+}
+.start-quiz{
+    width: 50%;
+    margin: 0 auto
+}
+.btn-back, .btn-next{
+    width:40%;
+    display: inline-block;
+
 }
