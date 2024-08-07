@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Store</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="hangManStyle.css">
+
+    <!-- JQuary -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+            crossorigin="anonymous"></script>
+    <!-- boot strap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- sweet alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body>
+    <script>
+        const booksAPI = "https://localhost:7225/api/Books";
+        let wordList = [];
+        let choosenWord = "";
+        let incorrectGuess = [];
+        let correctGuess = [];
+        const maxIncorrectGuesses = 9;
+        let hmPicture0 = "C:\Users\ofri9\OneDrive\Desktop\לימודים שנה ב\מערכות אינטרנט- צד שרת\images\hangman-0.svg";
+        let hmPicture1 = "C:\Users\ofri9\OneDrive\Desktop\לימודים שנה ב\מערכות אינטרנט- צד שרת\images\hangman-1.svg"
+        let hmPicture2 = "C:\Users\ofri9\OneDrive\Desktop\לימודים שנה ב\מערכות אינטרנט- צד שרת\images\hangman-2.svg"
+        let hmPicture3 = "C:\Users\ofri9\OneDrive\Desktop\לימודים שנה ב\מערכות אינטרנט- צד שרת\images\hangman-3.svg"
+        let hmPicture4 = "C:\Users\ofri9\OneDrive\Desktop\לימודים שנה ב\מערכות אינטרנט- צד שרת\images\hangman-4.svg"
+        let hmPicture5 = "C:\Users\ofri9\OneDrive\Desktop\לימודים שנה ב\מערכות אינטרנט- צד שרת\images\hangman-5.svg"
+        let hmPicture6 = "C:\Users\ofri9\OneDrive\Desktop\לימודים שנה ב\מערכות אינטרנט- צד שרת\images\hangman-6.svg"
+
+
+        $(document).ready(function () {
+            loadWords();
+        });
+
+        function showIncorrectPhotos{
+            switch (photos) {
+                case incorrectGuess.length == 1{
+                    const container = document.getElementById('image-container');
+                    container.appendChild(img);
+
+                }
+            }
+        }
+        function ajaxCall(method, api, data, successCB, errorCB) {
+            $.ajax({
+                type: method,
+                url: api,
+                data: JSON.stringify(data),
+                cache: false,
+                contentType: "application/json",
+                dataType: "json",
+                success: successCB,
+                error: errorCB
+            });
+        }
+        //load books from the server
+        function loadWords() {
+            if (wordList.length == 0) {
+                ajaxCall("GET", booksAPI, null, SuccessloadWords, errorLoadWords);
+            }
+        }
+
+        // push book titles to the wordlist that from her we will choose the word the user need to guess randomly,
+
+
+        function SuccessloadWords(books) {
+            for (let i = 0; i < books.length; i++) {
+                wordList.push(books[i].Title);
+            }
+            choosenWord = pickRandomWord(wordList).toUpperCase();
+            createAlphabetButtons();
+            displayWord();
+        }
+
+        function errorLoadWords(error) {
+            console.log(error);
+            Swal.fire('Error loading books. Please check the server connection.');
+        }
+        //random function to peek a word that the user need to guess
+
+        function pickRandomWord(array) {
+            let randomIndex = Math.floor(Math.random() * array.length);
+            return array[randomIndex];
+        }
+
+        // create keyboard
+        function createAlphabetButtons() {
+            const containerBtn = document.getElementById('button-container');
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+            for (let i = 0; i < alphabet.length; i++) {
+                let letter = alphabet[i];
+                let button = document.createElement('button');
+                button.innerText = letter;
+                button.id = 'button-' + letter;
+
+                // Add click event listener to the button
+                button.addEventListener('click', function () {
+                    handleGuess(letter);
+                });
+
+                containerBtn.appendChild(button);
+            }
+        }
+        //updates the display of the letters being guessed and showing correctly guessed letters
+        function displayWord() {
+            const wordDisplay = document.querySelector('.word-display');
+            wordDisplay.innerHTML = '';
+
+            for (let i = 0; i < choosenWord.length; i++) {
+                let span = document.createElement('span');
+                span.className = 'letter';
+                span.innerText = correctGuess.includes(choosenWord[i]) ? choosenWord[i] : '_';
+                wordDisplay.appendChild(span);
+            }
+        }
+
+        //chhose what to do in winning\ looseing situation
+        function handleGuess(letter) {
+            const incorrectGuessDisplay = document.querySelector('.failedGuess b');
+            if (choosenWord.includes(letter)) {
+                for (let i = 0; i < choosenWord.length; i++) {
+                    correctGuess.push(letter);
+                }
+                displayWord();
+                checkWin();
+            } else {
+                incorrectGuess.push(letter);
+                incorrectGuessDisplay.innerText = incorrectGuess.join(', ');
+                checkLoss();
+            }
+        }
+
+        //check if the user win
+        function checkWin() {
+            let allGuessed = choosenWord.split('').every(letter => correctGuess.includes(letter));
+            if (allGuessed) {
+                Swal.fire('Congratulations!', 'You guessed the word!', 'success');
+            }
+        }
+        //check if the user loss
+
+        function checkLoss() {
+            if (incorrectGuess.length >= maxIncorrectGuesses) {
+                Swal.fire('Game Over', `The correct word was: ${choosenWord}`);
+            }
+        }
+    </script>
+
+    <!-- Hangman game of books from library -->
+    <div class="container">
+        <div class="hangman-box">
+            <h1>Hangman Game</h1>
+        </div>
+        <div id="image-container"></div>
+
+        <div class="game-box">
+            <p class="word-display"></p>
+            <h3 class="failedGuess">
+                Incorrect guesses:
+                <b></b>
+                <br />
+            </h3>
+            <h3 class="correctWord" style="display: none;">
+                The Correct Word Was: <span></span>
+            </h3>
+            <div id="button-container"></div>
+        </div>
+    </div>
+
+</body>
+</html>

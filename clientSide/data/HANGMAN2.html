@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Store</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="hangManStyle.css">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+            crossorigin="anonymous"></script>
+    <!-- Bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <script>
+        const booksAPI = "https://localhost:7225/api/Books";
+        let wordList = [];
+        let choosenWord = "";
+        let incorrectGuess = [];
+        let correctGuess = [];
+        let maxIncorrectGuesses = 6;
+        let lettersArray = [];
+
+        $(document).ready(function () {
+            loadWords();
+        });
+
+        function ajaxCall(method, api, data, successCB, errorCB) {
+            $.ajax({
+                type: method,
+                url: api,
+                data: JSON.stringify(data),
+                cache: false,
+                contentType: "application/json",
+                dataType: "json",
+                success: successCB,
+                error: errorCB
+            });
+        }
+
+        function loadWords() {
+            if (wordList.length === 0) {
+                ajaxCall("GET", booksAPI, null, successLoadWords, errorLoadWords);
+            }
+        }
+
+        function successLoadWords(books) {
+            wordList = books;
+            pickRandomWord(wordList);
+            uniqueLetters(choosenWord);
+            createAlphabetButtons();
+            displayWord();
+        }
+
+        function errorLoadWords(error) {
+            console.log(error);
+            Swal.fire('Error loading books. Please check the server connection.');
+        }
+
+        function randomIntegerInRange(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        function pickRandomWord(array) {
+            let randomIndex = randomIntegerInRange(0, array.length);
+            choosenWord = array[randomIndex].title.toUpperCase();
+        }
+
+        function uniqueLetters(word) {
+            let seenLetters = {};
+
+            for (let i = 0; i < word.length; i++) {
+                let letter = word[i];
+                if (!seenLetters[letter]) {
+                    seenLetters[letter] = true;
+                    lettersArray.push(letter);
+                }
+            }
+        }
+
+        function createAlphabetButtons() {
+            const containerBtn = document.getElementById('button-container');
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+            for (let i = 0; i < alphabet.length; i++) {
+                let letter = alphabet[i];
+                let button = document.createElement('button');
+                button.innerText = letter;
+                button.id = 'button-' + letter;
+                button.className = 'btn btn-primary m-1';
+
+                button.addEventListener('click', function () {
+                    handleGuess(letter);
+                    button.disabled = true; // Disable the button after it's clicked
+                });
+
+                containerBtn.appendChild(button);
+            }
+        }
+
+        function displayWord() {
+            const wordDisplay = document.querySelector('.word-display');
+            wordDisplay.innerHTML = ''; // Clear previous display
+
+            for (let i = 0; i < choosenWord.length; i++) {
+                let li = document.createElement('li');
+                li.className = 'letter';
+                li.innerText = correctGuess.includes(choosenWord[i]) ? choosenWord[i] : '_';
+                wordDisplay.appendChild(li);
+            }
+        }
+
+        function handleGuess(letter) {
+            if (choosenWord.includes(letter)) {
+                correctGuess.push(letter);
+                displayWord();
+                checkWin();
+            } else {
+                incorrectGuess.push(letter);
+                updateIncorrectGuesses();
+                checkLoss();
+            }
+        }
+
+        function updateIncorrectGuesses() {
+            const failesGuess = document.querySelector('.failesGuess b');
+            failesGuess.innerText = incorrectGuess.join(', ');
+        }
+
+        function checkWin() {
+            let allGuessed = true;
+
+            for (let i = 0; i < choosenWord.length; i++) {
+                if (!correctGuess.includes(choosenWord[i])) {
+                    allGuessed = false;
+                    break;
+                }
+            }
+
+            if (allGuessed) {
+                Swal.fire('Congratulations!', 'You guessed the word!', 'success');
+            }
+        }
+
+        function checkLoss() {
+            if (incorrectGuess.length >= maxIncorrectGuesses) {
+                Swal.fire('Game Over', `The correct word was: ${choosenWord}`, 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            createAlphabetButtons();
+        });
+
+    </script>
+
+    <div class="container">
+        <div class="hangmam-box">
+            <h1>Hangman Game</h1>
+        </div>
+        <div class="game-box">
+            <ul class="word-display"></ul>
+            <h3 class="failesGuess">
+                Incorrect guesses:
+                <b></b>
+                <br />
+            </h3>
+            <h3 class="correctWord" style="display: none;">
+                The Correct Word Was: <span></span>
+            </h3>
+            <div id="button-container"></div>
+        </div>
+    </div>
+</body>
+</html>
