@@ -23,3 +23,6 @@ button {
     margin: 2px;
     background-color:palevioletred;
 }
+h1, h3, p {
+    text-align: center;
+}
