@@ -74,10 +74,34 @@
             <p>All rights reserved © 2024 Book Store</p>
         </div>
     </footer>
+    <!-- login form -->
 
+    <div class="reviewABook" id="reviewABook">
+        <div class="reviewABook-header">
+            <div class="tilte">
+                <button data-close-button class="close-button closeLoginButton">&times;</button>
+            </div>
+        </div>
+        <div class="reviewABook-body">
+            <img class="reviewABook-book-img" />
+            <h3 class="reviewABook-book-title"></h3>
+            <h5>Let us know your opinion:</h5>
 
+            <form id="reviewABook-form">
+                <div class="form-group userNameDiv">
+                    <label for="userName"><span>★ </span>Enter user name:</label>
+                    <input type="text" class="form-control" name="userName" id="userName" placeholder="user name" required />
+                </div>
+                <div class="form-group">
+                    <label for="userEmail"><span>★ </span>Enter email:</label>
+                    <input type="text" class="form-control" name="userEmail" id="userEmail" placeholder="email" required />
+                </div>
 
-
+                <input type="submit" value="Log in" class="btn" id="logInButton" />
+            </form>
+        </div>
+    </div>
+    <div id="overlay" class=""></div>
 
     <script>
 
@@ -95,7 +119,7 @@
 
             showMyBooks();
             $('.requestBox').click(showAllRequests);
-      
+
             $('.logout').click(logoutUser);
 
         });
@@ -113,11 +137,19 @@
             });
         }
         function rateBook(bookId) {
+            $("#reviewABook").addClass('active');
+            $("#overlay").addClass('active');
+
+            let choosenBook = allMyBooks.find(book => book.Id === bookId);
+
+            $(".reviewABook-book-img").attr("src", choosenBook.Thumbnail);
+            $(".reviewABook-book-title").html(choosenBook.Title);
+
             bookRating = Number(document.getElementById(`ratingSelect-${bookId}`).value);
             let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
             bookIdToRate = bookId;
 
-            ajaxCall("PUT", `${booksAPI}/RateBook?bookID=${bookIdToRate}&newRating=${bookRating}&userID=${userId}`, null, successRating, errorRating);
+            //ajaxCall("PUT", `${booksAPI}/RateBook?bookID=${bookIdToRate}&newRating=${bookRating}&userID=${userId}`, null, successRating, errorRating);
 
             document.getElementById(`ratingSelect-${bookId}`).value = 1;
 
@@ -192,36 +224,37 @@
             allMyBooks = books;
 
             allMyBooks.forEach((book) => {
+
                 booksHtml += `
-                        <div class='col-md-4'>
-                            <div class='card mb-4 book-card'>
-                                <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
-                                <div class='card-body' id='markAsRead-${book.Id}'>
-                                    <h5 class='card-title'>${book.Title}</h5>
-                                    <p>${book.Rating}</p>`;
+                            <div class='col-md-4'>
+                                <div class='card mb-4 book-card'>
+                                    <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
+                                    <div class='card-body' id='markAsRead-${book.Id}'>
+                                        <h5 class='card-title'>${book.Title}</h5>
+                                        <p>${book.Rating}</p>`;
                 if (book.IsRead == 'False') {
                     booksHtml += `<a class='btn btn-outline-dark pinkB' onclick="ReadTheBook(${book.UserId}, ${book.Id})">Mark as read</a>`;
                 } else if (book.WasRated == 0) {
                     booksHtml += `<a class='btn btn-outline-dark pinkB'>Already read this book</a>
-                            <div id='rating-${book.Id}'>
-                                Rating:
-                                <select id='ratingSelect-${book.Id}'>
-                                    <option value='1'>1</option>
-                                    <option value='2'>2</option>
-                                    <option value='3'>3</option>
-                                    <option value='4'>4</option>
-                                    <option value='5'>5</option>
-                                </select>
-                                <button onclick='rateBook(${book.Id})'>Rate</button>
-                            </div>`;
+                                <div id='rating-${book.Id}'>
+                                    Rating:
+                                    <select id='ratingSelect-${book.Id}'>
+                                        <option value='1'>1</option>
+                                        <option value='2'>2</option>
+                                        <option value='3'>3</option>
+                                        <option value='4'>4</option>
+                                        <option value='5'>5</option>
+                                    </select>
+                                    <button onclick='rateBook(${book.Id})'>Rate</button>
+                                </div>`;
                 }
                 else {
                     booksHtml += `<a class='btn btn-outline-dark pinkB '>Already read this book</a>`
                 }
                 booksHtml += `
+                                    </div>
                                 </div>
-                            </div>
-                        </div>`;
+                            </div>`;
             });
 
             booksContainer.innerHTML = booksHtml;
@@ -244,19 +277,19 @@
         function successToMarkAsRead() {
             const bookElement = document.getElementById(`markAsRead-${currentBookId}`);
             let bookHtml = `
-                                <h5 class='card-title'>${currentBookTitle}</h5>
-                                 <a class='btn btn-outline-dark pinkB'>Already read this book</a>
-                                <div id='rating-${currentBookId}' style='display:block;'>
-                                 Rating:
-                                <select id='ratingSelect-${currentBookId}'>
-                                <option value='1'>1</option>
-                                <option value='2'>2</option>
-                                <option value='3'>3</option>
-                                <option value='4'>4</option>
-                                <option value='5'>5</option>
-                                </select>
-                                <button onclick='rateBook(${currentBookId})'>Rate</button>
-                                </div>`;
+                                    <h5 class='card-title'>${currentBookTitle}</h5>
+                                     <a class='btn btn-outline-dark pinkB'>Already read this book</a>
+                                    <div id='rating-${currentBookId}' style='display:block;'>
+                                     Rating:
+                                    <select id='ratingSelect-${currentBookId}'>
+                                    <option value='1'>1</option>
+                                    <option value='2'>2</option>
+                                    <option value='3'>3</option>
+                                    <option value='4'>4</option>
+                                    <option value='5'>5</option>
+                                    </select>
+                                    <button onclick='rateBook(${currentBookId})'>Rate</button>
+                                    </div>`;
             bookElement.innerHTML = bookHtml;
             Swal.fire('Success', 'Book marked as read.', 'success');
         }
@@ -298,8 +331,7 @@
                 $('.adminPage').hide();
             }
         }
-        function showAllRequests()
-        {
+        function showAllRequests() {
             showRequests();
             ShowRequestToBuy();
         }
@@ -330,20 +362,19 @@
                     let sellerId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
                     listOfRequest.forEach((request) => {
                         htmlGot += `
-                                        <div class="dropdown-item">
-                                            <strong>Book:</strong> ${request.bookName} <br>
-                                            <strong>Want to buy:</strong> ${request.buyerName} <br>
-                                            <strong>Status:</strong> ${request.status} <br>
-                                            <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}')">Approve</button>
-                                            <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}')">Reject</button>
-                                        </div>`;
+                                            <div class="dropdown-item">
+                                                <strong>Book:</strong> ${request.bookName} <br>
+                                                <strong>Want to buy:</strong> ${request.buyerName} <br>
+                                                <strong>Status:</strong> ${request.status} <br>
+                                                <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}')">Approve</button>
+                                                <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}')">Reject</button>
+                                            </div>`;
                     });
                 }
                 requestBox.innerHTML = htmlGot;
             }
         }
-        function ShowRequestToBuy()
-        {
+        function ShowRequestToBuy() {
             let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
 
             ajaxCall("GET", usersAPI + `/getMyRequestToBuyPerUser?userId=${userId}`, null, ShowMyRequestToBuy, errorShowRequest);
@@ -367,10 +398,10 @@
 
                     listOfRequest.forEach((request) => {
                         htmlSend += `<div class="dropdown-item">
-                                        <strong>Book:</strong> ${request.bookName} <br>
-                                        <strong>you ask to buy from:</strong> ${request.sellerName} <br>
-                                        <strong>Status:</strong> ${request.status} <br>
-                                        </div>`
+                                            <strong>Book:</strong> ${request.bookName} <br>
+                                            <strong>you ask to buy from:</strong> ${request.sellerName} <br>
+                                            <strong>Status:</strong> ${request.status} <br>
+                                            </div>`
                     });
                 }
                 requestBox.innerHTML = htmlSend;
@@ -389,7 +420,7 @@
         function successToHandle(requestStatus) {
             if (requestStatus == 'approved') {
                 Swal.fire({
-                    icon:"success",
+                    icon: "success",
                     title: "The request was successfully approved"
                 });
             } else {
