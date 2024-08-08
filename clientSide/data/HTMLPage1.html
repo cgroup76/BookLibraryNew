@@ -658,7 +658,7 @@
         function showRequests() {
             let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
             console.log(userId);
-            ajaxCall("GET", usersAPI + /GetRequestsPerUser?userId=${userId}, null, showMyRequests, errorShowRequest);
+            ajaxCall("GET", usersAPI + `/GetRequestsPerUser?userId=${userId}`, null, showMyRequests, errorShowRequest);
  }
 
         function showMyRequests(listOfRequest) {
@@ -697,7 +697,7 @@
         function ShowRequestToBuy() {
             let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
 
-            ajaxCall("GET", usersAPI + /getMyRequestToBuyPerUser?userId=${userId}, null, ShowMyRequestToBuy, errorShowRequest);
+            ajaxCall("GET", usersAPI + `/getMyRequestToBuyPerUser?userId=${userId}`, null, ShowMyRequestToBuy, errorShowRequest);
  }
 
         function ShowMyRequestToBuy(listOfRequest) {
@@ -710,7 +710,7 @@
             else {
                 let requestBox = document.querySelector('.requestBox .dropdown-menu .send');
                 let htmlSend = "";
-                htmlSend += <h3> Request you send </h3>
+                htmlSend += `<h3> Request you send </h3>`
                 if (listOfRequest.length === 0) {
                     htmlSend += '<a class="dropdown-item" href="#">You wasnt send any request</a>';
                 }
@@ -748,7 +748,7 @@
                 });
 
             }
-            showRequests();
+            showAllRequests();
         }
         function errorToHandle() {
 
