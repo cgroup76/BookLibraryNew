@@ -200,9 +200,9 @@
                                     <h5 class='card-title'>${book.Title}</h5>
                                     <p>${book.Rating}</p>`;
                 if (book.IsRead == 'False') {
-                    booksHtml += `<a class='btn btn-primary' onclick="ReadTheBook(${book.UserId}, ${book.Id})">Mark as read</a>`;
+                    booksHtml += `<a class='btn btn-outline-dark pinkB' onclick="ReadTheBook(${book.UserId}, ${book.Id})">Mark as read</a>`;
                 } else if (book.WasRated == 0) {
-                    booksHtml += `<a class='btn btn-primary'>Already read this book</a>
+                    booksHtml += `<a class='btn btn-outline-dark pinkB'>Already read this book</a>
                             <div id='rating-${book.Id}'>
                                 Rating:
                                 <select id='ratingSelect-${book.Id}'>
@@ -216,7 +216,7 @@
                             </div>`;
                 }
                 else {
-                    booksHtml += `<a class='btn btn-primary'>Already read this book</a>`
+                    booksHtml += `<a class='btn btn-outline-dark pinkB '>Already read this book</a>`
                 }
                 booksHtml += `
                                 </div>
@@ -245,7 +245,7 @@
             const bookElement = document.getElementById(`markAsRead-${currentBookId}`);
             let bookHtml = `
                                 <h5 class='card-title'>${currentBookTitle}</h5>
-                                 <a class='btn btn-primary'>Already read this book</a>
+                                 <a class='btn btn-outline-dark pinkB'>Already read this book</a>
                                 <div id='rating-${currentBookId}' style='display:block;'>
                                  Rating:
                                 <select id='ratingSelect-${currentBookId}'>
