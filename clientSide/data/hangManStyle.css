@@ -1,0 +1,28 @@
+﻿body
+{
+    display: flex;
+    align-items: center;
+}
+.failedGuess b {
+    display: inline; /* Ensure guesses are shown inline */
+    margin-right: 5px; /* adds space between guesses */
+}
+.word-display {
+    list-style-type: none; /* Remove default list styling */
+    /*padding: 0;*/ /* Remove default padding */
+    /*margin: 0;*/ /* Remove default margin */
+    text-align: center; /* Center-align the text */
+}
+
+    .word-display .letter {
+        display: inline; /* Display letters inline */
+        font-size: 24px; /* Adjust font size as needed */
+        margin: 5px; /* Add spacing between letters */
+    }
+button {
+    margin: 2px;
+    background-color:palevioletred;
+}
+h1, h3, p {
+    text-align: center;
+}
