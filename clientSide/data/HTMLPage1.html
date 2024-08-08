@@ -97,7 +97,7 @@
         <div class="container">
             <h2 class="text-center text-white mb-5">Recommended Books</h2>
             <nav class="navbar navbar-dark bg-dark justify-content-between search-books-bar">
-                <a class="navbar-brand pink">Search</a>
+                <a class="navbar-brand pink">Search Books</a>
                 <form class="form-inline">
                     <input class="form-control mr-sm-2 search-string" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-dark my-2 my-sm-0 pinkB search-book-btn" type="submit">Search</button>
@@ -477,7 +477,8 @@
             const buyer = JSON.parse(localStorage.getItem("loginUserDetails"));
 
             books.forEach((book) => {
-                booksHtml += `
+                if (book.IsActive == 1) {
+                    booksHtml += `
                                         <div class='col-md-3'>
                                             <div class='card mb-4 book-card'>
                                                 <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
@@ -486,36 +487,37 @@
                                                     <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
                                                     <span class='card-text'>${book.Price}$       </span>`;
 
-                if (buyer != null) {
-                    const buyerId = buyer.userId;
+                    if (buyer != null) {
+                        const buyerId = buyer.userId;
 
-                    // If someone already bought the book
-                    if (book.IsAvailable == 0) {
-                        if (book.UserId == buyerId) { // The logged-in user bought this book
-                            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB'>You already bought this book</a>
+                        // If someone already bought the book
+                        if (book.IsAvailable == 0) {
+                            if (book.UserId == buyerId) { // The logged-in user bought this book
+                                booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB'>You already bought this book</a>
                                                               </div>
                                                               </div>
                                                               </div>`;
+                            } else {
+                                const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
+                                booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
+                                                              </div>
+                                                              </div>
+                                                              </div>`;
+                            }
                         } else {
-                            const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
-                            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
-                                                              </div>
-                                                              </div>
-                                                              </div>`;
-                        }
-                    } else {
-                        // If the book is available for purchase
-                        booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='buyABook(${book.Id})'>Buy</a>
+                            // If the book is available for purchase
+                            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='buyABook(${book.Id})'>Buy</a>
                                                           </div>
                                                           </div>
                                                           </div>`;
-                    }
-                } else {
-                    // If the user is not logged in, there's no need to show the purchase option
-                    booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='buyABook(${book.Id})'>Buy</a>
+                        }
+                    } else {
+                        // If the user is not logged in, there's no need to show the purchase option
+                        booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='buyABook(${book.Id})'>Buy</a>
                                                       </div>
                                                       </div>
                                                       </div>`;
+                    }
                 }
             });
 
@@ -797,14 +799,73 @@
             if (searchString == "") { }
             else {
                 for (let key in booksDict) {
-                    if (booksDict[key].includes(searchString)) {
 
-                        bookList.push(JSON.parse(key));
+                    let index = booksDict[key].indexOf(searchString)
+
+                    if (index != -1) {
+
+                        let str = booksDict[key];
+                        let section1 = str.substring(index - 50 - searchString.length, index);
+                        let section2 = str.substring(index + searchString.length);
+                        let findSearchString = searchString
+
+                        let book = JSON.parse(key);
+                        book['foundString'] = `<p>...${section1}<strong class='pink'>${findSearchString}</strong>${section2}...</p>`;
+                        console.log(book['foundString']);
+                        bookList.push(book);
 
                     }
                 }
                 if (bookList.length == 0) { document.getElementById("allBooks").innerHTML = "<h5>0 books was found...</h5>"; }
-                else { BooksToShow(bookList, "allBooks"); }
+                else {
+                    const BooksContainer = document.getElementById('allBooks');
+                    BooksContainer.classList.remove('row');
+                    BooksContainer.classList.add('container');
+                    const buyer = JSON.parse(localStorage.getItem("loginUserDetails"));
+                    let booksHtml = '';
+
+                    bookList.forEach((book) => {
+                        booksHtml += `
+                                        <div class='row'>
+                                            <div class='card mb-4 book-card-search col-md-2'>
+                                                <img src='${book.SmallThumbnail}' class='card-img-search' alt='Book'>
+                                                </div>
+                                                <div class='card-body w-100 col-md-10'>
+                                                    <h3 class='card-title'>${book.Title}</h3>
+                                                    ${book.foundString}
+                                                    <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
+                                                    <span class='card-text'>${book.Price}$       </span>`;
+                        if (buyer != null) {
+                            const buyerId = buyer.userId;
+
+                            // If someone already bought the book
+                            if (book.IsAvailable == 0) {
+                                if (book.UserId == buyerId) { // The logged-in user bought this book
+                                    booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB'>You already bought this book</a>
+                                                              </div>
+                                                              </div>`;
+                                } else {
+                                    const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
+                                    booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
+                                                              </div>
+                                                              </div>
+                                                              </div>`;
+                                }
+                            } else {
+                                // If the book is available for purchase
+                                booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='buyABook(${book.Id})'>Buy</a>
+                                                          </div>
+                                                          </div>`;
+                            }
+                        } else {
+                            // If the user is not logged in, there's no need to show the purchase option
+                            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='buyABook(${book.Id})'>Buy</a>
+                                                      </div>
+                                                      </div>`;
+                        }
+                    });
+                    BooksContainer.innerHTML = booksHtml;
+                }
             }
             return false;
         }

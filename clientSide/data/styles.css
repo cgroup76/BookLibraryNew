@@ -411,3 +411,8 @@ li {
     border-radius: 5px;
     margin-bottom: 20px;
 }
+.book-card-search, .card-img-search {
+    height: 250px;
+    width: 150px;
+    align-items: center;
+}
