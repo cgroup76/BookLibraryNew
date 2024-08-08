@@ -99,9 +99,15 @@ namespace serverSide.Controllers
 
         // POST insert new request
         [HttpPost("insertNewRequest")]
-        public bool POST(int sellerId, int buyerId, int bookId)
+        public IActionResult POST(int sellerId, int buyerId, int bookId)
         {
-            return IUser.insertNewRequest(sellerId, buyerId, bookId);
+            int status = IUser.insertNewRequest(sellerId, buyerId, bookId);
+            
+            if(status == 1) { return Ok(true); }
+
+            else if (status == 0) { return NotFound(false); }
+
+            return Unauthorized("user session has ended");
         }
         // DELETE api/<IUsersController>/5
         [HttpDelete("{id}")]

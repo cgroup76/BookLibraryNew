@@ -102,11 +102,11 @@ namespace serverSide.BL
 
 
         //}
-        public static bool insertNewRequest(int sellerId, int buyerId, int bookId)
+        public static int insertNewRequest(int sellerId, int buyerId, int bookId)
         {
             DBservicesUsers dBservicesUsers = new DBservicesUsers();
 
-            return 1 == dBservicesUsers.insertNewRequest(sellerId, buyerId, bookId);
+            return dBservicesUsers.insertNewRequest(sellerId, buyerId, bookId);
         }
         public static int requestHandling(int sellerId, int buyerId, int bookId, string requestStatus)
         {

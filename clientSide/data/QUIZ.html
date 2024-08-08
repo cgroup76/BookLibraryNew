@@ -16,18 +16,34 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <style>
-        .question {
-            color: black;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
-        <div class="quiz-container" id="quiz">
-            <h2 class="text-center text-dark">Book Quiz</h2>
-            <div id="question-container"></div>
-            <button class="btn btn-submit btn-block mt-3" id="submit-quiz" onclick="createQuiz()">Submit Quiz</button>
+        <div  id="quiz">
+            <button class="btn btn-outline-dark btn-block md-3" id="show-quiz">Quiz</button>
+        </div>
+        <div id="quiz-container" >
+            <div class="quiz-header">
+                <button data-close-button class="close-button closeQuizButton">&times;</button>
+                <br />
+                <h1 class="text-center text-dark">Books Quiz</h1>
+            </div>
+            <h5 class="timer"></h5>
+            <div class="quis-instruction">
+                <h4 class="text-center pink">Instructions:</h4>
+                <pre>
+                1.dsfsfsdfsefsef
+                2.sdfsdfsdfsdfsdcd
+                3.sdfsdfsdfsdfsdcd 
+                4.sdfsdfsdfsdfsdcd 
+                </pre>
+            </div>
+            <div id="questionContainer"></div>
+            <button class="btn btn-outline-dark btn-block pinkB start-quiz">Start Quiz</button>
+            <div class='btn-next-back'>
+                <button class='btn btn-outline-dark pinkB btn-back'>Back</button>
+                <button class='btn btn-outline-dark pinkB btn-next'>Next</button>
+            </div>
         </div>
     </div>
 
@@ -44,14 +60,24 @@
         const NUMOFQ = 4;
         const NUMOFA = 4;
         const randomIntegerInRange = (min, max) => Math.floor(Math.random() * (max - min+1)) + min;
+        let finalQuiz = [];
+        let userQuizAnswers = [];
+        let QuizCorrectAnswers = [];
+        let questionNumInQuiz = 0;
 
         $(document).ready(function () {
             loadBooks();
             loadAuthors();
+            $("#show-quiz").click(showQuiz);
+            $(".closeQuizButton").click(closeQuiz);
+            $(".start-quiz").click(startQuiz);
+            $(".btn-next-back").hide();
+            $(".btn-back").hide();
+            $(".btn-back").click(backQuestion);
+            $(".btn-next").click(nextQuestion);
+            $(".clear-ans-btn").click(clearAnswersCheckBox);
         });
-        //function gameScore() {
-        //    if()
-        //}
+   
         function ajaxCall(method, api, data, successCB, errorCB) {
             $.ajax({
                 type: method,
@@ -71,14 +97,18 @@
             }
         }
         function shuffle(array) {
-            let index = array.length;
+            let index = array.length - 1;
 
             while (index != 0) {
 
-                let randomIndex = randomIntegerInRange(0, index--);
+                let randomIndex = randomIntegerInRange(0, index);
 
-                [array[index], array[randomIndex]] = [array[randomIndex], array[index]]
+                if (randomIndex != undefined) {
+                    [array[index], array[randomIndex]] = [array[randomIndex], array[index]];
+                    index--;
+                }
             }
+      
             return array;
         }
         
@@ -110,7 +140,7 @@
         function generateAnswers(correctBook, questionInfo) {
             let Answers = [];
             Answers.push(correctBook[questionInfo]);
-            
+           
             while (Answers.length < NUMOFA) {
                 let randomBookIndex = randomIntegerInRange(0, allBooks.length-1);
                 let wrongAnswer = (allBooks[randomBookIndex])[questionInfo];
@@ -119,13 +149,13 @@
                     Answers.push(wrongAnswer);
                  }
             }
+            console.log(Answers)
             return Answers;
         }
 
         function createQuiz() {
-            let questionHTML = "";
             while (numOFQuestion++ < NUMOFQ) {
-
+                let questionHTML = "";
                 let chooseRandomQuestion = randomIntegerInRange(0,questions.length -1);
                 let generateRandomBook = allBooks[randomIntegerInRange(0, allBooks.length-1)];
                 let answerRandomIndex = shuffle([0, 1, 2, 3])
@@ -135,50 +165,185 @@
                     case 'Who is the author of the book':
                         {
                             let Answers = generateAnswers(generateRandomBook, 'FirstAuthorName');
-                            let CorrectAnswer = Answers[0];
-                            questionHTML += `<div class="question-${numOFQuestion} mb-4">
-                            <h5>${questions[chooseRandomQuestion]} "${generateRandomBook.Title}"?</h5></div>`
+                            QuizCorrectAnswers[numOFQuestion - 1] = Answers[0];
+                            questionHTML += "<div class='question'><div class='question-"+numOFQuestion+" w-100 clear-Q-div'>"+
+                                "<h5 class='pink'>" + questions[chooseRandomQuestion] + " '" + generateRandomBook.Title +"'?</h5></div><div class='answers'>"
 
                             Answers.forEach((ans) => {
                                 let answer = Answers[answerRandomIndex[index++]];
-                                questionHTML += `
-                                      <div class="form-check">
-                                     <input class="form-check-input" type="checkbox" value="${answer}" name="answer-${numOFQuestion}">
-                                     <label class="form-check-label" for="answer-${numOFQuestion}">
-                                     ${answer}
-                                    </label>
-                                </div>`;
+
+                                if (answer == undefined) { } // do nothing
+                                else {
+                                    questionHTML += " <div class='form-check'>" +
+                                        "<input class='form-check-input' type='checkbox' value='" + answer + "' name='answer'>" +
+                                        "<label class='form-check-label' for='answer'>" + answer + "</label> </div>";
+                                }
                             })
+                            questionHTML += "<button class='btn btn-outline-dark btn-block pinkB clear-ans-btn' onclick='clearAnswersCheckBox()'>Clear</button></div></div>";
+                            finalQuiz.push(questionHTML);
                             break;
                         }
                     case 'When was the book':
                         {
                             let Answers = generateAnswers(generateRandomBook, 'PublishDate');
-                            let CorrectAnswer = Answers[0];
+                            QuizCorrectAnswers[numOFQuestion - 1] = Answers[0];
 
-                            questionHTML += `<div class="question-${numOFQuestion} mb-4">
-                            <h5>${questions[chooseRandomQuestion]} "${generateRandomBook.Title}" was puplished?</h5></div>`
+                            questionHTML += "<div class='question'><div class='question-" + numOFQuestion + " w-100 clear-Q-div'>" +
+                                "<h5 class='pink'>" + questions[chooseRandomQuestion] + " '" + generateRandomBook.Title + "' published?</h5></div><div class='answers'>"
 
                             Answers.forEach((ans) => {
                                 let answer = Answers[answerRandomIndex[index++]];
-                                questionHTML += `
-                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="${answer}" name="answer-${numOFQuestion}">
-                                    <label class="form-check-label" for="answer-${numOFQuestion}">
-                                     ${answer}
-                                    </label>
-                                   </div>`;
+
+                                if (answer == undefined) { } // do nothing
+                                else { 
+                                    questionHTML += " <div class='form-check'>"+
+                                        "<input class='form-check-input' type='checkbox' value='"+answer+"' name='answer'>"+
+                                            "<label class='form-check-label' for='answer'>" + answer + "</label> </div>";
+                                }
                             })
+                            questionHTML += "<button class='btn btn-outline-dark btn-block pinkB clear-ans-btn' onclick='clearAnswersCheckBox()'>Clear</button></div></div>";
+                            finalQuiz.push(questionHTML);
                             break;
                         }
                 }
 
             }
-            $('#question-container').html(questionHTML)
+            
             numOFQuestion = 0;
         }
+        function showQuiz() {
+            $("#quiz-container").addClass('active');
+            createQuiz();
+        }
 
+        var intervalId; // to stop the intervals
 
+        function closeQuiz() {
+            clearInterval(intervalId); // stop th interval
+            $(".question").remove();
+            $("#quiz-container").removeClass('active');
+            $(".quis-instruction").show();
+            $(".start-quiz").show();
+            $('.timer').html(" ");
+            $(".btn-next-back").hide();
+            $(".btn-back").hide();
+            document.getElementById("questionContainer").innerHTML = "";
+            questionNumInQuiz = 0;
+            finalQuiz = [];
+        }
+        function startQuiz() {
+            let quizTimer = 60;
+
+            $(".quis-instruction").hide();
+            $(".start-quiz").hide();
+
+            intervalId = setInterval(() => {
+
+                $('.timer').html(quizTimer--)
+
+                if (quizTimer < 15) { $('.timer').addClass('pink'); }
+                if (quizTimer < 10) { $('.timer').addClass('bold'); }
+                if (quizTimer < 0) {
+                    clearInterval(intervalId); // stop th interval
+
+                    let correctAns = checkQuizResults();
+
+                    $(".question").remove();
+                    document.getElementById("questionContainer").innerHTML += "<h1>Times Up - Game Over</h1>";
+                    document.getElementById("questionContainer").innerHTML += "<h3>you had " + correctAns + " correct answers!</h3>";
+                    document.getElementById("questionContainer").innerHTML += "<button class='btn btn-outline-dark btn-block pinkB' onclick='closeQuiz()'>End</button>";
+                    $(".btn-next-back").hide();
+                }
+
+            }, 1000);
+
+            showQuestion(questionNumInQuiz); 
+
+            $(".btn-next-back").show();
+        }
+        function showQuestion(indexQuestionToShow) {
+
+            if (indexQuestionToShow == NUMOFQ) {  //end quiz// 
+
+                let correctAns = checkQuizResults();
+
+                document.getElementById("questionContainer").innerHTML += "<h1>Game Over</h1>";
+                document.getElementById("questionContainer").innerHTML = "you had " + correctAns + " correct answers!";
+                document.getElementById("questionContainer").innerHTML += "<button class='btn btn-outline-dark btn-block pinkB' onclick='closeQuiz()'>End</button>";
+                $(".btn-next-back").hide();
+            }
+
+            else {
+
+                if (indexQuestionToShow == 0) { $(".btn-back").hide(); }
+
+                document.getElementById("questionContainer").innerHTML = finalQuiz[indexQuestionToShow];
+                enableSingleCheckbox();
+            }
+        }
+        function nextQuestion() {
+
+            // Get the checked radio button with a specific name
+            var checkedRadio = $('input[name="answer"]:checked');
+
+            // Check if a radio button is checked and get the user answer
+            if (checkedRadio.length) {
+                userQuizAnswers[questionNumInQuiz] = checkedRadio.val();
+            } 
+
+            finalQuiz[questionNumInQuiz] = document.querySelector(".question").outerHTML; // set the user choise
+          
+            $(".question").remove();
+
+            showQuestion(++questionNumInQuiz);
+
+            $(".btn-back").show();
+        }
+        function backQuestion() {
+
+            $(".question").remove();
+
+            showQuestion(--questionNumInQuiz);
+        }
+
+        function enableSingleCheckbox() {
+            // Listen for checkbox changes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+
+                    checkboxes.forEach(chk => {
+
+                        if (chk !== checkbox && checkbox.checked) {
+                            chk.disabled = true;
+                        } else {
+                            chk.disabled = true;
+                            chk.setAttribute("checked", "checked");
+                        }
+                    });
+                });
+            });
+        }
+        function clearAnswersCheckBox() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.disabled = false;
+                checkbox.checked = false;
+                checkbox.removeAttribute("checked");
+            })
+
+        }
+        function checkQuizResults() {
+            let index = 0;
+            let numOfCorrectAns = 0;
+            let correctAnsToQuestion = "";
+            console.log(userQuizAnswers, QuizCorrectAnswers)
+            while (index < NUMOFA) {
+                if (userQuizAnswers[index] == QuizCorrectAnswers[index]) { numOfCorrectAns++ }
+                index++;
+            }
+            return numOfCorrectAns;
+        }
     </script>
 </body>
 </html>
