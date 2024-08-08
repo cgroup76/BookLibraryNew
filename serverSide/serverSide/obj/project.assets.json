@@ -683,24 +683,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\adida\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\user\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\adida\\OneDrive\\שולחן העבודה\\לימודים\\שנה ב\\סמסטר ב\\צד שרת\\BookLibraryNew\\BookLibraryNew\\serverSide\\serverSide\\serverSide.csproj",
+      "projectUniqueName": "C:\\Users\\user\\OneDrive\\Desktop\\BookLibraryNew\\BookLibraryNew\\serverSide\\serverSide\\serverSide.csproj",
       "projectName": "serverSide",
-      "projectPath": "C:\\Users\\adida\\OneDrive\\שולחן העבודה\\לימודים\\שנה ב\\סמסטר ב\\צד שרת\\BookLibraryNew\\BookLibraryNew\\serverSide\\serverSide\\serverSide.csproj",
-      "packagesPath": "C:\\Users\\adida\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\adida\\OneDrive\\שולחן העבודה\\לימודים\\שנה ב\\סמסטר ב\\צד שרת\\BookLibraryNew\\BookLibraryNew\\serverSide\\serverSide\\obj\\",
+      "projectPath": "C:\\Users\\user\\OneDrive\\Desktop\\BookLibraryNew\\BookLibraryNew\\serverSide\\serverSide\\serverSide.csproj",
+      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\user\\OneDrive\\Desktop\\BookLibraryNew\\BookLibraryNew\\serverSide\\serverSide\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\adida\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -746,24 +741,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[6.0.31, 6.0.31]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[6.0.31, 6.0.31]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[6.0.31, 6.0.31]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[6.0.31, 6.0.31]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -772,7 +749,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   }
