@@ -73,13 +73,7 @@
             <a class="btn btn-outline-dark btn-lg pinkB" id="show-quiz">Book Quiz</a>
         </div>
     </section>
-    <!--star-->
-    <div class="top5-logo">
-        <div class="star">
-            <span class="top-5-star">Top</span>
-            <span class="top-5-star">5</span>
-        </div>
-    </div>
+
     <!-- top 5 courses by rating  -->
     <section class="books py-5">
         <div class="container">
@@ -412,6 +406,12 @@
 
                     html += ` <div class='carousel-item active '>
                         <div class='top-books-container'>
+                            <!--star-->
+                            <div class="top5-logo">
+                            <div class="star">
+                             <span class="top-5-star">Top 5</span>
+                          </div>
+                          </div>
                         <img class='d-block  top-5-img'  alt='First slide' src='${book.Thumbnail}'>
                         <div class='top-info'>
                         <h2>${book.Title}</h2>
@@ -426,6 +426,12 @@
                 else {
                     html += ` <div class='carousel-item'>
                         <div class='top-books-container'>
+                         <!--star-->
+                            <div class="top5-logo">
+                            <div class="star">
+                             <span class="top-5-star">Top 5</span>
+                          </div>
+                          </div>
                         <img class='d-block  top-5-img'  alt='First slide' src='${book.Thumbnail}'>
                         <div class='top-info'>
                         <h2>${book.Title}</h2>
@@ -469,27 +475,27 @@
                     // If someone already bought the book
                     if (book.IsAvailable == 0) {
                         if (book.UserId == buyerId) { // The logged-in user bought this book
-                            booksHtml += `<a class='btn btn-primary buyABookBtn'>You already bought this book</a>
+                            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB'>You already bought this book</a>
                                                               </div>
                                                               </div>
                                                               </div>`;
                         } else {
                             const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
-                            booksHtml += `<a class='btn btn-primary buyABookBtn' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
+                            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
                                                               </div>
                                                               </div>
                                                               </div>`;
                         }
                     } else {
                         // If the book is available for purchase
-                        booksHtml += `<a class='btn btn-primary buyABookBtn' onclick='buyABook(${book.Id})'>Buy</a>
+                        booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='buyABook(${book.Id})'>Buy</a>
                                                           </div>
                                                           </div>
                                                           </div>`;
                     }
                 } else {
                     // If the user is not logged in, there's no need to show the purchase option
-                    booksHtml += `<a class='btn btn-primary buyABookBtn' onclick='buyABook(${book.Id})'>Buy</a>
+                    booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='buyABook(${book.Id})'>Buy</a>
                                                       </div>
                                                       </div>
                                                       </div>`;

@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\clientSide",
+    "\\clientSide\\data",
     "\\serverSide"
   ],
-  "SelectedNode": "\\serverSide",
+  "SelectedNode": "\\clientSide\\data\\HTMLPage1.html",
   "PreviewInSolutionExplorer": false
 }

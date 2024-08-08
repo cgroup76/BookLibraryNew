@@ -256,6 +256,9 @@ li {
     gap: 20px;
     grid-auto-rows: minmax(100px, auto);
 }
+.top-5-books{
+    padding-top: 5%;
+}
 /*head bubble*/
 .bubble-head-left {
     position: absolute;
@@ -286,8 +289,8 @@ li {
     position: absolute;
     width: 130px;
     height: 130px;
-    top: 45%;
-    left: 25%;
+    top: -20%;
+    left: 20%;
     animation: rotate 5s linear infinite;
     z-index: 1
 }
