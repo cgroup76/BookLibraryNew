@@ -1,0 +1,47 @@
+﻿body {
+    background-color: black; /* רקע לבן */
+    color: #000; /* צבע טקסט שחור */
+}
+
+.card {
+    background-color: #ffffff; /* רקע כרטיס לבן */
+    border: 2px solid #000; /* מסגרת שחורה */
+}
+
+h6 {
+    color: #ff69b4; /* צבע טקסט ורוד */
+    text-align:center;
+    font-size:35px;
+}
+
+.card-img-top {
+    width: 100%;
+    height: auto;
+}
+
+.game-card {
+    transition: transform 0.3s;
+}
+
+.game-card:hover {
+    transform: scale(1.05);
+    border-color: #ff69b4; /* מסגרת ורודה בעת ריחוף */
+}
+
+@media (max-width: 768px) {
+    .game-card {
+        margin-bottom: 20px;
+    }
+}
+
+h1{
+    color:white;
+    font-size:45px;
+    text-align:center;
+}
+button {
+    cursor: pointer;
+    background-color: pink;
+    font-size: 1.25em;
+    font-weight: bold;
+}

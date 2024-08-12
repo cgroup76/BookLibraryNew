@@ -1,0 +1,15 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "task-pexels-nicola-barts-7943490",
+      "appliesTo": "data/images/pexels-nicola-barts-7943490.jpg",
+      "type": "launch"
+    },
+    {
+      "taskLabel": "task-pexels-nicola-barts-7943490",
+      "appliesTo": "data/images/pexels-nicola-barts-7943490.jpg",
+      "type": "launch"
+    }
+  ]
+}
