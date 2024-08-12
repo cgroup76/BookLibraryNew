@@ -13,14 +13,14 @@
             integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
             crossorigin="anonymous"></script>
 
-   
+
     <!-- sweet aleret -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 </head>
 <body>
-    <header class="bg-dark text-white py-3">
+    <header class="bg-dark text-white py-3 fixed-top">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">
@@ -29,6 +29,8 @@
                 <nav>
                     <ul class="nav">
                         <li class="nav-item"><a class="nav-link text-white" href="HTMLPage1.html">Home</a></li>
+                        <li class="nav-item adminPage"><a class="nav-link text-white " href="adminPage.html">Admin Page</a></li>
+                        <li class="nav-item myBooks"><a class="nav-link text-white " href="myBooks.html">My Books</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="author.html">Authors</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
                         <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
@@ -39,10 +41,9 @@
                                     <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
                                 </svg>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton">
+                            <div class="dropdown-menu dropdown-menu-dark dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                 <div class="send"> </div>
-                                <div class="got"> </div>
-
+                                <div class="got"> </div>
                             </div>
                         </li>
                     </ul>
@@ -226,35 +227,35 @@
             allMyBooks.forEach((book) => {
 
                 booksHtml += `
-                            <div class='col-md-4'>
-                                <div class='card mb-4 book-card'>
-                                    <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
-                                    <div class='card-body' id='markAsRead-${book.Id}'>
-                                        <h5 class='card-title'>${book.Title}</h5>
-                                        <p>${book.Rating}</p>`;
+                                <div class='col-md-4'>
+                                    <div class='card mb-4 book-card'>
+                                        <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
+                                        <div class='card-body' id='markAsRead-${book.Id}'>
+                                            <h5 class='card-title'>${book.Title}</h5>
+                                            <p>${book.Rating}</p>`;
                 if (book.IsRead == 'False') {
                     booksHtml += `<a class='btn btn-outline-dark pinkB' onclick="ReadTheBook(${book.UserId}, ${book.Id})">Mark as read</a>`;
                 } else if (book.WasRated == 0) {
                     booksHtml += `<a class='btn btn-outline-dark pinkB'>Already read this book</a>
-                                <div id='rating-${book.Id}'>
-                                    Rating:
-                                    <select id='ratingSelect-${book.Id}'>
-                                        <option value='1'>1</option>
-                                        <option value='2'>2</option>
-                                        <option value='3'>3</option>
-                                        <option value='4'>4</option>
-                                        <option value='5'>5</option>
-                                    </select>
-                                    <button onclick='rateBook(${book.Id})'>Rate</button>
-                                </div>`;
+                                    <div id='rating-${book.Id}'>
+                                        Rating:
+                                        <select id='ratingSelect-${book.Id}'>
+                                            <option value='1'>1</option>
+                                            <option value='2'>2</option>
+                                            <option value='3'>3</option>
+                                            <option value='4'>4</option>
+                                            <option value='5'>5</option>
+                                        </select>
+                                        <button onclick='rateBook(${book.Id})'>Rate</button>
+                                    </div>`;
                 }
                 else {
                     booksHtml += `<a class='btn btn-outline-dark pinkB '>Already read this book</a>`
                 }
                 booksHtml += `
+                                        </div>
                                     </div>
-                                </div>
-                            </div>`;
+                                </div>`;
             });
 
             booksContainer.innerHTML = booksHtml;
@@ -277,19 +278,19 @@
         function successToMarkAsRead() {
             const bookElement = document.getElementById(`markAsRead-${currentBookId}`);
             let bookHtml = `
-                                    <h5 class='card-title'>${currentBookTitle}</h5>
-                                     <a class='btn btn-outline-dark pinkB'>Already read this book</a>
-                                    <div id='rating-${currentBookId}' style='display:block;'>
-                                     Rating:
-                                    <select id='ratingSelect-${currentBookId}'>
-                                    <option value='1'>1</option>
-                                    <option value='2'>2</option>
-                                    <option value='3'>3</option>
-                                    <option value='4'>4</option>
-                                    <option value='5'>5</option>
-                                    </select>
-                                    <button onclick='rateBook(${currentBookId})'>Rate</button>
-                                    </div>`;
+                                        <h5 class='card-title'>${currentBookTitle}</h5>
+                                         <a class='btn btn-outline-dark pinkB'>Already read this book</a>
+                                        <div id='rating-${currentBookId}' style='display:block;'>
+                                         Rating:
+                                        <select id='ratingSelect-${currentBookId}'>
+                                        <option value='1'>1</option>
+                                        <option value='2'>2</option>
+                                        <option value='3'>3</option>
+                                        <option value='4'>4</option>
+                                        <option value='5'>5</option>
+                                        </select>
+                                        <button onclick='rateBook(${currentBookId})'>Rate</button>
+                                        </div>`;
             bookElement.innerHTML = bookHtml;
             Swal.fire('Success', 'Book marked as read.', 'success');
         }
@@ -362,13 +363,13 @@
                     let sellerId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
                     listOfRequest.forEach((request) => {
                         htmlGot += `
-                                            <div class="dropdown-item">
-                                                <strong>Book:</strong> ${request.bookName} <br>
-                                                <strong>Want to buy:</strong> ${request.buyerName} <br>
-                                                <strong>Status:</strong> ${request.status} <br>
-                                                <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}')">Approve</button>
-                                                <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}')">Reject</button>
-                                            </div>`;
+                                                <div class="dropdown-item">
+                                                    <strong>Book:</strong> ${request.bookName} <br>
+                                                    <strong>Want to buy:</strong> ${request.buyerName} <br>
+                                                    <strong>Status:</strong> ${request.status} <br>
+                                                    <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}')">Approve</button>
+                                                    <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}')">Reject</button>
+                                                </div>`;
                     });
                 }
                 requestBox.innerHTML = htmlGot;
@@ -398,10 +399,10 @@
 
                     listOfRequest.forEach((request) => {
                         htmlSend += `<div class="dropdown-item">
-                                            <strong>Book:</strong> ${request.bookName} <br>
-                                            <strong>you ask to buy from:</strong> ${request.sellerName} <br>
-                                            <strong>Status:</strong> ${request.status} <br>
-                                            </div>`
+                                                <strong>Book:</strong> ${request.bookName} <br>
+                                                <strong>you ask to buy from:</strong> ${request.sellerName} <br>
+                                                <strong>Status:</strong> ${request.status} <br>
+                                                </div>`
                     });
                 }
                 requestBox.innerHTML = htmlSend;
@@ -445,7 +446,8 @@
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <!-- Bootstrap Bundle (includes Popper) -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
+    <!-- shared function -->
+    <script src="sharedFunc.js"></script>
 
 </body>
 </html>

@@ -20,7 +20,7 @@
 </head>
 
 <body>
-    <header class="bg-dark text-white py-3">
+    <header class="bg-dark text-white py-3 fixed-top">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">
@@ -29,10 +29,23 @@
                 <nav>
                     <ul class="nav">
                         <li class="nav-item"><a class="nav-link text-white" href="HTMLPage1.html">Home</a></li>
+                        <li class="nav-item adminPage"><a class="nav-link text-white " href="adminPage.html">Admin Page</a></li>
+                        <li class="nav-item myBooks"><a class="nav-link text-white " href="myBooks.html">My Books</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="author.html">Authors</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
                         <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
                         <li class="nav-item logoutBox"><a class="nav-link text-white logout">logout</a></li>
+                        <li class="nav-item dropdown requestBox">
+                            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
+                                </svg>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-dark dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <div class="send"> </div>
+                                <div class="got"> </div>
+                            </div>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -186,35 +199,35 @@
 
             books.forEach((book) => {
                 booksHtml += `
-                                <tr>
-                                    <td><img src='${book.SmallThumbnail}' alt='Thumbnail' width='50' height='75'></td>
-                                    <td>
-                                        ${book.Title} <br>
-                                        ${book.Description}
-                                    </td>
-                                    <td>
-                                        ${book.FirstAuthorName} <br>
-                                        ${book.SecondAuthorName}
-                                    </td>
-                                    <td>${book.UserName}</td>`
+                                    <tr>
+                                        <td><img src='${book.SmallThumbnail}' alt='Thumbnail' width='50' height='75'></td>
+                                        <td>
+                                            ${book.Title} <br>
+                                            ${book.Description}
+                                        </td>
+                                        <td>
+                                            ${book.FirstAuthorName} <br>
+                                            ${book.SecondAuthorName}
+                                        </td>
+                                        <td>${book.UserName}</td>`
                 if (book.IsAvailable == 1 && book.IsActive == 1) {
                     booksHtml +=
                         `<td> Active </br>
-                                             <button id="activityBtn" onclick="changeActivtiy(${book.Id})">Mark as inactive</button>
-                                             </td>
-                                            </tr>`;
+                                                 <button id="activityBtn" onclick="changeActivtiy(${book.Id})">Mark as inactive</button>
+                                                 </td>
+                                                </tr>`;
                 }
                 else if ((book.IsAvailable == 1 && book.IsActive == 0)) {
                     booksHtml +=
                         `<td> Inactive </br>
-                          <button id="activityBtn" onclick="changeActivtiy(${book.Id})">Mark as active</button>
-                          </td>
-                         </tr>`;
+                              <button id="activityBtn" onclick="changeActivtiy(${book.Id})">Mark as active</button>
+                              </td>
+                             </tr>`;
                 }
                 else if (book.IsAvailable == 0) {
                     booksHtml +=
                         `<td> Active  </td>
-                         </tr>`;
+                             </tr>`;
 
                 }
 
@@ -264,14 +277,14 @@
 
             authors.forEach((author) => {
                 authorsHtml += `
-                     <tr>
-                         <td>
-                             ${author.Name}
-                         </td>
-                         <td>
-                             ${author.numOfLibarries}
-                         </td>
-                     </tr>`;
+                         <tr>
+                             <td>
+                                 ${author.Name}
+                             </td>
+                             <td>
+                                 ${author.numOfLibarries}
+                             </td>
+                         </tr>`;
             });
 
             authorsHtml += '</tbody></table></div>';
@@ -291,14 +304,14 @@
             users.forEach((user) => {
                 var counter = 1;
                 usersHtml += `
-                        <tr id="user-${user.Id}">
-                            <td>${user.UserName}</td>
-                            <td>${user.Email}</td>
-                            <td id="userBooksAdminPage">`
+                            <tr id="user-${user.Id}">
+                                <td>${user.UserName}</td>
+                                <td>${user.Email}</td>
+                                <td id="userBooksAdminPage">`
                 allBooks.forEach((book) => {
                     if (book.UserId == user.Id) {
                         usersHtml += `${counter++}. ${book.Title} </br >`
-                        }
+                    }
                 });
                 usersHtml += ` </td > </tr>`
             });
@@ -313,10 +326,10 @@
             if (books.length > 0) {
                 books.forEach((book) => {
                     booksPerUserHtml += `${book.Title} <br>`;
-                    });
-                }
+                });
+            }
             else {
-                 booksPerUserHtml = "No books purchased";
+                booksPerUserHtml = "No books purchased";
             }
 
             booksCell.innerHTML = booksPerUserHtml;
@@ -324,45 +337,47 @@
 
 
         function errorToLoad(message) {
-             console.log(message);
+            console.log(message);
         }
 
         function showTable(table) {
-                if (table === 'Book Table') {
+            if (table === 'Book Table') {
 
-                        $("#bookTableContainer").show();
-                        $(".userTable").hide();
-                        $(".authersTable").hide();
-                        $(".booksTable").hide();
-                        showBooks();
+                $("#bookTableContainer").show();
+                $(".userTable").hide();
+                $(".authersTable").hide();
+                $(".booksTable").hide();
+                showBooks();
 
-                }
-                else if (table === 'User Table') {
-                        $("#usersTableContainer").show();
-                        $(".userTable").hide();
-                        $(".authersTable").hide();
-                        $(".booksTable").hide();
-                        showUsers();
-                }
-                else if (table === 'Authers Table') {
-                        $("#authorTableContainer").show();
-                        $(".userTable").hide();
-                        $(".authersTable").hide();
-                        $(".booksTable").hide();
-                        showAuthor();
-                }
+            }
+            else if (table === 'User Table') {
+                $("#usersTableContainer").show();
+                $(".userTable").hide();
+                $(".authersTable").hide();
+                $(".booksTable").hide();
+                showUsers();
+            }
+            else if (table === 'Authers Table') {
+                $("#authorTableContainer").show();
+                $(".userTable").hide();
+                $(".authersTable").hide();
+                $(".booksTable").hide();
+                showAuthor();
+            }
         }
 
         function closeTable() {
-                        $("#bookTableContainer").hide();
-                        $("#usersTableContainer").hide();
-                        $("#authorTableContainer").hide();
-                        $(".userTable").show();
-                        $(".authersTable").show();
-                        $(".booksTable").show();
+            $("#bookTableContainer").hide();
+            $("#usersTableContainer").hide();
+            $("#authorTableContainer").hide();
+            $(".userTable").show();
+            $(".authersTable").show();
+            $(".booksTable").show();
         }
 
     </script>
+    <!-- shared function -->
+    <script src="sharedFunc.js"></script>
 </body>
 
 </html>
