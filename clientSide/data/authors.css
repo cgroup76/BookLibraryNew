@@ -1,6 +1,12 @@
 ﻿body {
-    background-color: #000;
-    font-family: 'Reddit Mono', monospace;
+    text-align: left;
+    background-color: #121212;
+    color: #fff;
+    overflow-x: hidden;
+    padding-top: 5%;
+}
+.nav-link {
+    font-size: 1.1em;
 }
 
 header {

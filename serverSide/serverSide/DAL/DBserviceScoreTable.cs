@@ -95,7 +95,7 @@ public class DBservicesScoreTable
 
         cmd.Parameters.AddWithValue("@gameName", newScore.GameName);
 
-        cmd.Parameters.AddWithValue("@userName", newScore.UserName);
+        cmd.Parameters.AddWithValue("@userName", newScore.UserName); 
 
         cmd.Parameters.AddWithValue("@score", newScore.ScoreNum);
 
