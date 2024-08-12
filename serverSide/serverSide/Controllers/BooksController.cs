@@ -46,9 +46,9 @@ namespace serverSide.Controllers
         }
         // PUT RateBook
         [HttpPut("RateBook")]
-        public bool Put(int bookID, int newRating, int userID)
+        public bool Put(int bookID, int newRating, int userID, string review)
         {
-            return Book.RateBook(bookID, newRating, userID);
+            return Book.RateBook(bookID, newRating, userID, review);
         }
 
         // DELETE api/<BooksController>/5

@@ -14,10 +14,11 @@
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <!-- sweet aleret -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <body>
 
-    <header class="bg-dark text-white py-3">
+    <header class="bg-dark text-white py-3 fixed-top">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">
@@ -26,12 +27,23 @@
                 <nav>
                     <ul class="nav">
                         <li class="nav-item"><a class="nav-link text-white" href="HTMLPage1.html">Home</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#">My Books</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#">Authors</a></li>
+                        <li class="nav-item adminPage"><a class="nav-link text-white " href="adminPage.html">Admin Page</a></li>
+                        <li class="nav-item myBooks"><a class="nav-link text-white " href="myBooks.html">My Books</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="author.html">Authors</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
-                        <li class="nav-item loginBox"><a class="nav-link text-white login">login</a></li>
                         <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
                         <li class="nav-item logoutBox"><a class="nav-link text-white logout">logout</a></li>
+                        <li class="nav-item dropdown requestBox">
+                            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
+                                </svg>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-dark dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <div class="send"> </div>
+                                <div class="got"> </div>
+                            </div>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -85,7 +97,7 @@
                         selectedAuthor = author;
                     }
                 });
-                if (selectedAuthor == "") { $(".author-details").html(''); } // If no author name was selected 
+                if (selectedAuthor == "") { $(".author-details").html(''); } // If no author name was selected
                 else {
                     showSearchedAuthor(selectedAuthor);
                     loadAthourBooks(selectedAuthor.id);
@@ -97,9 +109,9 @@
         function showSearchedAuthor(author) {
             var html = "";
             html += `
-                        <div class='card'>
-                            <div class='card-body'>
-                                <h4 class='card-text'>${author.name}</h4>`;
+                            <div class='card'>
+                                <div class='card-body'>
+                                    <h4 class='card-text'>${author.name}</h4>`;
             if (author.dateOfBirth == undefined || author.dateOfBirth == "") { }
             else {
                 html += `<p class='card-text'>Born: ${author.dateOfBirth}</p>`
@@ -107,34 +119,34 @@
             if (author.dateOfDeath == undefined || author.dateOfDeath == "") { }
             else {
                 html += `<p class='card-text'>Died: ${author.dateOfDeath}</p>`
-            }       
+            }
             if (author.age == undefined || author.age == "") { }
             else {
                 html += `<p class='card-text'>Age: ${author.age}</p>`
-            }  
+            }
             if (author.nationality == undefined || author.nationality == "") { }
             else {
                 html += `<p class='card-text'>Nationality: ${author.nationality}</p>`
-            } 
+            }
             if (author.notableWork == undefined || author.notableWork == "") { }
             else {
                 html += `<p class='card-text'>Notable Work: ${author.notableWork}</p>`
-            } 
+            }
             if (author.awards == undefined || author.awards == "") { }
             else {
                 html += `<p class='card-text'>Awards: ${author.awards}</p>`
-            } 
+            }
             if (author.description == undefined || author.description == "") { }
             else {
                 html += `<p class='card-text'>Description: ${author.description}</p>`
-            } 
+            }
             html += `  <h4 class='authorBooksTitle'></h4>  <div class="row authour-books"></div> </div>
-                        </div>`;
+                            </div>`;
             $(".author-details").html(html)
         }
         // load all the books by author
         function loadAthourBooks(selectedAuthor) {
- 
+
             ajaxCall("GET", authorsAPI + `/findBookByAuthor/?authorId=${selectedAuthor}`, null, successToLoadBooks, errorToLoadAuthors)
         }
 
@@ -145,15 +157,15 @@
             document.querySelector(".authorBooksTitle").innerHTML += 'Books By ' + authorBooks[0].FirstAuthorName + ':';
 
             authorBooks.forEach((book) => {
-                
+
                 html += `
-                    <div class='col-md-3'>
-                        <div class='card mb-4 book-card'>
-                            <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
-                            <div class='card-body w-100'>
-                                <h6 class='card-title'>${book.Title}</h6>
-                                <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
-                                <span class='card-text'>${book.Price}$</span></div></div></div>`;
+                        <div class='col-md-3'>
+                            <div class='card mb-4 book-card'>
+                                <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
+                                <div class='card-body w-100'>
+                                    <h6 class='card-title'>${book.Title}</h6>
+                                    <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
+                                    <span class='card-text'>${book.Price}$</span></div></div></div>`;
             })
             $(".authour-books").html(html);
         }
@@ -180,59 +192,8 @@
             $("#authorsNames").html(authorNameSearchBar);
         }
 
-        function ajaxCall(method, api, data, successCB, errorCB) {
-            $.ajax({
-                type: method,
-                url: api,
-                data: data,
-                cache: false,
-                contentType: "application/json",
-                dataType: "json",
-                success: successCB,
-                error: errorCB
-            });
-        }
-        function checkForLoginUser() {
-            var loginUser = JSON.parse(localStorage.getItem("loginUserDetails"))
-
-            if (loginUser != null) {
-                $('.userNameBox').show();
-                $('.logoutBox').show();
-                $('.loginBox').hide();
-                $('.userName').text(loginUser.userName);
-                $('.myBooks').show();
-            }
-            else {
-                $('.userNameBox').hide();
-                $('.logoutBox').hide();
-                $('.loginBox').show();
-                $('.userName').text("");
-                $('.myBooks').hide();
-            }
-        }
-
-        function logoutUser() {
-            let user = JSON.parse(localStorage.getItem("loginUserDetails"));
-            if (user) {
-                let userIdToLogout = user.userId;
-                ajaxCall("PUT", `${usersAPI}/logoutUser`, JSON.stringify(userIdToLogout), successLogout, errorLogout);
-            }
-        }
-
-        function successLogout(status) {
-            if (status) {
-
-                localStorage.clear();
-
-                window.location.href = "HTMLPage1.html";
-            }
-        }
-
-        function errorLogout(errorMessage) {
-            console.log(errorMessage);
-            Swal.fire('Error', 'Failed to logout. Please try again.', 'error');
-        }
-
     </script>
+    <!-- shared function -->
+    <script src="sharedFunc.js"></script>
 </body>
 </html>
