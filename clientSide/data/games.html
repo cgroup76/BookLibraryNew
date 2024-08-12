@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="games.css">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+            crossorigin="anonymous"></script>
+    <!-- Bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="images.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Games</h1>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4 game-card">
+                    <h6>HangMan</h6>
+                    <img id="hangman-img" class="card-img-top" alt="HangMan">
+                    <div class="card-body text-center">
+                        <button id="hangManBtn">play</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4 game-card">
+                    <h6>Memory Game</h6>
+                    <img id="memory-game-img" class="card-img-top" alt="Memory Game">
+                    <div class="card-body text-center">
+                        <button id="memoryGame">play</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4 game-card">
+                    <h6>Quiz</h6>
+                    <img id="quiz-img" class="card-img-top" alt="Quiz">
+                    <div class="card-body text-center">
+                        <button id="quizBtn">play</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("hangman-img").src = "images/hangman-6.svg"; // ודא שהתמונה נמצאת בנתיב הנכון
+        document.getElementById("memory-game-img").src = "images/memoryGame.jpg"; // ודא שהתמונה נמצאת בנתיב הנכון
+        document.getElementById("quiz-img").src = "images/quiz.png"; // ודא שהתמונה נמצאת בנתיב הנכון
+
+        //redict to home page after the game finish 
+        function redirectToHomePage() {
+            window.location.href = 'HTMLPage1.html';
+        }
+
+        play();
+
+        //if the user click on the button- play it will take him to the specific game 
+        function play() {
+            $('#memoryGame').on('click', function () {
+                window.location.href = 'MemoryGame.html';
+            });
+            $('#hangManBtn').on('click', function () {
+                window.location.href = 'hangMan.html';
+            });
+            $('#quizBtn').on('click', function () {
+                window.location.href = 'QUIZ.html';
+            });
+
+
+        }
+
+
+    </script>
+</body>
+</html>

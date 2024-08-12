@@ -399,7 +399,7 @@ li {
 }
 .btn-back, .btn-next{
     width:35%;
-    margin: 0 5%;
+    /* margin: 0 5%; */
     display: inline-block;
 
 }
