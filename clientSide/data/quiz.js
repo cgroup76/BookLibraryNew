@@ -2,6 +2,7 @@
 
 
 const authorsAPI = "https://localhost:7225/api/Authors";
+const gameAPI = "https://localhost:7225/api/Score";
 
 let gameScore = 0;
 let allAuthors = [];
@@ -14,6 +15,7 @@ let finalQuiz = [];
 let userQuizAnswers = [];
 let QuizCorrectAnswers = [];
 let questionNumInQuiz = 0;
+let topGameResults = [];
 
 $(document).ready(function () {
     loadAuthors();
@@ -39,7 +41,19 @@ function ajaxCall(method, api, data, successCB, errorCB) {
         error: errorCB
     });
 }
-
+function ajaxCallSync(method, api, data, successCB, errorCB) {
+    $.ajax({
+        type: method,
+        url: api,
+        data: data,
+        cache: false,
+        async: false,
+        contentType: "application/json",
+        dataType: "json",
+        success: successCB,
+        error: errorCB
+    });
+}
 function shuffle(array) {
     let index = array.length - 1;
 
@@ -154,6 +168,7 @@ function createQuiz() {
 }
 function showQuiz() {
     $("#quiz-container").addClass('active');
+    $('#overlay').addClass('active');
     createQuiz();
 }
 
@@ -173,6 +188,9 @@ function closeQuiz() {
     finalQuiz = [];
     $('.timer').removeClass('bold');
     $('.timer').removeClass('pink');
+    $('#resultContainer').html("");
+    $('#overlay').removeClass('active');
+    $(".end-quiz").html("");
 }
 function startQuiz() {
     let quizTimer = 60;
@@ -191,11 +209,14 @@ function startQuiz() {
 
             let correctAns = checkQuizResults();
 
+            getTop5GameReasults('BookQuiz');
+
             $(".question").remove();
             document.getElementById("questionContainer").innerHTML += "<h1>Times Up - Game Over</h1>";
             document.getElementById("questionContainer").innerHTML += "<h3>you had " + correctAns + " correct answers!</h3>";
-            document.getElementById("questionContainer").innerHTML += "<button class='btn btn-outline-dark btn-block pinkB my-sm-0' onclick='closeQuiz()'>End</button>";
+            $(".end-quiz").html("<button class='btn btn-outline-dark btn-block pinkB my-sm-0' onclick='closeQuiz()'>End</button>");
             $(".btn-next-back").hide();
+
         }
 
     }, 1000);
@@ -214,10 +235,13 @@ function showQuestion(indexQuestionToShow) {
 
         let correctAns = checkQuizResults();
 
+        getTop5GameReasults('BookQuiz');
+
         document.getElementById("questionContainer").innerHTML += "<h1>Game Over</h1>";
         document.getElementById("questionContainer").innerHTML = "you had " + correctAns + " correct answers!";
-        document.getElementById("questionContainer").innerHTML += "<button class='btn btn-outline-dark btn-block pinkB my-sm-0' onclick='closeQuiz()'>End</button>";
+        $(".end-quiz").html("<button class='btn btn-outline-dark btn-block pinkB my-sm-0' onclick='closeQuiz()'>End</button>");
         $(".btn-next-back").hide();
+
     }
 
     else {
@@ -283,11 +307,54 @@ function clearAnswersCheckBox() {
 function checkQuizResults() {
     let index = 0;
     let numOfCorrectAns = 0;
-    let correctAnsToQuestion = "";
-    console.log(userQuizAnswers, QuizCorrectAnswers)
+    let gameResult;
+    let user = JSON.parse(localStorage.getItem('loginUserDetails'));
+
     while (index < NUMOFA) {
         if (userQuizAnswers[index] == QuizCorrectAnswers[index]) { numOfCorrectAns++ }
         index++;
     }
+
+    if (user != null) {
+        gameResult = {
+            "gameName": "BookQuiz",
+            "userName": user.userName,
+            "scoreNum": numOfCorrectAns,
+            "time": ($('.timer').html()).split(" ")[2]
+        }
+    }
+    else {
+        gameResult = {
+            "gameName": "BookQuiz",
+            "userName": "",
+            "scoreNum": numOfCorrectAns,
+            "time": ($('.timer').html()).split(" ")[2]
+        }
+    }
+
+    postGameReasults(gameResult);
     return numOfCorrectAns;
+}
+function getTop5GameReasults(gameName) {
+    ajaxCallSync("GET", gameAPI + `?gameName=${gameName}`, null, successTop5, errorTop5);
+}
+function successTop5(topResult) {
+    topGameResults = topResult;
+    let html = "<h3>Top Results</h3>";
+    let index = 1;
+
+    topGameResults.forEach((r) => {
+        if (index == 1) { html += `<p>${index++}. <strong class='pink'>User: ${r.userName} time: ${r.time} score: ${r.scoreNum}</strong>` }
+        else { html += `<p>${index++}. User: ${r.userName} time: ${r.time} score: ${r.scoreNum}` }
+    })
+
+    $('#resultContainer').html(html);
+}
+function errorTop5(err) { console.log(err); }
+
+function postGameReasults(gameResult) {
+    ajaxCallSync("POST", gameAPI + ``, JSON.stringify(gameResult), successPost, errorTop5);
+}
+function successPost(status) {
+    console.log(status)
 }
