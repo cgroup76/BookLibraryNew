@@ -80,25 +80,35 @@
     <div class="reviewABook" id="reviewABook">
         <div class="reviewABook-header">
             <div class="tilte">
-                <button data-close-button class="close-button closeLoginButton">&times;</button>
+                <button data-close-button class="close-button closeReviewButton">&times;</button>
             </div>
         </div>
         <div class="reviewABook-body">
             <img class="reviewABook-book-img" />
             <h3 class="reviewABook-book-title"></h3>
-            <h5>Let us know your opinion:</h5>
+            <hr />
+            <h5 class="pink">Let us know your opinion:</h5>
 
             <form id="reviewABook-form">
-                <div class="form-group userNameDiv">
-                    <label for="userName"><span>★ </span>Enter user name:</label>
-                    <input type="text" class="form-control" name="userName" id="userName" placeholder="user name" required />
-                </div>
-                <div class="form-group">
-                    <label for="userEmail"><span>★ </span>Enter email:</label>
-                    <input type="text" class="form-control" name="userEmail" id="userEmail" placeholder="email" required />
-                </div>
+                <div class="rating">
 
-                <input type="submit" value="Log in" class="btn" id="logInButton" />
+                    <input type="radio" id="star5" name="rating" value="5">
+                    <label for="star5">&#9733;</label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4">&#9733;</label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3">&#9733;</label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2">&#9733;</label>
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1">&#9733;</label>
+                </div>
+                <div class="comment">
+                    <label for="comment" class="pink">Tell us more:</label><br>
+                    <textarea id="comment" name="comment" oninput="updateCharacterCount()" maxlength="255"></textarea>
+                    <p id="charCount">0/255 characters</p>
+                </div>
+                <button type="button" class="submit-btn pinkB btn-outline-dark btn" onclick="postReview()">Submit</button>
             </form>
         </div>
     </div>
@@ -114,6 +124,7 @@
         var bookIdToRate;
         var bookRating;
         const requestBox = $('.requestBox .dropdown-menu');
+
         $(document).ready(function () {
 
             checkForLoginUser();
@@ -123,49 +134,69 @@
 
             $('.logout').click(logoutUser);
 
-        });
+            $('.closeReviewButton').click(closeReviewForm);
 
-        function ajaxCall(method, api, data, successCB, errorCB) {
-            $.ajax({
-                type: method,
-                url: api,
-                data: JSON.stringify(data),
-                cache: false,
-                contentType: "application/json",
-                dataType: "json",
-                success: successCB,
-                error: errorCB
-            });
+        });
+        // review
+
+        function postReview() {
+            if (document.querySelector('input[name="rating"]:checked') == null) { }
+            else {
+                var rating = document.querySelector('input[name="rating"]:checked').value;
+            }
+            var comment = document.getElementById("comment").value;
+            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+
+
+            ajaxCall("PUT", booksAPI + `/RateBook?bookID=${bookIdToRate}&newRating=${rating}&userID=${userId}&review=${comment}`, null, successRating, errorRating);
+
+            return false;
         }
-        function rateBook(bookId) {
+
+        function updateCharacterCount() {
+            const textInput = document.getElementById('comment');
+            const charCount = document.getElementById('charCount');
+            const currentLength = textInput.value.length;
+
+            charCount.textContent = `${currentLength}/255 characters`;
+        }
+        function showReviewForm(id) {
+            bookIdToRate = id;
+            let bookToReview = allMyBooks.find((book) => book.Id === id);
+
             $("#reviewABook").addClass('active');
             $("#overlay").addClass('active');
-
-            let choosenBook = allMyBooks.find(book => book.Id === bookId);
-
-            $(".reviewABook-book-img").attr("src", choosenBook.Thumbnail);
-            $(".reviewABook-book-title").html(choosenBook.Title);
-
-            bookRating = Number(document.getElementById(`ratingSelect-${bookId}`).value);
-            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
-            bookIdToRate = bookId;
-
-            //ajaxCall("PUT", `${booksAPI}/RateBook?bookID=${bookIdToRate}&newRating=${bookRating}&userID=${userId}`, null, successRating, errorRating);
-
-            document.getElementById(`ratingSelect-${bookId}`).value = 1;
+            $('.reviewABook-book-img').attr('src', bookToReview.SmallThumbnail);
+            $('.reviewABook-book-title').html(bookToReview.Title);
 
         }
+        function closeReviewForm() {
+            $("#reviewABook").removeClass('active');
+            $("#overlay").removeClass('active');
+        }
 
-        function errorRating(err) {
-            Swal.fire('Error', "Could not submit your raitng - please try again later", 'error');
+        //------------
+
+        function errorRating(error) {
+            if (error.status == 401) {
+
+                Swal.fire("Connection time ended - Please login first");
+
+                logoutUser();
+            }
+            else {
+                Swal.fire('Error', "Could not submit your raitng - please try again later", 'error');
+            }
         }
 
         function successRating() {
-            Swal.fire('Success', "Thank you for submiting a rating for this book!", 'success');
+            closeReviewForm();
+
+            Swal.fire('Success', "Thank you for submiting a review for this book!", 'success');
 
             $(`#rating-${bookIdToRate}`).hide();
 
-            // SET IN TOO HERE THE WAS RATED - THE DB DOES IT AUTOMATICLY
+            // SET THE BOOK THAT WAS RATED - THE DB DOES IT AUTOMATICLY
             for (let i = 0; i < allMyBooks.length; i++) {
 
                 if (allMyBooks[i].Id == bookIdToRate) {
@@ -217,7 +248,6 @@
             }
         }
         var currentBookTitle = "";
-        var currentBookId;
 
         function BooksToShow(books) {
             const booksContainer = document.getElementById('myBooks');
@@ -236,17 +266,7 @@
                 if (book.IsRead == 'False') {
                     booksHtml += `<a class='btn btn-outline-dark pinkB' onclick="ReadTheBook(${book.UserId}, ${book.Id})">Mark as read</a>`;
                 } else if (book.WasRated == 0) {
-                    booksHtml += `<a class='btn btn-outline-dark pinkB'>Already read this book</a>
-                                    <div id='rating-${book.Id}'>
-                                        Rating:
-                                        <select id='ratingSelect-${book.Id}'>
-                                            <option value='1'>1</option>
-                                            <option value='2'>2</option>
-                                            <option value='3'>3</option>
-                                            <option value='4'>4</option>
-                                            <option value='5'>5</option>
-                                        </select>
-                                        <button onclick='rateBook(${book.Id})'>Rate</button>
+                    booksHtml += `<a class='btn btn-outline-dark pinkB ' onclick='showReviewForm(${book.Id})''>Review</a>
                                     </div>`;
                 }
                 else {
@@ -279,17 +299,7 @@
             const bookElement = document.getElementById(`markAsRead-${currentBookId}`);
             let bookHtml = `
                                         <h5 class='card-title'>${currentBookTitle}</h5>
-                                         <a class='btn btn-outline-dark pinkB'>Already read this book</a>
-                                        <div id='rating-${currentBookId}' style='display:block;'>
-                                         Rating:
-                                        <select id='ratingSelect-${currentBookId}'>
-                                        <option value='1'>1</option>
-                                        <option value='2'>2</option>
-                                        <option value='3'>3</option>
-                                        <option value='4'>4</option>
-                                        <option value='5'>5</option>
-                                        </select>
-                                        <button onclick='rateBook(${currentBookId})'>Rate</button>
+                                         <a class='btn btn-outline-dark pinkB ' onclick='showReviewForm(${book.Id})''>Review</a>
                                         </div>`;
             bookElement.innerHTML = bookHtml;
             Swal.fire('Success', 'Book marked as read.', 'success');
@@ -303,35 +313,6 @@
             }
         }
 
-        function checkForLoginUser() {
-
-            var loginUser = JSON.parse(localStorage.getItem("loginUserDetails"))
-            if (loginUser != null) {
-                $('.userNameBox').show();
-                $('.logoutBox').show();
-                $('.loginBox').hide();
-                $('.userName').text(loginUser.userName);
-                $('.myBooks').show();
-                $('.requestBox').show();
-                $('.adminPage').hide();
-                //check if the login user is admin and open the access to admin page
-                if (loginUser.userName == "admin") {
-                    $('.adminPage').show();
-                    $('.userNameBox').hide();
-                    $('.requestBox').show();
-                }
-            }
-
-            else {
-                $('.userNameBox').hide();
-                $('.logoutBox').hide();
-                $('.loginBox').show();
-                $('.userName').text("");
-                $('.myBooks').hide();
-                $('.requestBox').hide();
-                $('.adminPage').hide();
-            }
-        }
         function showAllRequests() {
             showRequests();
             ShowRequestToBuy();
