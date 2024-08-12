@@ -26,10 +26,10 @@ namespace serverSide.Controllers
         }
 
         // GET api/<BooksController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("getBookReviews")]
+        public List<object> Get(int bookId)
         {
-            return "value";
+            return Book.getBookReviews(bookId);
         }
 
         // POST add new book to DB

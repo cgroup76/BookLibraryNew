@@ -718,6 +718,7 @@ public class DBservicesUsers
                 request.buyerName = Convert.ToString(dataReader["userName"]);
                 request.bookName = Convert.ToString(dataReader["title"]);
                 request.status = Convert.ToString(dataReader["requestStatus"]);
+                request.statusN = 0;
                 userRequests.Add(request);
             }
 
@@ -729,7 +730,7 @@ public class DBservicesUsers
             {
                 // Handle the case where the status is -1
                 dynamic request = new ExpandoObject();
-                request.status = status;
+                request.statusN = status;
                 userRequests.Add(request);
             }
         }
@@ -887,6 +888,7 @@ public class DBservicesUsers
                 requestToBuy.sellerName = Convert.ToString(dataReader["userName"]);
                 requestToBuy.bookName = Convert.ToString(dataReader["title"]);
                 requestToBuy.status = Convert.ToString(dataReader["requestStatus"]);
+                requestToBuy.statusN = 0;
                 userRequestsToBuy.Add(requestToBuy);
             }
 
@@ -898,7 +900,7 @@ public class DBservicesUsers
             {
                 // Handle the case where the status is -1
                 dynamic requestToBuy = new ExpandoObject();
-                requestToBuy.status = status;
+                requestToBuy.statusN = status;
                 userRequestsToBuy.Add(requestToBuy);
             }
         }

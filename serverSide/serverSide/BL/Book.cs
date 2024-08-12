@@ -104,6 +104,12 @@ namespace serverSide.BL
 
             return 1 == dBserviecesBooks.changeBookActivity(bookId);
         }
+        public static List<object> getBookReviews(int bookId)
+        {
+            DBservicesBooks dBserviecesBooks = new DBservicesBooks();
+
+            return dBserviecesBooks.getBookReviews(bookId);
+        }
     }
 
 }

@@ -43,7 +43,7 @@
                         <li class="nav-item myBooks"><a class="nav-link text-white " href="myBooks.html">My Books</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="author.html">Authors</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
-                        <li class="nav-item games"><a class="nav-link text-white games"href="games.html">games</a></li>
+                        <li class="nav-item games"><a class="nav-link text-white games" href="games.html">games</a></li>
 
                         <li class="nav-item loginBox"><a class="nav-link text-white login">login</a></li>
                         <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
@@ -180,6 +180,53 @@
         <div class="end-quiz"></div>
     </div>
     <!---------------->
+    <!-- book info -->
+    <div id="book-info-container">
+        <div class="book-info-header">
+            <button data-close-button class="close-button closeBookInfoButton" onclick="closeBookInfo()">&times;</button>
+            <br />
+            <img class="book-info-img" />
+            <h1 class="text-center book-info-title"></h1>
+            <span class="bold">Author: </span>
+            <span class="book-info-author pink"></span>
+            <span class="bold">published: </span>
+            <span class="book-info-publish pink"></span>
+
+        </div>
+        <br />
+        <div id="book-info-body">
+            <span class="book-info-rating pink"></span><br />
+            <span class="pink bold">Info:</span><br />
+            <span>Publish date: </span>
+            <span class="pink book-info-publish"></span><br />
+            <span>Author</span>
+            <span class="pink book-info-author"></span><br />
+            <span>Category: </span>
+            <span class="pink book-info-category"></span><br />
+            <span>Pages: </span>
+            <span class="pink book-info-numOfPages"></span><br />
+            <span>Format: </span>
+            <span class="pink book-info-format"></span><br />
+            <span>Language: </span>
+            <span class="pink book-info-lang"></span>
+        </div>
+        <div class="book-info-reviews">
+            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner" id="review-carosel">
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!---------------->
 
     <script src="quiz.js"></script>
     <script>
@@ -195,6 +242,7 @@
 
         $(document).ready(function () {
 
+            checkUserLogoutReason();
             checkForLoginUser();
 
             showBooks();
@@ -220,6 +268,62 @@
             $(".search-book-btn").click(searchBook);
 
         })
+
+        // book info
+
+        function showBookInfo(bookId) {
+
+            ajaxCall("GET", booksAPI +`/getBookReviews?bookId=${bookId}`, null, seccessToLoadReviews, errorR)
+
+            let book = allBooks.find((book) => book.Id === bookId);
+
+            $('#book-info-container').addClass('active');
+            $('#overlay').addClass('active');
+            $('.book-info-img').attr('src', book.Thumbnail);
+            $('.book-info-title').html(book.Title);
+            $('.book-info-rating').html( rating(book.Rating) + "   " + (book.Rating).toFixed(1));
+            $('.book-info-author').html(book.FirstAuthorName);
+            $('.book-info-publish').html(book.PublishDate);
+            $('.book-info-category').html(book.Category);
+            $('.book-info-numOfPages').html(book.NumOfPages);
+
+            if (book.IsEbook == 0) { $('.book-info-format').html('Hard Cover'); }
+            else { $('.book-info-format').html('EBook'); }
+            
+            $('.book-info-lang').html('English');
+
+        }
+        function seccessToLoadReviews(reviews) {
+            let html = '';
+            let index = 1;
+            
+            if (reviews.length > 0) {
+                reviews.forEach((review) => {
+                    if (index++ == 1) {
+                        html += `<div class="carousel-item active">
+                                <h5>${review.UserName}</h5>
+                                <h5>${rating(review.Rating)}  ${(review.Rating).toFixed(1)}</h5>
+                                <p>${review.Review}</p>
+                                </div>`;
+                    }
+                    else {
+                        html += `<div class="carousel-item">
+                                <h2>${rating(review.Rating)}  ${(review.Rating).toFixed(1)}</h2>
+                                <p>${review.Review}</p>
+                                </div>`;
+                    }
+                    
+                })
+                $('#review-carosel').html(html);
+            }
+        }
+
+        function errorR(err) { console.log(err) }
+
+        function closeBookInfo() {
+            $('#book-info-container').removeClass('active');
+            $('#overlay').removeClass('active');
+        }
 
         // login or signup form
 
@@ -371,41 +475,41 @@
                 if (index++ == 0) {
 
                     html += ` <div class='carousel-item active '>
-                            <div class='top-books-container'>
-                                <!--star-->
-                                <div class="top5-logo">
-                                <div class="star">
-                                 <span class="top-5-star">Top 5</span>
-                              </div>
-                              </div>
-                            <img class='d-block  top-5-img'  alt='First slide' src='${book.Thumbnail}'>
-                            <div class='top-info'>
-                            <h2>${book.Title}</h2>
-                            <h5 class='pink'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</h5>
-                            <p>${limitStringLength(book.Description, 122)}</p>
-                            </div>
-                            </div>
-                            </div >`;
+                                    <div class='top-books-container'>
+                                        <!--star-->
+                                        <div class="top5-logo">
+                                        <div class="star">
+                                         <span class="top-5-star">Top 5</span>
+                                      </div>
+                                      </div>
+                                    <img class='d-block  top-5-img'  alt='First slide' src='${book.Thumbnail}'>
+                                    <div class='top-info'>
+                                    <h2>${book.Title}</h2>
+                                    <h5 class='pink'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</h5>
+                                    <p>${limitStringLength(book.Description, 122)}</p>
+                                    </div>
+                                    </div>
+                                    </div >`;
 
                 }
 
                 else {
                     html += ` <div class='carousel-item'>
-                            <div class='top-books-container'>
-                             <!--star-->
-                                <div class="top5-logo">
-                                <div class="star">
-                                 <span class="top-5-star">Top 5</span>
-                              </div>
-                              </div>
-                            <img class='d-block  top-5-img'  alt='First slide' src='${book.Thumbnail}'>
-                            <div class='top-info'>
-                            <h2>${book.Title}</h2>
-                            <h5 class='pink'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</h5>
-                            <p>${limitStringLength(book.Description, 122)}</p>
-                            </div>
-                            </div>
-                            </div >`;
+                                    <div class='top-books-container'>
+                                     <!--star-->
+                                        <div class="top5-logo">
+                                        <div class="star">
+                                         <span class="top-5-star">Top 5</span>
+                                      </div>
+                                      </div>
+                                    <img class='d-block  top-5-img'  alt='First slide' src='${book.Thumbnail}'>
+                                    <div class='top-info'>
+                                    <h2>${book.Title}</h2>
+                                    <h5 class='pink'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</h5>
+                                    <p>${limitStringLength(book.Description, 122)}</p>
+                                    </div>
+                                    </div>
+                                    </div >`;
                 }
             })
             $("#top5Books").html(html);
@@ -427,14 +531,14 @@
 
             books.forEach((book) => {
                 if (book.IsActive == 1) {
-                    booksHtml += `
-                                            <div class='col-md-3'>
-                                                <div class='card mb-4 book-card'>
-                                                    <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
-                                                    <div class='card-body w-100'>
-                                                        <h6 class='card-title'>${book.Title}</h6>
-                                                        <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
-                                                        <span class='card-text'>${book.Price}$       </span>`;
+                    booksHtml += `<a onclick='showBookInfo(${book.Id})'>
+                                                    <div class='col-md-3 book-info'>
+                                                        <div class='card mb-4 book-card'>
+                                                            <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
+                                                            <div class='card-body w-100'>
+                                                                <h6 class='card-title'>${book.Title}</h6>
+                                                                <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
+                                                                <span class='card-text'>${book.Price}$       </span>`;
 
                     if (buyer != null) {
                         const buyerId = buyer.userId;
@@ -443,29 +547,29 @@
                         if (book.IsAvailable == 0) {
                             if (book.UserId == buyerId) { // The logged-in user bought this book
                                 booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB'>You already bought this book</a>
-                                                                  </div>
-                                                                  </div>
-                                                                  </div>`;
+                                                                          </div>
+                                                                          </div>
+                                                                          </div></a>`;
                             } else {
                                 const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
                                 booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
-                                                                  </div>
-                                                                  </div>
-                                                                  </div>`;
+                                                                          </div>
+                                                                          </div>
+                                                                          </div></a>`;
                             }
                         } else {
                             // If the book is available for purchase
                             booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='buyABook(${book.Id})'>Buy</a>
-                                                              </div>
-                                                              </div>
-                                                              </div>`;
+                                                                      </div>
+                                                                      </div>
+                                                                      </div></a>`;
                         }
                     } else {
                         // If the user is not logged in, there's no need to show the purchase option
                         booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='buyABook(${book.Id})'>Buy</a>
-                                                          </div>
-                                                          </div>
-                                                          </div>`;
+                                                                  </div>
+                                                                  </div>
+                                                                  </div></a>`;
                     }
                 }
             });
@@ -595,116 +699,7 @@
 
         }
 
-        //show user request
-        function showAllRequests() {
-            showRequests();
-            ShowRequestToBuy();
-        }
-        function showRequests() {
-            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
-            console.log(userId);
-            ajaxCall("GET", usersAPI + `/GetRequestsPerUser?userId=${userId}`, null, showMyRequests, errorShowRequest);
-        }
-
-        function showMyRequests(listOfRequest) {
-            if (listOfRequest.status == -1) {
-
-                Swal.fire("Connection time ended - Please login first");
-
-                logoutUser();
-            }
-            else {
-                let requestBox = document.querySelector('.requestBox .dropdown-menu .got')
-                let htmlGot = "";
-                let approved = "approved";
-                let denied = "denied";
-                htmlGot += '<h3> Request you got </h3>';
-
-                if (listOfRequest.length === 0) {
-                    htmlGot += '<a class="dropdown-item" href="#">No requests was sent to you</a>';
-                }
-                else {
-                    let sellerId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
-                    listOfRequest.forEach((request) => {
-                        htmlGot += `
-                             <div class="dropdown-item">
-                                 <strong>Book:</strong> ${request.bookName} <br>
-                                 <strong>Want to buy:</strong> ${request.buyerName} <br>
-                                 <strong>Status:</strong> ${request.status} <br>
-                                 <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}')">Approve</button>
-                                 <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}')">Reject</button>
-                             </div>`;
-                    });
-                }
-                requestBox.innerHTML = htmlGot;
-            }
-        }
-        function ShowRequestToBuy() {
-            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
-
-            ajaxCall("GET", usersAPI + `/getMyRequestToBuyPerUser?userId=${userId}`, null, ShowMyRequestToBuy, errorShowRequest);
-        }
-
-        function ShowMyRequestToBuy(listOfRequest) {
-            if (listOfRequest.status == -1) {
-
-                Swal.fire("Connection time ended - Please login first");
-
-                logoutUser();
-            }
-            else {
-                let requestBox = document.querySelector('.requestBox .dropdown-menu .send');
-                let htmlSend = "";
-                htmlSend += `<h3> Request you send </h3>`
-                if (listOfRequest.length === 0) {
-                    htmlSend += '<a class="dropdown-item" href="#">You wasnt send any request</a>';
-                }
-                else {
-
-                    listOfRequest.forEach((request) => {
-                        htmlSend += `<div class="dropdown-item">
-                             <strong>Book:</strong> ${request.bookName} <br>
-                             <strong>you ask to buy from:</strong> ${request.sellerName} <br>
-                             <strong>Status:</strong> ${request.status} <br>
-                             </div>`
-                    });
-                }
-                requestBox.innerHTML = htmlSend;
-            }
-        }
-
-        function errorShowRequest() {
-            console.log("not good")
-        }
-        //approve or denied request
-        function handleRequest(buyerId, sellerId, bookId, requestStatus) {
-            console.log(buyerId, sellerId, bookId, requestStatus);
-            ajaxCall("PUT", `${usersAPI}/requestHandling?sellerId=${sellerId}&buyerId=${buyerId}&bookId=${bookId}&requeststatus=${requestStatus}`, null, successToHandle(requestStatus), errorToHandle)
-        }
-
-        function successToHandle(requestStatus) {
-            if (requestStatus == 'approved') {
-                Swal.fire({
-                    title: "The request was successfully approved"
-                });
-            }
-            else {
-                Swal.fire({
-                    title: "The request was successfully rejected"
-                });
-
-            }
-            showAllRequests();
-        }
-        function errorToHandle() {
-
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'There was an error handling the request. Please try again.'
-            });
-        }
-
+     
         //------------------------
         function activateSreachBooksBar() {
 
@@ -747,15 +742,15 @@
 
                     bookList.forEach((book) => {
                         booksHtml += `
-                                            <div class='row'>
-                                                <div class='card mb-4 book-card-search col-md-2'>
-                                                    <img src='${book.SmallThumbnail}' class='card-img-search' alt='Book'>
-                                                    </div>
-                                                    <div class='card-body w-100 col-md-10'>
-                                                        <h3 class='card-title'>${book.Title}</h3>
-                                                        ${book.foundString}
-                                                        <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
-                                                        <span class='card-text'>${book.Price}$       </span>`;
+                                                    <div class='row'>
+                                                        <div class='card mb-4 book-card-search col-md-2'>
+                                                            <img src='${book.SmallThumbnail}' class='card-img-search' alt='Book'>
+                                                            </div>
+                                                            <div class='card-body w-100 col-md-10'>
+                                                                <h3 class='card-title'>${book.Title}</h3>
+                                                                ${book.foundString}
+                                                                <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
+                                                                <span class='card-text'>${book.Price}$       </span>`;
                         if (buyer != null) {
                             const buyerId = buyer.userId;
 
@@ -763,26 +758,26 @@
                             if (book.IsAvailable == 0) {
                                 if (book.UserId == buyerId) { // The logged-in user bought this book
                                     booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB'>You already bought this book</a>
-                                                                  </div>
-                                                                  </div>`;
+                                                                          </div>
+                                                                          </div>`;
                                 } else {
                                     const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
                                     booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
-                                                                  </div>
-                                                                  </div>
-                                                                  </div>`;
+                                                                          </div>
+                                                                          </div>
+                                                                          </div>`;
                                 }
                             } else {
                                 // If the book is available for purchase
                                 booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='buyABook(${book.Id})'>Buy</a>
-                                                              </div>
-                                                              </div>`;
+                                                                      </div>
+                                                                      </div>`;
                             }
                         } else {
                             // If the user is not logged in, there's no need to show the purchase option
                             booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='buyABook(${book.Id})'>Buy</a>
-                                                          </div>
-                                                          </div>`;
+                                                                  </div>
+                                                                  </div>`;
                         }
                     });
                     BooksContainer.innerHTML = booksHtml;

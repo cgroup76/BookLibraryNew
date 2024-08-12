@@ -123,6 +123,7 @@
 
         var bookIdToRate;
         var bookRating;
+        var currentBookId;
         const requestBox = $('.requestBox .dropdown-menu');
 
         $(document).ready(function () {
@@ -130,6 +131,7 @@
             checkForLoginUser();
 
             showMyBooks();
+
             $('.requestBox').click(showAllRequests);
 
             $('.logout').click(logoutUser);
@@ -173,6 +175,15 @@
         function closeReviewForm() {
             $("#reviewABook").removeClass('active');
             $("#overlay").removeClass('active');
+
+            // Clear the rating selection
+            $('input[name="rating"]').prop('checked', false);
+
+            // Clear the text in the comment box
+            $('#comment').val('');
+
+            // Reset the character count display
+            $('#charCount').text('0/255 characters');
         }
 
         //------------
@@ -180,9 +191,7 @@
         function errorRating(error) {
             if (error.status == 401) {
 
-                Swal.fire("Connection time ended - Please login first");
-
-                logoutUser();
+                logoutUser('endSession');
             }
             else {
                 Swal.fire('Error', "Could not submit your raitng - please try again later", 'error');
@@ -299,7 +308,7 @@
             const bookElement = document.getElementById(`markAsRead-${currentBookId}`);
             let bookHtml = `
                                         <h5 class='card-title'>${currentBookTitle}</h5>
-                                         <a class='btn btn-outline-dark pinkB ' onclick='showReviewForm(${book.Id})''>Review</a>
+                                         <a class='btn btn-outline-dark pinkB ' onclick='showReviewForm(${currentBookId})''>Review</a>
                                         </div>`;
             bookElement.innerHTML = bookHtml;
             Swal.fire('Success', 'Book marked as read.', 'success');
@@ -307,120 +316,13 @@
 
         function errorToMarkAsRead(errorMessage) {
             if (errorMessage.status == 401) {
-                Swal.fire("Connection time ended - Please login first").then(() => successLogout(true));
+                logoutUser('endSession');
             } else {
                 Swal.fire('Error', 'Failed to mark the book as read. Please try again.', 'error');
             }
         }
 
-        function showAllRequests() {
-            showRequests();
-            ShowRequestToBuy();
-        }
-        function showRequests() {
-            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
-            console.log(userId);
-            ajaxCall("GET", usersAPI + `/GetRequestsPerUser?userId=${userId}`, null, showMyRequests, errorShowRequest);
-        }
 
-        function showMyRequests(listOfRequest) {
-            if (listOfRequest.status == -1) {
-
-                Swal.fire("Connection time ended - Please login first");
-
-                logoutUser();
-            }
-            else {
-                let requestBox = document.querySelector('.requestBox .dropdown-menu .got')
-                let htmlGot = "";
-                let approved = "approved";
-                let denied = "denied";
-                htmlGot += '<h3> Request you got </h3>';
-
-                if (listOfRequest.length === 0) {
-                    htmlGot += '<a class="dropdown-item" href="#">No requests was sent to you</a>';
-                }
-                else {
-                    let sellerId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
-                    listOfRequest.forEach((request) => {
-                        htmlGot += `
-                                                <div class="dropdown-item">
-                                                    <strong>Book:</strong> ${request.bookName} <br>
-                                                    <strong>Want to buy:</strong> ${request.buyerName} <br>
-                                                    <strong>Status:</strong> ${request.status} <br>
-                                                    <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}')">Approve</button>
-                                                    <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}')">Reject</button>
-                                                </div>`;
-                    });
-                }
-                requestBox.innerHTML = htmlGot;
-            }
-        }
-        function ShowRequestToBuy() {
-            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
-
-            ajaxCall("GET", usersAPI + `/getMyRequestToBuyPerUser?userId=${userId}`, null, ShowMyRequestToBuy, errorShowRequest);
-        }
-
-        function ShowMyRequestToBuy(listOfRequest) {
-            if (listOfRequest.status == -1) {
-
-                Swal.fire("Connection time ended - Please login first");
-
-                logoutUser();
-            }
-            else {
-                let requestBox = document.querySelector('.requestBox .dropdown-menu .send');
-                let htmlSend = "";
-                htmlSend += `<h3> Request you send </h3>`
-                if (listOfRequest.length === 0) {
-                    htmlSend += '<a class="dropdown-item" href="#">You wasnt send any request</a>';
-                }
-                else {
-
-                    listOfRequest.forEach((request) => {
-                        htmlSend += `<div class="dropdown-item">
-                                                <strong>Book:</strong> ${request.bookName} <br>
-                                                <strong>you ask to buy from:</strong> ${request.sellerName} <br>
-                                                <strong>Status:</strong> ${request.status} <br>
-                                                </div>`
-                    });
-                }
-                requestBox.innerHTML = htmlSend;
-            }
-        }
-
-        function errorShowRequest() {
-            console.log("not good")
-        }
-
-        function handleRequest(buyerId, sellerId, bookId, requestStatus) {
-            console.log(buyerId, sellerId, bookId, requestStatus);
-            ajaxCall("PUT", `${usersAPI}/requestHandling?sellerId=${sellerId}&buyerId=${buyerId}&bookId=${bookId}&requeststatus=${requestStatus}`, null, successToHandle(requestStatus), errorToHandle);
-        }
-
-        function successToHandle(requestStatus) {
-            if (requestStatus == 'approved') {
-                Swal.fire({
-                    icon: "success",
-                    title: "The request was successfully approved"
-                });
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "The request was successfully rejected"
-                });
-            }
-            showAllRequests();
-        }
-
-        function errorToHandle() {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'There was an error handling the request. Please try again.'
-            });
-        }
 
     </script>
     <!-- jQuery -->
