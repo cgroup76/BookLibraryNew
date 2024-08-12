@@ -8,6 +8,7 @@ using System.Text;
 using System.Data.Common;
 using serverSide.BL;
 using System.Dynamic;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 
 /// <summary>
 /// DBServices is a class created by me to provides some DataBase Services
@@ -243,7 +244,7 @@ public class DBservicesBooks
     // This method let the user rate books
     //--------------------------------------------------------------------------------------------------
 
-    public int RateBook(int bookID, int newRating, int userID)
+    public int RateBook(int bookID, int newRating, int userID, string review)
     {
 
         SqlConnection con;
@@ -261,7 +262,7 @@ public class DBservicesBooks
             throw (ex);
         }
 
-        cmd = CreateCommandWithStoredProcedureNewRating("RateBook", con, bookID, newRating, userID);             // create the command
+        cmd = CreateCommandWithStoredProcedureNewRating("RateBook", con, bookID, newRating, userID, review);             // create the command
         returnValue.ParameterName = "@RETURN_VALUE";
         returnValue.Direction = ParameterDirection.ReturnValue;
         cmd.Parameters.Add(returnValue);
@@ -293,7 +294,7 @@ public class DBservicesBooks
     //  This method let the user rate books
     //---------------------------------------------------------------------------------
 
-    private SqlCommand CreateCommandWithStoredProcedureNewRating(String spName, SqlConnection con, int bookId, int newRating, int userId)
+    private SqlCommand CreateCommandWithStoredProcedureNewRating(String spName, SqlConnection con, int bookId, int newRating, int userId, string review)
     {
 
         SqlCommand cmd = new SqlCommand(); // create the command object
@@ -310,6 +311,7 @@ public class DBservicesBooks
         cmd.Parameters.AddWithValue("@bookid", bookId);
         cmd.Parameters.AddWithValue("@newRating", newRating);
         cmd.Parameters.AddWithValue("@userid", userId);
+        cmd.Parameters.AddWithValue("@review", review);
 
 
 
