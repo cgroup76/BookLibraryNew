@@ -133,6 +133,12 @@ namespace serverSide.BL
 
             return dBservicesUsers.GetAllIusers();
         }
+        // login a user with google
+        public static object LogInWithGoogle(IUser LoginUser)
+        {
+            DBservicesUsers dbservicesUsers = new DBservicesUsers();
 
+            return dbservicesUsers.LogInWithGoogle(LoginUser, TIMEOUT);
+        }
     }
 }

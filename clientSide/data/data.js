@@ -4121,5 +4121,424 @@ var eBooks = [
         "searchInfo": {
             "textSnippet": ""
         }
+    }, {
+        "kind": "books#volume",
+        "id": "BQBINxJhNqcC",
+        "etag": "jGrkJ4umrJI",
+        "selfLink": "https://www.googleapis.com/books/v1/volumes/BQBINxJhNqcC",
+        "volumeInfo": {
+            "title": "Archaeology, Anthropology, and Interstellar Communication",
+            "authors": [
+                "Douglas A. Vakoch"
+            ],
+            "publisher": "U. S. National Aeronautics & Space Administration",
+            "publishedDate": "2014",
+            "description": "Are we alone? asks the writeup on the back cover of the dust jacket. The contributors to this collection raise questions that may have been overlooked by physical scientists about the ease of establishing meaningful communication with an extraterrestrial intelligence. By drawing on issues at the core of contemporary archaeology and anthropology, we can be much better prepared for contact with an extraterrestrial civilization, should that day ever come. NASA SP-2013-4413.",
+            "industryIdentifiers": [
+                {
+                    "type": "OTHER",
+                    "identifier": "RUTGERS:39030039382785"
+                }
+            ],
+            "readingModes": {
+                "text": false,
+                "image": true
+            },
+            "pageCount": 338,
+            "printType": "BOOK",
+            "categories": [
+                "History"
+            ],
+            "maturityRating": "NOT_MATURE",
+            "allowAnonLogging": false,
+            "contentVersion": "0.0.1.0.full.1",
+            "panelizationSummary": {
+                "containsEpubBubbles": false,
+                "containsImageBubbles": false
+            },
+            "imageLinks": {
+                "smallThumbnail": "http://books.google.com/books/content?id=BQBINxJhNqcC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                "thumbnail": "http://books.google.com/books/content?id=BQBINxJhNqcC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+            },
+            "language": "en",
+            "previewLink": "http://books.google.com/books?id=BQBINxJhNqcC&pg=PA258&dq=subject:Science+fiction&hl=&as_brr=5&cd=1&source=gbs_api",
+            "infoLink": "https://play.google.com/store/books/details?id=BQBINxJhNqcC&source=gbs_api",
+            "canonicalVolumeLink": "https://play.google.com/store/books/details?id=BQBINxJhNqcC"
+        },
+        "saleInfo": {
+            "country": "IL",
+            "saleability": "FREE",
+            "isEbook": true,
+            "buyLink": "https://play.google.com/store/books/details?id=BQBINxJhNqcC&rdid=book-BQBINxJhNqcC&rdot=1&source=gbs_api"
+        },
+        "accessInfo": {
+            "country": "IL",
+            "viewability": "ALL_PAGES",
+            "embeddable": true,
+            "publicDomain": true,
+            "textToSpeechPermission": "ALLOWED",
+            "epub": {
+                "isAvailable": false,
+                "downloadLink": "http://books.google.com/books/download/Archaeology_Anthropology_and_Interstella.epub?id=BQBINxJhNqcC&hl=&output=epub&source=gbs_api"
+            },
+            "pdf": {
+                "isAvailable": false
+            },
+            "webReaderLink": "http://play.google.com/books/reader?id=BQBINxJhNqcC&hl=&as_brr=5&source=gbs_api",
+            "accessViewStatus": "FULL_PUBLIC_DOMAIN",
+            "quoteSharingAllowed": false
+        },
+        "searchInfo": {
+            "textSnippet": ""
+        }
+
+    },
+    {
+        "kind": "books#volume",
+        "id": "T-FXvgk5N5kC",
+        "etag": "cJnjZ3Kjyh0",
+        "selfLink": "https://www.googleapis.com/books/v1/volumes/T-FXvgk5N5kC",
+        "volumeInfo": {
+            "title": "When Biospheres Collide",
+            "subtitle": "A History of NASA's Planetary Protection Programs",
+            "authors": [
+                "Michael Meltzer"
+            ],
+            "publisher": "U. S. National Aeronautics & Space Administration",
+            "publishedDate": "2010",
+            "description": "NOTE: NO FURTHER DISCOUNT FOR THIS PRINT PRODUCT- OVERSTOCK SALE-- Significantly reduced list price This new book from the NASA History Series tackles an interesting duo of biological problems that will be familiar to anybody who has seen photos of Apollo astronauts quarantined after their return to Earth.Namely, how do we avoid contaminating celestial bodies with Earthly germs when we send spacecraft to study these bodies, and how do we avoid spreading foreign biological matter from space when our robotic and human spacefarers return to Earth?Biological matter from an external system could potentially cause an unchecked epidemic either on Earth or in space so strict precautions are necessary. Each time a space vehicle visits another world it runs the risk of forever changing that extraterrestrial environment. We are surrounded on Earth by a melange of different microorganisms, and if some of these hitchhike onboard a space mission, they could contaminate and start colonies on a different planet. Such an occurrence would irrevocably alter the nature of that world, compromise all future scientific exploration of the body, and possibly damage any extant life on it.By inadvertently carrying exotic organisms back to Earth on our spacecraft, we also risk the release of biohazardous materials into our own ecosystem. Such concerns were recognized by scientists even before the 1957 launch of Sputnik. This book presents the history of planetary protection by tracing the responses to the above concerns on NASA s missions to the Moon, Mars, Venus, Jupiter, Saturn, and many smaller bodies of our solar system. The book relates the extensive efforts put forth by NASA to plan operations and prepare space vehicles that return exemplary science without contaminating the biospheres of other worlds or our own. To protect irreplaceable environments, NASA has committed to conducting space exploration in a manner that is protective of the bodies visited, as well as of our own planet.\"",
+            "industryIdentifiers": [
+                {
+                    "type": "OTHER",
+                    "identifier": "NYPL:33433088901636"
+                }
+            ],
+            "readingModes": {
+                "text": false,
+                "image": true
+            },
+            "pageCount": 556,
+            "printType": "BOOK",
+            "categories": [
+                "Nature"
+            ],
+            "maturityRating": "NOT_MATURE",
+            "allowAnonLogging": false,
+            "contentVersion": "0.4.5.0.full.1",
+            "panelizationSummary": {
+                "containsEpubBubbles": false,
+                "containsImageBubbles": false
+            },
+            "imageLinks": {
+                "smallThumbnail": "http://books.google.com/books/content?id=T-FXvgk5N5kC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                "thumbnail": "http://books.google.com/books/content?id=T-FXvgk5N5kC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+            },
+            "language": "en",
+            "previewLink": "http://books.google.com/books?id=T-FXvgk5N5kC&pg=PA73&dq=subject:Science+fiction&hl=&as_brr=5&cd=2&source=gbs_api",
+            "infoLink": "https://play.google.com/store/books/details?id=T-FXvgk5N5kC&source=gbs_api",
+            "canonicalVolumeLink": "https://play.google.com/store/books/details?id=T-FXvgk5N5kC"
+        },
+        "saleInfo": {
+            "country": "IL",
+            "saleability": "FREE",
+            "isEbook": true,
+            "buyLink": "https://play.google.com/store/books/details?id=T-FXvgk5N5kC&rdid=book-T-FXvgk5N5kC&rdot=1&source=gbs_api"
+        },
+        "accessInfo": {
+            "country": "IL",
+            "viewability": "ALL_PAGES",
+            "embeddable": true,
+            "publicDomain": true,
+            "textToSpeechPermission": "ALLOWED",
+            "epub": {
+                "isAvailable": false,
+                "downloadLink": "http://books.google.com/books/download/When_Biospheres_Collide.epub?id=T-FXvgk5N5kC&hl=&output=epub&source=gbs_api"
+            },
+            "pdf": {
+                "isAvailable": false
+            },
+            "webReaderLink": "http://play.google.com/books/reader?id=T-FXvgk5N5kC&hl=&as_brr=5&source=gbs_api",
+            "accessViewStatus": "FULL_PUBLIC_DOMAIN",
+            "quoteSharingAllowed": false
+        },
+        "searchInfo": {
+            "textSnippet": ""
+        }
+    },
+    {
+        "kind": "books#volume",
+        "id": "VoZcAAAAQBAJ",
+        "etag": "6NjqfMd6U4g",
+        "selfLink": "https://www.googleapis.com/books/v1/volumes/VoZcAAAAQBAJ",
+        "volumeInfo": {
+            "title": "A moreninha",
+            "authors": [
+                "Joaquim Manuel de Macedo"
+            ],
+            "publisher": "Google, Inc.",
+            "publishedDate": "2013-07-21",
+            "readingModes": {
+                "text": true,
+                "image": true
+            },
+            "pageCount": 191,
+            "printType": "BOOK",
+            "categories": [
+                "Fiction"
+            ],
+            "averageRating": 4.5,
+            "ratingsCount": 4,
+            "maturityRating": "NOT_MATURE",
+            "allowAnonLogging": false,
+            "contentVersion": "1.4.4.0.full.3",
+            "panelizationSummary": {
+                "containsEpubBubbles": false,
+                "containsImageBubbles": false
+            },
+            "imageLinks": {
+                "smallThumbnail": "http://books.google.com/books/content?id=VoZcAAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                "thumbnail": "http://books.google.com/books/content?id=VoZcAAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+            },
+            "language": "pt",
+            "previewLink": "http://books.google.com/books?id=VoZcAAAAQBAJ&printsec=frontcover&dq=subject:fiction&hl=&as_brr=5&cd=4&source=gbs_api",
+            "infoLink": "https://play.google.com/store/books/details?id=VoZcAAAAQBAJ&source=gbs_api",
+            "canonicalVolumeLink": "https://play.google.com/store/books/details?id=VoZcAAAAQBAJ"
+        },
+        "saleInfo": {
+            "country": "IL",
+            "saleability": "FREE",
+            "isEbook": true,
+            "buyLink": "https://play.google.com/store/books/details?id=VoZcAAAAQBAJ&rdid=book-VoZcAAAAQBAJ&rdot=1&source=gbs_api"
+        },
+        "accessInfo": {
+            "country": "IL",
+            "viewability": "ALL_PAGES",
+            "embeddable": true,
+            "publicDomain": true,
+            "textToSpeechPermission": "ALLOWED",
+            "epub": {
+                "isAvailable": true,
+                "downloadLink": "http://books.google.com/books/download/A_moreninha.epub?id=VoZcAAAAQBAJ&hl=&output=epub&source=gbs_api"
+            },
+            "pdf": {
+                "isAvailable": true,
+                "downloadLink": "http://books.google.com/books/download/A_moreninha.pdf?id=VoZcAAAAQBAJ&hl=&output=pdf&sig=ACfU3U1DL7XIuHIpA_Jmxroo2em9ZGnoRw&source=gbs_api"
+            },
+            "webReaderLink": "http://play.google.com/books/reader?id=VoZcAAAAQBAJ&hl=&as_brr=5&source=gbs_api",
+            "accessViewStatus": "FULL_PUBLIC_DOMAIN",
+            "quoteSharingAllowed": false
+        },
+        "searchInfo": {
+            "textSnippet": ""
+        }
+    }, 
+    {
+        "kind": "books#volume",
+        "id": "bqhaAAAAMAAJ",
+        "etag": "Sj6zXyIE2+8",
+        "selfLink": "https://www.googleapis.com/books/v1/volumes/bqhaAAAAMAAJ",
+        "volumeInfo": {
+            "title": "The Wind in the Willows",
+            "authors": [
+                "Kenneth Grahame"
+            ],
+            "publishedDate": "1908",
+            "description": "Since its publication in 1908, Kenneth Grahame's The Wind in the Willows has enchanted readers, young and old. This new edition, sensitively abridged and exquisitely illustrated by Inga Moore, is sure to win over a new generation of fans. Here readers will meet the amiable Mole, his hearty friend the Water Rat, the genial Badger, and, of course, the irrepressible Mr. Toad, and enjoy some of the most memorable adventures in children's literature. Classic, yet accessible, and full of humor, this beautiful volume is the perfect addition to every family's bookshelf. Book jacket.",
+            "industryIdentifiers": [
+                {
+                    "type": "OTHER",
+                    "identifier": "UOM:39015008859509"
+                }
+            ],
+            "readingModes": {
+                "text": true,
+                "image": true
+            },
+            "pageCount": 324,
+            "printType": "BOOK",
+            "categories": [
+                "Juvenile Fiction"
+            ],
+            "averageRating": 4,
+            "ratingsCount": 19,
+            "maturityRating": "NOT_MATURE",
+            "allowAnonLogging": false,
+            "contentVersion": "3.3.8.0.full.3",
+            "panelizationSummary": {
+                "containsEpubBubbles": false,
+                "containsImageBubbles": false
+            },
+            "imageLinks": {
+                "smallThumbnail": "http://books.google.com/books/content?id=bqhaAAAAMAAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                "thumbnail": "http://books.google.com/books/content?id=bqhaAAAAMAAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+            },
+            "language": "en",
+            "previewLink": "http://books.google.com/books?id=bqhaAAAAMAAJ&printsec=frontcover&dq=subject:Fantasy&hl=&as_brr=5&cd=2&source=gbs_api",
+            "infoLink": "https://play.google.com/store/books/details?id=bqhaAAAAMAAJ&source=gbs_api",
+            "canonicalVolumeLink": "https://play.google.com/store/books/details?id=bqhaAAAAMAAJ"
+        },
+        "saleInfo": {
+            "country": "IL",
+            "saleability": "FREE",
+            "isEbook": true,
+            "buyLink": "https://play.google.com/store/books/details?id=bqhaAAAAMAAJ&rdid=book-bqhaAAAAMAAJ&rdot=1&source=gbs_api"
+        },
+        "accessInfo": {
+            "country": "IL",
+            "viewability": "ALL_PAGES",
+            "embeddable": true,
+            "publicDomain": true,
+            "textToSpeechPermission": "ALLOWED",
+            "epub": {
+                "isAvailable": true,
+                "downloadLink": "http://books.google.com/books/download/The_Wind_in_the_Willows.epub?id=bqhaAAAAMAAJ&hl=&output=epub&source=gbs_api"
+            },
+            "pdf": {
+                "isAvailable": true,
+                "downloadLink": "http://books.google.com/books/download/The_Wind_in_the_Willows.pdf?id=bqhaAAAAMAAJ&hl=&output=pdf&sig=ACfU3U0RRMrp8X3i6_PGz2oZHeSmYkDinQ&source=gbs_api"
+            },
+            "webReaderLink": "http://play.google.com/books/reader?id=bqhaAAAAMAAJ&hl=&as_brr=5&source=gbs_api",
+            "accessViewStatus": "FULL_PUBLIC_DOMAIN",
+            "quoteSharingAllowed": false
+        },
+        "searchInfo": {
+            "textSnippet": ""
+        }
+    }, {
+        "kind": "books#volume",
+        "id": "joPmIH6fAT4C",
+        "etag": "DGO/KNUBnqo",
+        "selfLink": "https://www.googleapis.com/books/v1/volumes/joPmIH6fAT4C",
+        "volumeInfo": {
+            "title": "ESEA, from Tales to Tapes",
+            "subtitle": "Hearing of the Committee on Health, Education, Labor, and Pensions, United States Senate, One Hundred Sixth Congress, First Session, on Examining Legislation Authorizing Funds for Programs of the Elementary and Secondary Education Act, May 20, 1999",
+            "authors": [
+                "United States. Congress. Senate. Committee on Health, Education, Labor, and Pensions"
+            ],
+            "publishedDate": "1999",
+            "industryIdentifiers": [
+                {
+                    "type": "OTHER",
+                    "identifier": "PSU:000043040131"
+                }
+            ],
+            "readingModes": {
+                "text": false,
+                "image": true
+            },
+            "pageCount": 248,
+            "printType": "BOOK",
+            "categories": [
+                "Education"
+            ],
+            "maturityRating": "NOT_MATURE",
+            "allowAnonLogging": false,
+            "contentVersion": "0.7.10.0.full.1",
+            "panelizationSummary": {
+                "containsEpubBubbles": false,
+                "containsImageBubbles": false
+            },
+            "imageLinks": {
+                "smallThumbnail": "http://books.google.com/books/content?id=joPmIH6fAT4C&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                "thumbnail": "http://books.google.com/books/content?id=joPmIH6fAT4C&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+            },
+            "language": "en",
+            "previewLink": "http://books.google.com/books?id=joPmIH6fAT4C&pg=PA185&dq=intitle:To+Kill+a+Mockingbird&hl=&as_brr=5&as_pt=BOOKS&cd=4&source=gbs_api",
+            "infoLink": "https://play.google.com/store/books/details?id=joPmIH6fAT4C&source=gbs_api",
+            "canonicalVolumeLink": "https://play.google.com/store/books/details?id=joPmIH6fAT4C"
+        },
+        "saleInfo": {
+            "country": "IL",
+            "saleability": "FREE",
+            "isEbook": true,
+            "buyLink": "https://play.google.com/store/books/details?id=joPmIH6fAT4C&rdid=book-joPmIH6fAT4C&rdot=1&source=gbs_api"
+        },
+        "accessInfo": {
+            "country": "IL",
+            "viewability": "ALL_PAGES",
+            "embeddable": true,
+            "publicDomain": true,
+            "textToSpeechPermission": "ALLOWED",
+            "epub": {
+                "isAvailable": false,
+                "downloadLink": "http://books.google.com/books/download/ESEA_from_Tales_to_Tapes.epub?id=joPmIH6fAT4C&hl=&output=epub&source=gbs_api"
+            },
+            "pdf": {
+                "isAvailable": false
+            },
+            "webReaderLink": "http://play.google.com/books/reader?id=joPmIH6fAT4C&hl=&as_brr=5&as_pt=BOOKS&source=gbs_api",
+            "accessViewStatus": "FULL_PUBLIC_DOMAIN",
+            "quoteSharingAllowed": false
+        },
+        "searchInfo": {
+            "textSnippet": "... <b>Kill a Mockingbird</b> &quot; and &quot; Stand and Deliver . &quot; Rebuttal During a special program relating to Black History Month , a Channel One anchor recommended these films as sensitive explorations of racial issues in America . These two films&nbsp;..."
+        }
+    }, {
+        "kind": "books#volume",
+        "id": "P-wNAAAAYAAJ",
+        "etag": "+e+skqqk+Wc",
+        "selfLink": "https://www.googleapis.com/books/v1/volumes/P-wNAAAAYAAJ",
+        "volumeInfo": {
+            "title": "The Romance of Travel",
+            "subtitle": "Comprising Adventures in Foreign Countries, and Descriptions of Manners, Customs, and Places",
+            "authors": [
+                "Old Traveller"
+            ],
+            "publishedDate": "1854",
+            "industryIdentifiers": [
+                {
+                    "type": "OTHER",
+                    "identifier": "HARVARD:HNW1I3"
+                }
+            ],
+            "readingModes": {
+                "text": false,
+                "image": true
+            },
+            "pageCount": 312,
+            "printType": "BOOK",
+            "categories": [
+                "Adventure"
+            ],
+            "maturityRating": "NOT_MATURE",
+            "allowAnonLogging": false,
+            "contentVersion": "0.4.6.0.full.1",
+            "panelizationSummary": {
+                "containsEpubBubbles": false,
+                "containsImageBubbles": false
+            },
+            "imageLinks": {
+                "smallThumbnail": "http://books.google.com/books/content?id=P-wNAAAAYAAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                "thumbnail": "http://books.google.com/books/content?id=P-wNAAAAYAAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+            },
+            "language": "en",
+            "previewLink": "http://books.google.com/books?id=P-wNAAAAYAAJ&printsec=frontcover&dq=subject:Adventure&hl=&as_brr=5&as_pt=BOOKS&cd=1&source=gbs_api",
+            "infoLink": "https://play.google.com/store/books/details?id=P-wNAAAAYAAJ&source=gbs_api",
+            "canonicalVolumeLink": "https://play.google.com/store/books/details?id=P-wNAAAAYAAJ"
+        },
+        "saleInfo": {
+            "country": "IL",
+            "saleability": "FREE",
+            "isEbook": true,
+            "buyLink": "https://play.google.com/store/books/details?id=P-wNAAAAYAAJ&rdid=book-P-wNAAAAYAAJ&rdot=1&source=gbs_api"
+        },
+        "accessInfo": {
+            "country": "IL",
+            "viewability": "ALL_PAGES",
+            "embeddable": true,
+            "publicDomain": true,
+            "textToSpeechPermission": "ALLOWED",
+            "epub": {
+                "isAvailable": false,
+                "downloadLink": "http://books.google.com/books/download/The_Romance_of_Travel.epub?id=P-wNAAAAYAAJ&hl=&output=epub&source=gbs_api"
+            },
+            "pdf": {
+                "isAvailable": true,
+                "downloadLink": "http://books.google.com/books/download/The_Romance_of_Travel.pdf?id=P-wNAAAAYAAJ&hl=&output=pdf&sig=ACfU3U1_yYWW9F6H8maIaEqKN9iqI8OrFg&source=gbs_api"
+            },
+            "webReaderLink": "http://play.google.com/books/reader?id=P-wNAAAAYAAJ&hl=&as_brr=5&as_pt=BOOKS&source=gbs_api",
+            "accessViewStatus": "FULL_PUBLIC_DOMAIN",
+            "quoteSharingAllowed": false
+        }
     },
 ]

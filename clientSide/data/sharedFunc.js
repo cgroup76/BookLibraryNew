@@ -41,6 +41,19 @@ function ajaxCall(method, api, data, successCB, errorCB) {
         error: errorCB
     });
 }
+function ajaxCallSync(method, api, data, successCB, errorCB) {
+    $.ajax({
+        type: method,
+        url: api,
+        data: data,
+        cache: false,
+        async: false,
+        contentType: "application/json",
+        dataType: "json",
+        success: successCB,
+        error: errorCB
+    });
+}
 //-----------------------
 
 // logout user

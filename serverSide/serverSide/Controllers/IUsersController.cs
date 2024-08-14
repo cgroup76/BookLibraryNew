@@ -138,7 +138,16 @@ namespace serverSide.Controllers
            
         }
 
+        // PUT login google user
+        [HttpPut("loginGoogleUser")]
+        public IActionResult LogInWithGoogle([FromBody] IUser user)
+        {
+            object loggedinUserDetails = IUser.LogInWithGoogle(user);
 
+            if (loggedinUserDetails != null) { return Ok(loggedinUserDetails); } // checks if the object is not empty
+
+            else { return NotFound(); }
+        }
 
 
     }
