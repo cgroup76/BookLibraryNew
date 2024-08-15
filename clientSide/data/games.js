@@ -26,7 +26,7 @@ function startMemoryGame() {
 }
 
 function createMemoryCards() {
-    const selectedBooks = allBooks.sort(() => Math.random() - 0.5).slice(0, 2);
+    const selectedBooks = allBooks.sort(() => Math.random() - 0.5).slice(0, 4);
     gameCards = [];
     selectedBooks.forEach(book => {
         // Add cover card
