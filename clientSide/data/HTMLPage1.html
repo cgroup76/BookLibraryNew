@@ -96,10 +96,23 @@
             <h2 class="text-center text-white mb-5">Recommended Books</h2>
             <nav class="navbar navbar-dark bg-dark justify-content-between search-books-bar">
                 <a class="navbar-brand pink">Search Books</a>
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2 search-string" type="search" placeholder="Search" aria-label="Search">
+                <div class="search-div d-flex justify-content-center align-items-center">
+
+                        <div class="form">
+                            <i class="fa fa-search"></i>
+                            <input type="text" class="form-control form-input search-string" placeholder="Search anything...">
+                            <span class="left-pan">
+                                <svg class="speech-to-text" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic" viewBox="0 0 16 16">
+                                    <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5" />
+                                    <path d="M10 8a2 2 0 1 1-4 0V3a2 2 0 1 1 4 0zM8 0a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V3a3 3 0 0 0-3-3" />
+                                </svg>
+                            </span>
+                        </div>
+
                     <button class="btn btn-outline-dark my-2 my-sm-0 pinkB search-book-btn" type="submit">Search</button>
-                </form>
+
+                </div>
+
             </nav>
             <div class="row" id="allBooks">
 
@@ -269,6 +282,50 @@
             $(".search-book-btn").click(searchBook);
 
         })
+
+        // text to speach -> search bar : work on Google chrom / Opera / Samsung Internet
+
+        const transcript = document.querySelector(".search-string");
+
+        // Select the SVG element by its class and add a click event listener
+        document.querySelector('.speech-to-text').addEventListener('click', () => {
+            // Start speech recognition logic here
+            transcript.value = "";  // Clear input field
+
+            recognition = new webkitSpeechRecognition();  // Initialize speech recognition
+
+            // Set up speech recognition options
+            recognition.lang = "en-US";
+            recognition.interimResults = false;
+            recognition.continuous = false;
+            recognition.maxAlternatives = 10;
+
+            recognition.start();  // Start speech recognition
+
+            // Handle the results of speech recognition
+            recognition.onresult = (event) => {
+                let text = "";
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i][0].confidence > 0.8) {
+                        text += event.results[i][0].transcript;
+                    }
+                }
+
+                transcript.value = text.trim();  // Update input field with transcribed text
+            };
+
+            recognition.onend = () => {
+                // Re-enable recognition or handle when recognition ends
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Speech recognition error:", event.error);
+                recognition.stop();
+            };
+        });
+
+        //-----------------------
+
         // login with google 
         const clientId = "330257384068-acpk14o95tj991u9u5l9vngpmll1c38g.apps.googleusercontent.com"; // Your Client ID
         const redirectUri = "http://localhost:65055/HTMLPage1.html"; // Replace with your actual redirect URI
@@ -803,7 +860,7 @@
         function activateSreachBooksBar() {
 
             allBooks.forEach((book) => {
-                let text = book.Title + " " + book.FirstAuthorName + " " + book.SecondAuthorName + " " + book.TextSnippet;
+                let text = book.Title + " " + book.FirstAuthorName + " " + book.SecondAuthorName + " " + book.TextSnippet + " " + book.Description;
                 booksDict[JSON.stringify(book)] = text;
             })
         }
