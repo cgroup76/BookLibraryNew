@@ -34,7 +34,7 @@
                         <li class="nav-item"><a class="nav-link text-white" href="author.html">Authors</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="TheGoodBookClub.html">Books Clubs</a></li>
                         <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
-                        <li class="nav-item logoutBox"><a class="nav-link text-white logout">logout</a></li>
+                        <li class="nav-item logoutBox"><a class="nav-link pink logout">logout</a></li>
                         <li class="nav-item dropdown requestBox">
                             <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
@@ -287,13 +287,15 @@
 
             allMyBooks.forEach((book) => {
 
-                booksHtml += `
-                                            <div class='col-md-4'>
-                                                <div class='card mb-4 book-card'>
-                                                    <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
+                booksHtml += `<div class='col-md-4'>`
+                                            
+                if (book.IsRead == 'True') { booksHtml += `<div class='card mb-4 book-card book-${book.Id} readTheBook'>` }
+                else { booksHtml += `<div class='card mb-4 book-card book-${book.Id} '>` }  
+                
+                booksHtml +=                    `<img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
                                                     <div class='card-body' id='markAsRead-${book.Id}'>
-                                                        <h5 class='card-title'>${book.Title}</h5>`
-                                                        /*<p>${book.Rating}</p>*/;
+                                                        <h5 class='card-title'>${book.Title}</h5>
+                                                        <p>Written by: ${book.FirstAuthorName}</p>`;
                 if (book.IsRead == 'False') {
                     booksHtml += `<a class='btn btn-outline-dark pinkB' onclick="ReadTheBook(${book.UserId}, ${book.Id})">Mark as read</a>`;
                 } else if (book.WasRated == 0) {
@@ -333,6 +335,8 @@
                                                      <a class='btn btn-outline-dark pinkB ' onclick='showReviewForm(${currentBookId})''>Review</a>
                                                     </div>`;
             bookElement.innerHTML = bookHtml;
+
+            $(`.book-${currentBookId}`).addClass('readTheBook');
             Swal.fire('Success', 'Book marked as read.', 'success');
         }
 

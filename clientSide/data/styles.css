@@ -8,7 +8,10 @@
 .nav-link {
     font-size: 1.1em;
 }
-
+.whiteHover:hover {
+    color: #ff0083;
+    text-shadow: -1px 0px 11px rgba(255,255,255,0.54);
+}
 .hero {
     /*background: url('https://via.placeholder.com/1500x500') no-repeat center center;*/
     color: #fff;
@@ -39,7 +42,9 @@
         background-color: #e67e22;
         border-color: #e67e22;
     }
-
+.card-body{
+    padding: 0.7rem;
+}
 footer {
     background-color: #1c1c1c;
 }
@@ -60,10 +65,12 @@ footer {
 
 .books .card {
     animation: fadeIn 1s ease-in-out;
+    padding: 5% 2%
 }
-
+#notAllowed {
+    cursor: not-allowed;
+}
 /**  log in from  **/
-
 #logInForm {
     position: fixed;
     background-color: white;
@@ -413,6 +420,9 @@ li {
     border-radius: 10px;
     margin-top: 5%;
     margin-bottom: 10%;
+}
+.readTheBook {
+    border: 1px solid rgb(157 254 87 / 69%);
 }
 /*search books*/
 .search-books-bar {

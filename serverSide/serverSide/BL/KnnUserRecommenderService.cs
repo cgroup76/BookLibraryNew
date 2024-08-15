@@ -18,7 +18,7 @@ public class KnnUserRecommenderService
 
     public List<int> RunKnnAlgorithmOnGeneralizedData(Dictionary<int, double[]> userPreferenceVectors)
     {
-        if (!userPreferenceVectors.ContainsKey(currentUserId)) { return null; }
+        if (!userPreferenceVectors.ContainsKey(currentUserId)) { return null; } // user didn't purchased any books
 
         double[] currentUserVector = userPreferenceVectors[currentUserId];
         List<Tuple<int, double>> distances = new List<Tuple<int, double>>();
@@ -141,21 +141,16 @@ public class KnnUserRecommenderService
 
     private double CalculateCosineSimilarity(double[] user1Vector, double[] user2Vector)
     {
-        double dotProduct = 0;
-        double user1Magnitude = 0;
-        double user2Magnitude = 0;
+        double distance = 0;
 
         for (int i = 0; i < user1Vector.Length; i++)
         {
-            dotProduct += user1Vector[i] * user2Vector[i];
-            user1Magnitude += Math.Pow(user1Vector[i], 2);
-            user2Magnitude += Math.Pow(user2Vector[i], 2);
+            distance += Math.Pow((user1Vector[i] - user2Vector[i]), 2);
         }
 
-        user1Magnitude = Math.Sqrt(user1Magnitude);
-        user2Magnitude = Math.Sqrt(user2Magnitude);
+        distance = Math.Sqrt(distance);
 
-        return dotProduct / (user1Magnitude * user2Magnitude);
+        return distance;
     }
 
 }
