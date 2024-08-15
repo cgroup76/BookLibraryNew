@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Store</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- JQuary -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+            crossorigin="anonymous"></script>
+
+
+    <!-- sweet aleret -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </head>
+<body>
+    <header class="bg-dark text-white py-3 fixed-top">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="logo">
+                    <h1 class="h3">Book Store</h1>
+                </div>
+                <nav>
+                    <ul class="nav">
+                        <li class="nav-item"><a class="nav-link text-white" href="HTMLPage1.html">Home</a></li>
+                        <li class="nav-item adminPage"><a class="nav-link text-white " href="adminPage.html">Admin Page</a></li>
+                        <li class="nav-item myBooks"><a class="nav-link text-white " href="myBooks.html">My Books</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="author.html">Authors</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="TheGoodBookClub.html">Books Clubs</a></li>
+                        <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
+                        <li class="nav-item logoutBox"><a class="nav-link text-white logout">logout</a></li>
+                        <li class="nav-item dropdown requestBox">
+                            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
+                                </svg>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-dark dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <div class="send"> </div>
+                                <div class="got"> </div>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <section class="hero text-center py-5">
+        <div class="container">
+            <div class="container">
+                <h2 class="display-4">My Clubs</h2>
+
+            </div>
+            <nav class="navbar navbar-dark bg-dark justify-content-between search-books-bar">
+                <a class="navbar-brand pink">Search Clubs</a>
+                <form class="form-inline">
+                    <input class="form-control mr-sm-2 search-string" type="search" placeholder="Search By Book Title" aria-label="Search">
+                    <button class="btn btn-outline-dark my-2 my-sm-0 pinkB search-book-btn" type="submit">Search</button>
+                </form>
+            </nav>
+        </div>
+    </section>
+
+
+    <section class="books py-5">
+        <div class="container">
+            <div class="row" id="myBooks">
+
+            </div>
+        </div>
+
+    </section>
+
+    <footer class="bg-dark text-white py-3">
+        <div class="container text-center">
+            <p>All rights reserved © 2024 Book Store</p>
+        </div>
+    </footer>
+</body>
+</html>

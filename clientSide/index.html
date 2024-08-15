@@ -66,7 +66,7 @@
                             "id": 0,
                             "title": book.volumeInfo.title,
                             "subTitle": book.volumeInfo.subTitle,
-                            "isEbook": 0,
+                            "isEbook": 1,
                             "isActive": 1,
                             "isAvailable": 1,
                             "category": joinWithAnd(book.volumeInfo.categories),
@@ -88,7 +88,7 @@
                             "id": 0,
                             "title": book.volumeInfo.title,
                             "subTitle": book.volumeInfo.subTitle,
-                            "isEbook": 0,
+                            "isEbook": 1,
                             "isActive": 1,
                             "isAvailable": 1,
                             "category": joinWithAnd(book.volumeInfo.categories),
@@ -111,7 +111,7 @@
                         "id": 0,
                         "title": book.volumeInfo.title,
                         "subTitle": book.volumeInfo.subTitle,
-                        "isEbook": 0,
+                        "isEbook": 1,
                         "isActive": 1,
                         "isAvailable": 1,
                         "category": joinWithAnd(book.volumeInfo.categories),
@@ -141,7 +141,7 @@
         console.log(allBooks)
         console.log(authors)
     }
-    y(books)
+    y(eBooks)
     function errorCB(err) { console.log(err) } 
 
     function ss(s) {console.log(s) }

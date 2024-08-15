@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Google Sign-In</title>
+</head>
+<body>
+    <button type="button" onclick="signInWithGoogle();">Sign In With Google</button>
+
+    <script>
+        const clientId = "330257384068-acpk14o95tj991u9u5l9vngpmll1c38g.apps.googleusercontent.com"; // Your Client ID
+        const redirectUri = "http://localhost:62447/HTMLPage2.html"; // Replace with your actual redirect URI
+
+        function signInWithGoogle() {
+            const scope = "email"; // Scopes you are requesting
+            const responseType = "token"; // Request an authorization code
+            const accessType = "online"; // Request offline access to receive refresh tokens
+            const prompt = "consent"; // Prompt the user for consent
+
+            const url = `https://accounts.google.com/o/oauth2/v2/auth? +
+                client_id=${clientId}& +
+                redirect_uri=${redirectUri}& +
+                response_type=${responseType}& +
+                scope=${scope}& +
+                access_type=${accessType}& +
+                prompt=${prompt}`;
+
+            window.location.href = url;
+        }
+
+        var accessToken = null;
+
+        const hash = window.location.hash.substring(1);
+
+        // Parse the hash into a query string format
+        const params = new URLSearchParams(hash);
+
+        // Retrieve the access token
+        accessToken = params.get('access_token');
+
+        if (accessToken) { trySampleRequest(); }
+
+
+        function trySampleRequest() {
+
+            if (accessToken) {
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET',
+                    'https://www.googleapis.com/oauth2/v2/userinfo?fields=email&' +
+                    'access_token=' + accessToken);
+                xhr.onreadystatechange = function (e) {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var userEmail = xhr.response;
+                        console.log(userEmail);
+                    } else if (xhr.readyState === 4 && xhr.status === 401) {
+                        // Token invalid, so prompt for user permission.
+                        //oauth2SignIn();
+                    }
+                };
+                xhr.send(null);
+            } else {
+                //oauth2SignIn();
+            }
+        }
+    </script>
+</body>
+</html>
