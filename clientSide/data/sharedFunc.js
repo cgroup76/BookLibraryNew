@@ -67,7 +67,7 @@ function logoutUser(reson) {
 }
 
 function successLogout(status) {
-    console.log(resonToLogout);
+
     if (status && resonToLogout == 'endSession') {
         localStorage.setItem('logoutReason', 'endSession');
         localStorage.removeItem('loginUserDetails');
@@ -205,3 +205,4 @@ function errorToHandle() {
         text: 'There was an error handling the request. Please try again.'
     });
 }
+

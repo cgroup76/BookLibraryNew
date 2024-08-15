@@ -5,7 +5,7 @@ namespace serverSide.BL
 {
     public class IUser
     {
-        public static readonly int TIMEOUT = 1; // SET A GLOBAL VALUE FOR THE SESSION TIMEOUT -> CAN BE CHANGED AND MODIFY SO WE SAVE IN THE CODE
+        public static readonly int TIMEOUT = 20; // SET A GLOBAL VALUE FOR THE SESSION TIMEOUT -> CAN BE CHANGED AND MODIFY SO WE SAVE IN THE CODE
 
         int id;
         string userName = string.Empty;

@@ -493,7 +493,7 @@ li {
     color: black;
     text-align: center;
     height: 550px;
-    width: 500px;
+    width: 550px;
     max-height: 80%;
     max-width: 50%;
     top: 55%;
@@ -512,4 +512,72 @@ li {
 }
 .book-info-title{
     color:white
+}
+#book-info-body {
+    padding:2% 20%;
+    display: grid;
+    grid-template-columns: auto auto; /* Two columns: one for the label and one for the value */
+    gap: 10px; /* Space between the columns */
+    align-items: center; /* Align items vertically */
+    margin-bottom: 5%;
+}
+
+    #book-info-body .white {
+        text-align: left; /* Align the labels to the left */
+    }
+
+    #book-info-body .pink {
+        text-align: right; /* Align the values to the right */
+    }
+.closeBookInfoButton{
+    color: white;
+}
+.right{
+    margin-left: 6%
+}
+.book-review {
+    border: 1px solid #ff0083;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: 15% 1fr 1fr;
+    grid-template-rows: 25% 25% 1fr;
+    gap: 5px;
+    grid-auto-rows: minmax(10px, auto);
+    background-color: white;
+    padding: 5%;
+}
+.white{
+    color:white;
+}
+.padding{
+    padding: 2% 10%;
+}
+.review-user {
+    text-align: left;
+    grid-column: 2 / 3;
+    grid-row: 1/2;
+}
+.review-rating {
+    text-align: left;
+    grid-column: 1 / 3;
+    grid-row: 2/3;
+}
+.review-text {
+    text-align: left;
+    grid-column: 1 / 4;
+    grid-row: 3/4;
+}
+.user-image-info {
+    grid-column: 1 / 2;
+    grid-row: 1/2;
+    height: 30px;
+    text-align: center
+}
+.top-line {
+    width: 45%;
+    background-color: #ff0083;
+}
+.bot-line {
+    width: 30%;
+    background-color: #ff0083;
 }

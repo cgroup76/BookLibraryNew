@@ -7,7 +7,8 @@
 <body>
     <button type="button" onclick="signInWithGoogle();">Sign In With Google</button>
 
-    <script>const clientId = "533566515454-hbuhjhm8h4fnd9revl717otomkl2utbf.apps.googleusercontent.com"; // Your Client ID
+    <script>
+        const clientId = "330257384068-acpk14o95tj991u9u5l9vngpmll1c38g.apps.googleusercontent.com"; // Your Client ID
         const redirectUri = "http://localhost:62447/HTMLPage2.html"; // Replace with your actual redirect URI
 
         function signInWithGoogle() {
@@ -16,13 +17,13 @@
             const accessType = "online"; // Request offline access to receive refresh tokens
             const prompt = "consent"; // Prompt the user for consent
 
-            const url = https://accounts.google.com/o/oauth2/v2/auth? +
+            const url = `https://accounts.google.com/o/oauth2/v2/auth? +
                 client_id=${clientId}& +
                 redirect_uri=${redirectUri}& +
                 response_type=${responseType}& +
                 scope=${scope}& +
                 access_type=${accessType}& +
-                prompt=${prompt};
+                prompt=${prompt}`;
 
             window.location.href = url;
         }
@@ -61,6 +62,7 @@
             } else {
                 //oauth2SignIn();
             }
-        }</script>
+        }
+    </script>
 </body>
 </html>
