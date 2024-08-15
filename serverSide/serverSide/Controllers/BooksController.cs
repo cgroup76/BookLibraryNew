@@ -2,6 +2,7 @@
 using serverSide.BL;
 using System.Data.SqlClient;
 using System.Data;
+using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,10 +26,10 @@ namespace serverSide.Controllers
         }
 
         // GET api/<BooksController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("getBookReviews")]
+        public List<object> Get(int bookId)
         {
-            return "value";
+            return Book.getBookReviews(bookId);
         }
 
         // POST add new book to DB
@@ -46,9 +47,15 @@ namespace serverSide.Controllers
         }
         // PUT RateBook
         [HttpPut("RateBook")]
-        public bool Put(int bookID, int newRating, int userID, string review)
+        public IActionResult Put(int bookID, int newRating, int userID, string review)
         {
-            return Book.RateBook(bookID, newRating, userID, review);
+            int status = Book.RateBook(bookID, newRating, userID, review);
+
+            if (status == 1) { return Ok(true); }
+
+            else if (status == 0) { return NotFound(false); }
+
+            return Unauthorized("user session has ended");
         }
 
         // DELETE api/<BooksController>/5

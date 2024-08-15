@@ -85,11 +85,11 @@ namespace serverSide.BL
 
             return dBserviecesBooks.getAllBooks();
         }
-        public static bool RateBook(int bookID, int newRating, int userID, string review)
+        public static int RateBook(int bookID, int newRating, int userID, string review)
         {
             DBservicesBooks dBserviecesBooks = new DBservicesBooks();
 
-            return 1 == dBserviecesBooks.RateBook(bookID, newRating, userID, review);
+            return dBserviecesBooks.RateBook(bookID, newRating, userID, review);
 
         }
         public static List<object> showTop5BooksByrating()
@@ -103,6 +103,12 @@ namespace serverSide.BL
             DBservicesBooks dBserviecesBooks = new DBservicesBooks();
 
             return 1 == dBserviecesBooks.changeBookActivity(bookId);
+        }
+        public static List<object> getBookReviews(int bookId)
+        {
+            DBservicesBooks dBserviecesBooks = new DBservicesBooks();
+
+            return dBserviecesBooks.getBookReviews(bookId);
         }
     }
 

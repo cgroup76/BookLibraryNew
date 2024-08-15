@@ -19,14 +19,22 @@ namespace serverSide.Controllers
         }
         
         [HttpGet("GetRequestsPerUser")]
-        public List<dynamic> GetRequestsPerUser(int userId)
+        public IActionResult GetRequestsPerUser(int userId)
         {
-            return IUser.getRequestsPerUser(userId);
+            List<dynamic> lst = IUser.getRequestsPerUser(userId);
+
+            if(lst.Count == 1 && lst[0].statusN == -1) { return Unauthorized("user session has ended"); }
+
+            else { return Ok(lst); }
         } 
         [HttpGet("getMyRequestToBuyPerUser")]
-        public List<dynamic> getMyRequestToBuyPerUser(int userId)
+        public IActionResult getMyRequestToBuyPerUser(int userId)
         {
-            return IUser.getMyRequestToBuyPerUser(userId);
+            List<dynamic> lst = IUser.getMyRequestToBuyPerUser(userId);
+
+            if (lst.Count == 1 && lst[0].statusN == -1) { return Unauthorized("user session has ended"); }
+
+            else { return Ok(lst); }
         }
 
         [HttpGet("GetAllIusers")]
@@ -130,7 +138,16 @@ namespace serverSide.Controllers
            
         }
 
+        // PUT login google user
+        [HttpPut("loginGoogleUser")]
+        public IActionResult LogInWithGoogle([FromBody] IUser user)
+        {
+            object loggedinUserDetails = IUser.LogInWithGoogle(user);
 
+            if (loggedinUserDetails != null) { return Ok(loggedinUserDetails); } // checks if the object is not empty
+
+            else { return NotFound(); }
+        }
 
 
     }

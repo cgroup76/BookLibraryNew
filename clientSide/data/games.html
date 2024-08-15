@@ -17,70 +17,295 @@
 
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="images.js"></script>
+    <script src="sharedFunc.js"></script>
+  
+
+
+    <script>
+        const gameAPI = "https://localhost:7225/api/Score";
+        const booksAPI = "https://localhost:7225/api/Books";
+        const authorsAPI = "https://localhost:7225/api/Authors";
+        let gameName;
+        let allBooks =[];
+        let wordList=[];
+        let allAuthors=[];
+
+        $(document).ready(function ()
+        {
+            getBooks();
+            loadAuthors();
+            $('button').click(openGame)
+            $('.closeGameButton').click(closeGame);
+            $(".btn-next-back").hide();
+            $(".btn-back").hide();
+            $(".btn-back").click(backQuestion);
+            $(".btn-next").click(nextQuestion);
+            $(".clear-ans-btn").click(clearAnswersCheckBox);
+            $(".start-quiz").click(startQuiz)
+        });
+
+        function loadAuthors() {
+            if (allAuthors.length == 0) {
+                ajaxCall("GET", authorsAPI, null, SuccessLoadAuthors, errorLoadAuthors);
+            }
+        }
+
+
+        function SuccessLoadAuthors(authors) {
+            allAuthors = authors;
+        }
+
+
+
+        function errorLoadAuthors(error) {
+            console.log('Error loading authors:', error);
+        }
+        function getBooks() {
+            if (allBooks.length == 0) {
+                ajaxCall("GET", booksAPI, null, getAllBooks, errorToLoadBooks);
+            }
+        }
+
+        function getAllBooks(books) {
+            allBooks = books;
+              for (let i = 0; i < books.length; i++) {
+                wordList.push(books[i].Title);
+            }
+        }
+
+        function errorToLoadBooks() {
+            console.error("The books could not be loaded.");
+        }
+
+        function closeGame(){
+                    $('#games').removeClass('active');
+                    $('#overlay').removeClass('active');
+                    clearHangMan();
+                    closeQuiz();
+        }
+            function openGame(){
+                    gameName = $(this).attr('id');
+                    $('#games').addClass('active');
+                    $('#overlay').addClass('active');
+
+                    console.log(gameName);
+                switch (gameName){
+                    case 'HangMan':
+                        {
+                        $('#container-quiz').hide()
+                        $('#container-Memorybody').hide()
+                        $('#container-hangMan').show()
+                        startHangManGame();
+                                            }
+                        break;
+                    case 'MemoryGame':
+                        {
+                        $('#container-quiz').hide()
+                        $('#container-Memorybody').show()
+                        $('#container-hangMan').hide()
+                        startMemoryGame();
+
+                                            }
+                        break;
+                    case 'BookQuiz':{
+                        $('#container-quiz').show()
+                        $('#container-Memorybody').hide()
+                        $('#container-hangMan').hide()
+                        createQuiz();
+                                            }
+                        break;
+                }
+
+            }
+
+
+    </script>
 </head>
+
 <body>
-    <div class="container mt-5">
-        <h1>Games</h1>
+    <header class="bg-dark text-white py-3 fixed-top">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="logo">
+                    <h1>Games</h1>
+                </div>
+                <nav>
+                    <ul class="nav">
+                        <li class="nav-item"><a class="nav-link text-white" href="HTMLPage1.html">Home</a></li>
+                        <li class="nav-item adminPage"><a class="nav-link text-white" href="adminPage.html">Admin Page</a></li>
+                        <li class="nav-item myBooks"><a class="nav-link text-white" href="myBooks.html">My Books</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="author.html">Authors</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="games.html">Games</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="TheGoodBookClub.html">Books Clubs</a></li>
+                        <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
+                        <li class="nav-item logoutBox"><a class="nav-link text-white logout">Logout</a></li>
+                        <li class="nav-item dropdown requestBox">
+                            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
+                                </svg>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-dark dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <div class="send"> </div>
+                                <div class="got"> </div>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <div class="container mt-5 pt-5">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-lg-4">
                 <div class="card mb-4 game-card">
                     <h6>HangMan</h6>
-                    <img id="hangman-img" class="card-img-top" alt="HangMan">
                     <div class="card-body text-center">
-                        <button id="hangManBtn">play</button>
+                        <!--<img id="hangman-img" class="card-img-top">-->
+                        <button id="HangMan">Play</button>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-lg-4">
                 <div class="card mb-4 game-card">
                     <h6>Memory Game</h6>
-                    <img id="memory-game-img" class="card-img-top" alt="Memory Game">
                     <div class="card-body text-center">
-                        <button id="memoryGame">play</button>
+                        <!--<img id="memory-game-img" class="card-img-top">-->
+                        <button id="MemoryGame">Play</button>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-lg-4">
                 <div class="card mb-4 game-card">
                     <h6>Quiz</h6>
-                    <img id="quiz-img" class="card-img-top" alt="Quiz">
                     <div class="card-body text-center">
-                        <button id="quizBtn">play</button>
+                        <!--<img id="quiz-img" class="card-img-top">-->
+                        <button id="BookQuiz">Play</button>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="scores">
+            <br />
+            <h1 class="text-center">Scores</h1>
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <!-- HangMan Columns
+                        <th scope="col" colspan="2">HangMan</th>
+                        <!-- Memory Game Columns -->
+                        <th scope="col" colspan="2">Memory Game</th>
+                        <!-- Quiz Columns -->
+                        <th scope="col" colspan="2">Quiz</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">1</th>
+                        <!-- HangMan -->
+                        <th scope="col">Username</th>
+                        <th scope="col">Score</th>
+                        <!-- Memory Game -->
+                        <th scope="col">Username</th>
+                        <th scope="col">Score</th>
+                        <!-- Quiz -->
+                        <th scope="col">Username</th>
+                        <th scope="col">Score</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">2</th>
+                        <!-- HangMan -->
+                        <th scope="col">Username</th>
+                        <th scope="col">Score</th>
+                        <!-- Memory Game -->
+                        <th scope="col">Username</th>
+                        <th scope="col">Score</th>
+                        <!-- Quiz -->
+                        <th scope="col">Username</th>
+                        <th scope="col">Score</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">3</th>
+                        <!-- HangMan -->
+                        <th scope="col">Username</th>
+                        <th scope="col">Score</th>
+                        <!-- Memory Game -->
+                        <th scope="col">Username</th>
+                        <th scope="col">Score</th>
+                        <!-- Quiz -->
+                        <th scope="col">Username</th>
+                        <th scope="col">Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="games">
+        <div id="container-quiz">
+            <div class="quiz-header">
+                <button data-close-button class="close-button closeGameButton">&times;</button>
+                <br />
+                <h1 class="text-center text-dark">Books Quiz</h1>
+            </div>
+            <h5 class="timer"></h5>
+            <div class="quis-instruction">
+                <h4 class="text-center pink">Instructions:</h4>
+                <pre>
+                1.You have 1 minute to answer all the questions.
+                2.Read each question carefully before selecting your answer.
+                3.Click 'Submit' when you're done to see your score.
+                </pre>
+            </div>
+            <div id="questionContainer"></div>
+            <div id="resultContainer"></div>
+            <button class="btn btn-outline-dark btn-block pinkB start-quiz">Start Quiz</button>
+            <div class='btn-next-back'>
+                <button class='btn btn-outline-dark pinkB btn-back'>Back</button>
+                <button class='btn btn-outline-dark pinkB btn-next'>Next</button>
+            </div>
+        </div>
+
+        <div id="container-Memorybody">
+            <button data-close-button class="close-button closeGameButton">&times;</button>
+            <div class="game-container">
+                <div class="stats">
+                    <p>Attempts: <span id="attempts">0</span></p>
+                    <p>Time: <span id="time">0</span> seconds</p>
+                </div>
+                <div id="game-board" class="game-board"></div>
+            </div>
+        </div>
+
+        <div id="container-hangMan">
+            <button data-close-button class="close-button closeGameButton">&times;</button>
+
+            <div class="hangman-box">
+                <h1 class="text-center">Hangman Game</h1>
+            </div>
+            <div class="game-box">
+                <p class="word-display"></p>
+                <h3 class="failedGuess text-center">
+                    Incorrect guesses:
+                    <b></b>
+                    <br />
+                </h3>
+                <h3 class="correctWord text-center" style="display: none;">
+                    The Correct Word Was: <span></span>
+                </h3>
+                <div id="image-container" class="d-flex justify-content-center"></div>
+                <div id="button-container">
+                    <div id="row-1" class="keyboard-row"></div>
+                    <div id="row-2" class="keyboard-row"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        document.getElementById("hangman-img").src = "images/hangman-6.svg"; // ודא שהתמונה נמצאת בנתיב הנכון
-        document.getElementById("memory-game-img").src = "images/memoryGame.jpg"; // ודא שהתמונה נמצאת בנתיב הנכון
-        document.getElementById("quiz-img").src = "images/quiz.png"; // ודא שהתמונה נמצאת בנתיב הנכון
-
-        //redict to home page after the game finish 
-        function redirectToHomePage() {
-            window.location.href = 'HTMLPage1.html';
-        }
-
-        play();
-
-        //if the user click on the button- play it will take him to the specific game 
-        function play() {
-            $('#memoryGame').on('click', function () {
-                window.location.href = 'MemoryGame.html';
-            });
-            $('#hangManBtn').on('click', function () {
-                window.location.href = 'hangMan.html';
-            });
-            $('#quizBtn').on('click', function () {
-                window.location.href = 'QUIZ.html';
-            });
-
-
-        }
-
-
-    </script>
+    <div id="overlay"></div>
+    <script src="games.js"></script>
 </body>
+
 </html>
