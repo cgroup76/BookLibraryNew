@@ -10,36 +10,7 @@ let attempts = 0;
 let matches = 0;
 let timer = null;
 let time = 0;
-let finalScoreMemory;
 
-function updateScoreTable(gameResults) {
-    let tableBody = $("table tbody");
-    tableBody.empty();
-
-    gameResults.forEach((result, index) => {
-        let row = `<tr>
-            <td>${index + 1}</td>
-            <td>${result.hangManUserName}</td>
-            <td>${result.hangManScore}</td>
-            <td>${result.memoryGameUserName}</td>
-            <td>${result.memoryGameScore}</td>
-            <td>${result.quizUserName}</td>
-            <td>${result.quizScore}</td>
-        </tr>`;
-
-        tableBody.append(row);
-    });
-}
-
-function postGameResults(gameResult) {
-    ajaxCall("POST", gameAPI, gameResult, successPost, errorTop5);
-}
-
-function getTop5GameResults(gameName) {
-    ajaxCallSync("GET", gameAPI + `?gameName=${gameName}`, null, (topResults) => {
-        updateScoreTable(topResults);
-    }, errorTop5);
-}
 
 function startMemoryGame() {
     resetGame();
@@ -54,10 +25,12 @@ function startMemoryGame() {
 }
 
 function createMemoryCards() {
-    const selectedBooks = allBooks.sort(() => Math.random() - 0.5).slice(0, 4);
+    const selectedBooks = allBooks.sort(() => Math.random() - 0.5).slice(0, 2);
     gameCards = [];
     selectedBooks.forEach(book => {
+        // Add cover card
         gameCards.push({ ...book, type: 'cover' });
+        // Add author card
         gameCards.push({ ...book, type: 'author' });
     });
     gameCards.sort(() => Math.random() - 0.5);
@@ -65,7 +38,7 @@ function createMemoryCards() {
 
 function createCardElement(card) {
     const cardElement = document.createElement('div');
-    cardElement.classList.add('card-memory');
+    cardElement.classList.add('card');
     cardElement.dataset.name = card.Title;
     cardElement.dataset.type = card.type;
     cardElement.dataset.AuthorName = card.FirstAuthorName;
@@ -73,6 +46,7 @@ function createCardElement(card) {
     const cardFront = document.createElement('div');
     cardFront.classList.add('card-front');
 
+    // Set the front side content
     if (card.type === 'cover') {
         cardFront.style.backgroundImage = `url(${card.SmallThumbnail})`;
         cardFront.style.backgroundSize = 'cover';
@@ -96,6 +70,7 @@ function createCardElement(card) {
     return cardElement;
 }
 
+
 function flipCard() {
     if (lockBoard || this.classList.contains('flip') || (firstCard && secondCard)) return;
 
@@ -103,33 +78,42 @@ function flipCard() {
 
     if (!firstCard) {
         firstCard = this;
+        console.log('First card set:', firstCard);
         return;
     }
 
     secondCard = this;
+    console.log('Second card set:', secondCard);
 
     checkForMatch();
 }
 
 function checkForMatch() {
     if (!firstCard || !secondCard) {
+        console.error("One or both cards are missing!", { firstCard, secondCard });
         resetBoard();
         return;
     }
 
-    const isMatchAuthor = firstCard.dataset.AuthorName === secondCard.dataset.AuthorName;
-    const isMatchCover = firstCard.dataset.type !== secondCard.dataset.type;
+    console.log('Checking match for:', firstCard.dataset.name, secondCard.dataset.name);
 
-    if (isMatchAuthor && isMatchCover) {
-        console.log(firstCard)
-        console.log(secondCard)
+    const isMatch = firstCard.dataset.AuthorName === secondCard.dataset.AuthorName;
+
+    if (isMatch) {
         disableCards();
-        firstCard.classList.add('correct');
-        secondCard.classList.add('correct');
+        if (firstCard) {
+            console.log('Adding correct class to first card');
+            firstCard.classList.add('correct');
+        }
+        if (secondCard) {
+            console.log('Adding correct class to second card');
+            secondCard.classList.add('correct');
+        }
+        // Display message for correct match
         Swal.fire({
             icon: 'success',
             title: 'Good',
-            text: 'You found a match!',
+            text: 'you find a match!',
             timer: 1000,
             showConfirmButton: false
         });
@@ -142,23 +126,22 @@ function checkForMatch() {
 
     if (matches === gameCards.length / 2) {
         victoryTime = time;
-        victoryAttempts = attempts;
+        victoryAttempts = attempts
         setTimeout(() => {
             Swal.fire({
                 icon: 'success',
                 title: 'You Win!',
-                text: `Attempts: ${ victoryAttempts }, Time: ${ victoryTime } seconds`,
-                confirmButtonText: 'New Game',
-                showCancelButton: true,
-                cancelButtonText: 'Cancel'
+                text: `Attempts: ${victoryAttempts}, Time: ${victoryTime} seconds`,
+                confirmButtonText: 'End Game',
             }).then((result) => {
-                    if (result.isConfirmed) {
-                        startMemoryGame();
-                    }
-                });
-        clearInterval(timer);
-    }, 500);
-}
+                if (result.isConfirmed) {
+                    closeGame();
+                }
+            });
+            clearInterval(timer);
+        }, 500);
+
+    }
 }
 
 function disableCards() {
@@ -196,6 +179,7 @@ function startTimer() {
     }, 1000);
 }
 
+
 function resetGame() {
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
@@ -206,16 +190,6 @@ function resetGame() {
     document.getElementById('time').textContent = time;
     clearInterval(timer);
 }
-
-function getScore(attempts) {
-    let score = 100 - attempts;
-    let userName = JSON.parse(localStorage.getItem("loginUserDetails")).userName;
-    let game = "MemoryGame";
-    let time = null;
-    finalScoreMemory = [game, userName, score, time];
-    return finalScoreMemory;
-}
-
 // HangMan
 let choosenWord = "";
 let incorrectGuess = [];

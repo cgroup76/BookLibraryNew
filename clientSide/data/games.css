@@ -3,7 +3,7 @@
     color: #333;
 }
 
-.card {
+.cardMain {
     background-color: #2c2c2c;
     color: #fff;
     border: none;
@@ -106,7 +106,7 @@ button {
     }
 
 
-/**  log in from  **/
+/**    **/
 
 #games {
     position: fixed;
@@ -188,7 +188,7 @@ button {
     grid-gap: 15px; /* Adjust spacing */
 }
 
-.card-memory {
+.card {
     width: 150px; /* Increase card size */
     height: 150px; /* Increase card size */
     background-color: #ff0083;
@@ -205,7 +205,7 @@ button {
     transition: transform 0.5s;
 }
 
-    .card-memory.flip {
+    .card.flip {
         transform: rotateY(180deg); /* Show the front side when flipped */
     }
 
@@ -243,9 +243,9 @@ button {
     margin-bottom: 20px;
 }
 
-.card-memory.correct {
-    background-color: #ff0083;
-    pointer-events: none;
+.card.correct {
+    background-color: #ff0083; /* ��� ��� ���� �������� ������� */
+    pointer-events: none; /* ���� ����� ����� �� ������ */
 }
 
 #start-game-btn {
@@ -253,31 +253,19 @@ button {
 }
 
 /* Media Query for responsiveness */
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
     .game-board {
-        grid-template-columns: repeat(3, 100px); /* 3 columns with smaller cards */
-        grid-gap: 10px;
+        grid-template-columns: repeat(3, 100px);*/ /* 3 columns with smaller cards */
+        /*grid-gap: 10px;
     }
 
     .card-memory {
-        width: 100px; /* Smaller card size */
-        height: 100px; /* Smaller card size */
-        font-size: 18px;
+        width: 100px;*/ /* Smaller card size */
+        /*height: 100px;*/ /* Smaller card size */
+        /*font-size: 18px;
     }
-}
+}*/
 
-@media (max-width: 480px) {
-    .game-board {
-        grid-template-columns: repeat(2, 80px); /* 2 columns with even smaller cards */
-        grid-gap: 8px;
-    }
-
-    .card-memory {
-        width: 80px; /* Even smaller card size */
-        height: 80px; /* Even smaller card size */
-        font-size: 16px;
-    }
-}
 
 /*hangMan*/
 .failedGuess b {
