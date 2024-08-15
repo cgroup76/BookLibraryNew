@@ -486,5 +486,85 @@ public class DBservicesBooks
 
         return cmd;
     }
+    //--------------------------------------------------------------------------------------------------
+    // This method get a book reviews
+    //--------------------------------------------------------------------------------------------------
 
+    public List<object> getBookReviews(int bookId)
+
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProceduregetBookReviews("getBookReviews", con, bookId);             // create the command
+
+        List<dynamic> reviews = new List<dynamic>();
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dataReader.Read())
+            {
+                dynamic review = new ExpandoObject();
+                review.Rating = Convert.ToInt32(dataReader["rating"]);
+                review.Review = Convert.ToString(dataReader["review"]);
+                review.UserId = Convert.ToString(dataReader["userId"]);
+                review.BookId = Convert.ToString(dataReader["bookId"]);
+                review.UserName = Convert.ToString(dataReader["userName"]);
+
+                reviews.Add(review);
+            }
+
+            return reviews;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+
+    //---------------------------------------------------------------------------------
+    // Create the SqlCommand using a stored procedure to get book reviews
+    //---------------------------------------------------------------------------------
+
+    private SqlCommand CreateCommandWithStoredProceduregetBookReviews(String spName, SqlConnection con, int bookId)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@bookId", bookId);
+        return cmd;
+    }
 }

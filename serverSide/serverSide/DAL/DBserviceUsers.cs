@@ -718,6 +718,7 @@ public class DBservicesUsers
                 request.buyerName = Convert.ToString(dataReader["userName"]);
                 request.bookName = Convert.ToString(dataReader["title"]);
                 request.status = Convert.ToString(dataReader["requestStatus"]);
+                request.statusN = 0;
                 userRequests.Add(request);
             }
 
@@ -729,7 +730,7 @@ public class DBservicesUsers
             {
                 // Handle the case where the status is -1
                 dynamic request = new ExpandoObject();
-                request.status = status;
+                request.statusN = status;
                 userRequests.Add(request);
             }
         }
@@ -887,6 +888,7 @@ public class DBservicesUsers
                 requestToBuy.sellerName = Convert.ToString(dataReader["userName"]);
                 requestToBuy.bookName = Convert.ToString(dataReader["title"]);
                 requestToBuy.status = Convert.ToString(dataReader["requestStatus"]);
+                requestToBuy.statusN = 0;
                 userRequestsToBuy.Add(requestToBuy);
             }
 
@@ -898,7 +900,7 @@ public class DBservicesUsers
             {
                 // Handle the case where the status is -1
                 dynamic requestToBuy = new ExpandoObject();
-                requestToBuy.status = status;
+                requestToBuy.statusN = status;
                 userRequestsToBuy.Add(requestToBuy);
             }
         }
@@ -936,4 +938,86 @@ public class DBservicesUsers
 
         return cmd;
     }
+    //--------------------------------------------------------------------------------------------------
+    // This method login google user
+    //--------------------------------------------------------------------------------------------------
+    public object LogInWithGoogle(IUser user, int timeout)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedureLogInWithGoogle("LogInWithGoogle", con, user, timeout);             // create the command
+
+        // create an output parameter to get back from the store presigere 
+
+
+        dynamic userDetails = new ExpandoObject(); // create a dynamic object 
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dataReader.Read())
+            {
+                userDetails.userId = Convert.ToInt32(dataReader["userId"]);
+                userDetails.userName = Convert.ToString(dataReader["userName"]);
+            }
+            return userDetails;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+
+    //---------------------------------------------------------------------------------
+    // Create the SqlCommand using a stored procedure login/add new google user
+    //---------------------------------------------------------------------------------
+
+    private SqlCommand CreateCommandWithStoredProcedureLogInWithGoogle(String spName, SqlConnection con, IUser user, int timeout)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        cmd.Parameters.AddWithValue("@username", user.UserName);
+
+        cmd.Parameters.AddWithValue("@email", user.EMail);
+
+        cmd.Parameters.AddWithValue("@password", user.Password);
+
+        cmd.Parameters.AddWithValue("@sessionTimeOut", timeout);
+
+        return cmd;
+    }
+
 }
