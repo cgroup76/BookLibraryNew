@@ -17,7 +17,13 @@ namespace serverSide.Controllers
             return IUser.showMyBooks(userId);
 
         }
-        
+        // GET: api/<IUsersController>
+        [HttpGet("getRecommendedBook")]
+        public List<dynamic> GetRecommendedBooks(int userId)
+        {
+            return IUser.getRecommendedBooksForUser(userId);
+
+        }
         [HttpGet("GetRequestsPerUser")]
         public IActionResult GetRequestsPerUser(int userId)
         {
