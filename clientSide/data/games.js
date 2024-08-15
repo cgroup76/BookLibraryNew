@@ -13,6 +13,7 @@ let time = 0;
 
 
 function startMemoryGame() {
+    $(".game-container" ).show();
     resetGame();
     createMemoryCards();
     const gameBoard = document.getElementById('game-board');
@@ -89,7 +90,8 @@ function flipCard() {
 }
 
 function checkForMatch() {
-    if (!firstCard || !secondCard) {
+    if (!firstCard || !secondCard)
+    {
         console.error("One or both cards are missing!", { firstCard, secondCard });
         resetBoard();
         return;
@@ -99,13 +101,16 @@ function checkForMatch() {
 
     const isMatch = firstCard.dataset.AuthorName === secondCard.dataset.AuthorName;
 
-    if (isMatch) {
+    if (isMatch)
+    {
         disableCards();
-        if (firstCard) {
+        if (firstCard)
+        {
             console.log('Adding correct class to first card');
             firstCard.classList.add('correct');
         }
-        if (secondCard) {
+        if (secondCard)
+        {
             console.log('Adding correct class to second card');
             secondCard.classList.add('correct');
         }
@@ -117,7 +122,8 @@ function checkForMatch() {
             timer: 1000,
             showConfirmButton: false
         });
-    } else {
+    }
+    else {
         unflipCards();
     }
 
@@ -127,22 +133,33 @@ function checkForMatch() {
     if (matches === gameCards.length / 2) {
         victoryTime = time;
         victoryAttempts = attempts
-        setTimeout(() => {
-            Swal.fire({
-                icon: 'success',
-                title: 'You Win!',
-                text: `Attempts: ${victoryAttempts}, Time: ${victoryTime} seconds`,
-                confirmButtonText: 'End Game',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    closeGame();
-                }
-            });
-            clearInterval(timer);
-        }, 500);
-
+        let gameResult="";
+        let user = JSON.parse(localStorage.getItem('loginUserDetails'));
+        if (user != null) {
+           
+            gameResult = {
+                "gameName": "MemoryCard",
+                "userName": user.userName,
+                "scoreNum": (100 - victoryAttempts),
+                "time": victoryTime.toString()
+            }
+            postGameReasults(gameResult);
+            getTop5GameReasults("MemoryCard");
+        }
+        else {
+            gameResult = {
+                "gameName": "MemoryCard",
+                "userName": "",
+                "scoreNum": (100 - victoryAttempts),
+                "time": victoryTime.toString()
+            }
+            console.log(gameResult);
+            postGameReasults(gameResult);
+            getTop5GameReasults("MemoryCard");
+        }
     }
 }
+
 
 function disableCards() {
     if (firstCard && secondCard) {
@@ -190,11 +207,13 @@ function resetGame() {
     document.getElementById('time').textContent = time;
     clearInterval(timer);
 }
+
 // HangMan
 let choosenWord = "";
 let incorrectGuess = [];
 let correctGuess = [];
 const maxIncorrectGuesses = 7;
+const attemptHangMan = 0;
 
 function showIncorrectPhotos() {
     const container = document.getElementById('image-container');
@@ -232,11 +251,11 @@ function clearHangMan() {
     document.getElementById('row-2').innerHTML = '';
     document.querySelector('.failedGuess').innerHTML =
         `Incorrect guesses: <b></b><br />`;
-    getTop5GameResults('HangMan');
-    postGameResults(getScore(incorrectGuess));
+   
 }
 
 function startHangManGame() {
+    $('.game-box').show();
     choosenWord = pickRandomWord(wordList).toUpperCase();
     createAlphabetButtons();
     displayWord();
@@ -244,6 +263,7 @@ function startHangManGame() {
 
 function pickRandomWord(array) {
     let randomIndex = Math.floor(Math.random() * array.length);
+    console.log(array[randomIndex]);
     return array[randomIndex];
 }
 
@@ -302,6 +322,12 @@ function displayWord() {
         else if (choosenWord[i] == '!') {
             span.innerText = '!';
         }
+        else if (choosenWord[i] == '(') {
+            span.innerText = '(';
+        }
+        else if (choosenWord[i] == ')') {
+            span.innerText = ')';
+        }
         else {
             span.innerText = correctGuess.includes(choosenWord[i]) ? choosenWord[i] : '_';
         }
@@ -311,30 +337,37 @@ function displayWord() {
 
 //chhose what to do in winning\ looseing situation
 function handleGuess(letter) {
+   
     const incorrectGuessDisplay = document.querySelector('.failedGuess b');
     if (choosenWord.includes(letter)) {
         for (let i = 0; i < choosenWord.length; i++) {
             correctGuess.push(letter);
         }
+        
         displayWord();
         checkWin();
+        
     } else {
         incorrectGuess.push(letter);
         incorrectGuessDisplay.innerText = incorrectGuess.join(', ');
         showIncorrectPhotos();
+        
         checkLoss();
     }
+
 }
 
 
 //check if the user win
 function checkWin() {
     let allGuessed = choosenWord.split('').every(letter => {
-        return letter == ' ' || letter == ',' || letter == ':' || letter == '#' || letter == '!' || correctGuess.includes(letter);
+        return letter == ' ' || letter == ',' || letter == ':' || letter == '#' || letter == '!' || letter == ')' ||letter == '(' || correctGuess.includes(letter);
     });
     if (allGuessed) {
+        getScore(incorrectGuess);
         Swal.fire('Congratulations!', 'You guessed the word!', 'success');
     }
+
 }
 
 //check if the user loss
@@ -346,25 +379,39 @@ function checkLoss() {
 }
 
 function getScore(incorrectGuess) {
-    let baseScore = 100;
-    let finalScore = baseScore - incorrectGuess * 5;
-    let userName = JSON.parse(localStorage.getItem("loginUserDetails")).userName;
+    let finalScore = 100 - incorrectGuess;
+    let user = JSON.parse(localStorage.getItem("loginUserDetails"));
     let game = "HangMan";
-    let time = null;
 
-    return {
-        gameName: game,
-        userName: userName,
-        scoreNum: finalScore,
-        time: time
-    };
+    if (user != null)
+    {
+
+        gameResult = {
+            "gameName": game,
+            "userName": user.userName,
+            "scoreNum": finalScore,
+            "time": ""
+        }
+        
+        postGameReasults(gameResult);
+        getTop5GameReasults("HangMan");
+    }
+    else {
+        gameResult = {
+            "gameName": game,
+            "userName":"",
+            "scoreNum": finalScore,
+            "time": ""
+        }
+       
+        postGameReasults(gameResult);
+        getTop5GameReasults("HangMan");
+    }
+   
 }
 
 //quiz
 // JavaScript source code
-
-
-
 
 let gameScore = 0;
 let questions = ['Who is the author of the book', 'When was the book'];
@@ -512,7 +559,7 @@ function closeQuiz() {
     finalQuiz = [];
     $('.timer').removeClass('bold');
     $('.timer').removeClass('pink');
-    $('#resultContainer').html("");
+    $('.resultContainer').html("");
     $('#overlay').removeClass('active');
 }
 function startQuiz() {
@@ -665,11 +712,27 @@ function successTop5(topResult) {
     let index = 1;
 
     topGameResults.forEach((r) => {
-        if (index == 1) { html += `<p>${index++}. <strong class='pink'>User: ${r.userName} time: ${r.time} score: ${r.scoreNum}</strong> ` }
-        else { html += `<p>${index++}. User: ${r.userName} time: ${r.time} score: ${r.scoreNum} ` }
-    })
+        
+        if (index == 1) {
+            if (gameName = 'HangMan') {
+                html += `<p>${index++}. <strong class='pink'>User: ${r.userName} score: ${r.scoreNum}</strong> `
 
-    $('#resultContainer').html(html);
+            }
+            else {
+                html += `<p>${index++}. <strong class='pink'>User: ${r.userName} time: ${r.time} score: ${r.scoreNum}</strong> `
+            }
+        }
+        else {
+            if (gameName = 'HangMan') { html += `<p>${index++}. User: ${r.userName} score: ${r.scoreNum} ` }
+            else {
+                html += `<p>${index++}. User: ${r.userName} time: ${r.time} score: ${r.scoreNum} `
+            }
+        }
+    })
+    $('.game-container').hide();
+    $('.game-box').hide();
+    $('.resultContainer').show();
+    $('.resultContainer').html(html);
 }
 function errorTop5(err) { console.log(err); }
 
