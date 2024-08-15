@@ -140,5 +140,11 @@ namespace serverSide.BL
 
             return dbservicesUsers.LogInWithGoogle(LoginUser, TIMEOUT);
         }
+        public static List<dynamic> getRecommendedBooksForUser(int userId)
+        {
+            DBservicesUsers dbservicesUsers = new DBservicesUsers();
+
+            return dbservicesUsers.getRecommendedBooksForUser(userId);
+        }
     }
 }

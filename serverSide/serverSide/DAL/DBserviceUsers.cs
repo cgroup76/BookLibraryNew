@@ -1020,4 +1020,142 @@ public class DBservicesUsers
         return cmd;
     }
 
+    //--------------------------------------------------------------------------------------------------
+    // This method show all books recomended for a specific user
+    //--------------------------------------------------------------------------------------------------
+
+    public List<dynamic> getRecommendedBooksForUser(int userId)
+
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProceduregetRecommendedBooksForUser("getHistoryPurchase", con, userId);             // create the command
+
+
+        List<dynamic> Books = new List<dynamic>();
+        List<UserPurchaseData> allUserPurchaseData = new List<UserPurchaseData>();
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dataReader.Read())
+            {
+                dynamic book = new ExpandoObject();
+                book.Id = Convert.ToInt32(dataReader["id"]);
+                book.Title = Convert.ToString(dataReader["title"]);
+                book.SubTitle = Convert.ToString(dataReader["subTitle"]);
+                book.IsEbook = Convert.ToByte(dataReader["isEbook"]);
+                book.IsActive = Convert.ToByte(dataReader["isActive"]);
+                book.IsAvailable = Convert.ToByte(dataReader["isAvailable"]);
+                book.Price = (float)Convert.ToDouble(dataReader["price"]);
+                book.Category = Convert.ToString(dataReader["category"]);
+                book.SmallThumbnail = Convert.ToString(dataReader["smallThumbnail"]);
+                book.Thumbnail = Convert.ToString(dataReader["thumbnail"]);
+                book.NumOfPages = Convert.ToInt32(dataReader["numOfPages"]);
+                book.Description = Convert.ToString(dataReader["description"]);
+                book.PreviewLink = Convert.ToString(dataReader["previewLink"]);
+                book.PublishDate = Convert.ToString(dataReader["publishedDate"]);
+                book.FirstAuthorName = Convert.ToString(dataReader["firstAuthor"]);
+                book.SecondAuthorName = Convert.ToString(dataReader["secondAuthor"]);
+                book.NumOfReviews = Convert.ToInt32(dataReader["numOfReviews"]);
+                book.Rating = (float)Convert.ToDouble(dataReader["rating"]);
+                book.TextSnippet = Convert.ToString(dataReader["textSnippet"]);
+                book.UserId = Convert.ToString(dataReader["userid"]);
+                Books.Add(book);
+
+                string userid = Convert.ToString(dataReader["userId"]);
+                string id = Convert.ToString(dataReader["id"]);
+                string rating = Convert.ToString(dataReader["rate"]);
+                int userIdInt = 0;
+                int bookId = 0;
+                float ratingInt = 0;
+
+                if(userid != "") { userIdInt = Convert.ToInt32(userid); }
+                if(id != "") { bookId = Convert.ToInt32(id); }
+                if(rating != "") { ratingInt = (float)Convert.ToDouble(rating); }
+
+                UserPurchaseData purchaseData = new UserPurchaseData
+                {
+                    UserId = userIdInt,
+                    BookId = bookId,
+                    Rating = ratingInt,
+                    Genre = Convert.ToString(dataReader["category"]),
+                    Author = Convert.ToInt32(dataReader["firstAuthorId"]),
+                    Title = Convert.ToString(dataReader["title"])
+                };
+
+                allUserPurchaseData.Add(purchaseData);
+
+            }
+
+            KnnUserRecommenderService knnAlgorithem = new KnnUserRecommenderService(allUserPurchaseData, 2, userId);
+
+            Dictionary<int, double[]> user = knnAlgorithem.BuildUserPreferenceVectorsGeneralized(allUserPurchaseData);
+
+            List<int> recommendedBookId = knnAlgorithem.RunKnnAlgorithmOnGeneralizedData(user);
+
+            if(recommendedBookId == null) { return null; }
+
+            List<dynamic> recommendedBooks = new List<dynamic>();
+
+            foreach (int bookId in recommendedBookId)
+            {
+                foreach (dynamic book in Books)
+                {
+                    if(bookId == book.Id) { recommendedBooks.Add(book); }
+                }
+            }
+
+            return recommendedBooks;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    //---------------------------------------------------------------------------------
+    // Create the SqlCommand using a stored procedure to get recommended books per user
+    //---------------------------------------------------------------------------------
+
+    private SqlCommand CreateCommandWithStoredProceduregetRecommendedBooksForUser(String spName, SqlConnection con, int userId)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+
+        cmd.Connection = con;              // assign the connection to the command object
+
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+        return cmd;
+    }
+
 }
