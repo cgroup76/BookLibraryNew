@@ -23,17 +23,17 @@ public class KnnUserRecommenderService
         double[] currentUserVector = userPreferenceVectors[currentUserId];
         List<Tuple<int, double>> distances = new List<Tuple<int, double>>();
 
-        foreach (var kvp in userPreferenceVectors)
+        foreach (var user in userPreferenceVectors)
         {
-            if (kvp.Key == currentUserId) continue;
+            if (user.Key == currentUserId) continue;
 
-            double distance = CalculateCosineSimilarity(currentUserVector, kvp.Value);
-            distances.Add(new Tuple<int, double>(kvp.Key, distance));
+            double distance = CalculateCosineSimilarity(currentUserVector, user.Value);
+            distances.Add(new Tuple<int, double>(user.Key, distance));
         }
 
         // find the k nearest neighboood
         var nearestNeighbors = distances.OrderBy(d => d.Item2)
-                                        .Take(k) // k=5
+                                        .Take(k) // k
                                         .Select(d => d.Item1)
                                         .ToList();
 
