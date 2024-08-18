@@ -19,11 +19,11 @@ namespace serverSide.BL
             ClubName = clubName;
         }
 
-        public static int createNewClub(int bookId,string clubName, int userId)
+        public static int createNewClub(string clubName, int userId)
         {
             DBserviceBookClub dBservicesBookClub = new DBserviceBookClub();
 
-           return (dBservicesBookClub.AddNewBookClub(bookId,clubName, userId));
+           return (dBservicesBookClub.AddNewBookClub(clubName, userId));
 
            
         }
@@ -41,6 +41,14 @@ namespace serverSide.BL
 
 
         }
+        public static List<dynamic> getAllClubs()
+        {
+            DBserviceBookClub dBservicesBookClub = new DBserviceBookClub();
+            return dBservicesBookClub.getAllBookClub();
+
+        }
+
     }
+
 
 }

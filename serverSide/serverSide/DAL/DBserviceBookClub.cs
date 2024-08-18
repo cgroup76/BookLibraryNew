@@ -27,7 +27,7 @@ namespace serverSide.DAL
         //--------------------------------------------------------------------------------------------------
         // This method adds a new Club
         //--------------------------------------------------------------------------------------------------
-        public int AddNewBookClub(int bookId, string clubName, int userId)
+        public int AddNewBookClub( string clubName, int userId)
         {
 
             SqlConnection con;
@@ -43,7 +43,7 @@ namespace serverSide.DAL
                 throw (ex);
             }
 
-            cmd = CreateCommandWithStoredProcedureAddNewBookClub("creatNewBookClub", con, bookId, clubName, userId);             // create the command
+            cmd = CreateCommandWithStoredProcedureAddNewBookClub("creatNewBookClub", con, clubName, userId);             // create the command
 
             returnValue.ParameterName = "@RETURN_VALUE";
             returnValue.Direction = ParameterDirection.ReturnValue;
@@ -78,7 +78,7 @@ namespace serverSide.DAL
         // Create the SqlCommand using a stored procedure to  adds a new Club
         //---------------------------------------------------------------------------------
 
-        private SqlCommand CreateCommandWithStoredProcedureAddNewBookClub(String spName, SqlConnection con, int bookId, string clubName, int userId)
+        private SqlCommand CreateCommandWithStoredProcedureAddNewBookClub(String spName, SqlConnection con, string clubName, int userId)
         {
 
             SqlCommand cmd = new SqlCommand(); // create the command object
@@ -90,8 +90,6 @@ namespace serverSide.DAL
             cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
 
             cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-            cmd.Parameters.AddWithValue("@bookId", bookId);
 
             cmd.Parameters.AddWithValue("@userId", userId);
 
@@ -194,7 +192,7 @@ namespace serverSide.DAL
         //--------------------------------------------------------------------------------------------------
         // This method let users join club
         //--------------------------------------------------------------------------------------------------
-        public int joinClub( int clubId, int userId)
+        public int joinClub(int clubId, int userId)
         {
 
             SqlConnection con;
@@ -210,7 +208,7 @@ namespace serverSide.DAL
                 throw (ex);
             }
 
-            cmd = CreateCommandWithStoredProcedurejoinClub("joinToBookClub", con, clubId,userId);             // create the command
+            cmd = CreateCommandWithStoredProcedurejoinClub("joinToBookClub", con, clubId, userId);             // create the command
 
             returnValue.ParameterName = "@RETURN_VALUE";
             returnValue.Direction = ParameterDirection.ReturnValue;
@@ -245,7 +243,7 @@ namespace serverSide.DAL
         // Create the SqlCommand using a stored procedure to let users join club
         //---------------------------------------------------------------------------------
 
-        private SqlCommand CreateCommandWithStoredProcedurejoinClub(String spName, SqlConnection con, int bookClubId,int userId)
+        private SqlCommand CreateCommandWithStoredProcedurejoinClub(String spName, SqlConnection con, int bookClubId, int userId)
         {
 
             SqlCommand cmd = new SqlCommand(); // create the command object
@@ -265,5 +263,94 @@ namespace serverSide.DAL
             return cmd;
         }
 
+        //---------------------------------------------------------------------------------
+        // Create the SqlCommand using a stored procedure to getAllClubs
+        //---------------------------------------------------------------------------------
+
+
+        public List<object> getAllBookClub()
+
+        {
+
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("myProjDB"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            cmd = CreateCommandWithStoredProceduregetAllBookClub("getAllClubs", con);             // create the command
+
+
+            List<dynamic> Clubs = new List<dynamic>();
+
+            try
+            {
+                SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dataReader.Read())
+                {
+                    dynamic BookClub = new ExpandoObject();
+                    BookClub.clubId = Convert.ToString(dataReader["clubId"]);
+                    BookClub.ClubName = Convert.ToString(dataReader["bookName"]);
+
+
+                    Clubs.Add(BookClub);
+
+                }
+                return Clubs;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        //---------------------------------------------------------------------------------
+        // Create the SqlCommand using a stored procedure to get membersInBookClub 
+        //---------------------------------------------------------------------------------
+
+        private SqlCommand CreateCommandWithStoredProceduregetAllBookClub(String spName, SqlConnection con)
+        {
+
+            SqlCommand cmd = new SqlCommand(); // create the command object
+
+            cmd.Connection = con;              // assign the connection to the command object
+
+            cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+            cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+            cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+
+            return cmd;
+        }
+
+
+
+
+
     }
+
+
+
+
+
 }
