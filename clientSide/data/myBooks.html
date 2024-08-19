@@ -132,6 +132,8 @@
     </div>
     <div id="overlay" class=""></div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.5/signalr.min.js"></script>
+
     <script>
 
         var usersAPI = "https://localhost:7225/api/IUsers";
@@ -158,6 +160,8 @@
             $('.logout').click(logoutUser);
 
             $('.closeReviewButton').click(closeReviewForm);
+
+          
 
         });
         // review
@@ -288,25 +292,25 @@
             allMyBooks.forEach((book) => {
 
                 booksHtml += `
-                                            <div class='col-md-4'>
-                                                <div class='card mb-4 book-card'>
-                                                    <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
-                                                    <div class='card-body' id='markAsRead-${book.Id}'>
-                                                        <h5 class='card-title'>${book.Title}</h5>`
-                                                        /*<p>${book.Rating}</p>*/;
+                                                <div class='col-md-4'>
+                                                    <div class='card mb-4 book-card'>
+                                                        <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
+                                                        <div class='card-body' id='markAsRead-${book.Id}'>
+                                                            <h5 class='card-title'>${book.Title}</h5>`
+                                                            /*<p>${book.Rating}</p>*/;
                 if (book.IsRead == 'False') {
                     booksHtml += `<a class='btn btn-outline-dark pinkB' onclick="ReadTheBook(${book.UserId}, ${book.Id})">Mark as read</a>`;
                 } else if (book.WasRated == 0) {
                     booksHtml += `<a class='btn btn-outline-dark pinkB ' onclick='showReviewForm(${book.Id})''>Review</a>
-                                                </div>`;
+                                                    </div>`;
                 }
                 else {
                     booksHtml += `<a class='btn btn-outline-dark pinkB '>Already read this book</a>`
                 }
                 booksHtml += `
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>`;
+                                                </div>`;
             });
 
             booksContainer.innerHTML = booksHtml;
@@ -329,9 +333,9 @@
         function successToMarkAsRead() {
             const bookElement = document.getElementById(`markAsRead-${currentBookId}`);
             let bookHtml = `
-                                                    <h5 class='card-title'>${currentBookTitle}</h5>
-                                                     <a class='btn btn-outline-dark pinkB ' onclick='showReviewForm(${currentBookId})''>Review</a>
-                                                    </div>`;
+                                                        <h5 class='card-title'>${currentBookTitle}</h5>
+                                                         <a class='btn btn-outline-dark pinkB ' onclick='showReviewForm(${currentBookId})''>Review</a>
+                                                        </div>`;
             bookElement.innerHTML = bookHtml;
             Swal.fire('Success', 'Book marked as read.', 'success');
         }
@@ -358,29 +362,29 @@
                 if (index++ == 0) {
 
                     html += ` <div class='carousel-item active '>
-                                        <div class='top-books-container'>
-                                        <img class='d-block  top-5-img'  alt='First slide' src='${book.Thumbnail}'>
-                                        <div class='top-info'>
-                                        <h2>${book.Title}</h2>
-                                        <h5 class='pink'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</h5>
-                                        <p>${limitStringLength(book.Description, 122)}</p>
-                                        </div>
-                                        </div>
-                                        </div >`;
+                                            <div class='top-books-container'>
+                                            <img class='d-block  top-5-img'  alt='First slide' src='${book.Thumbnail}'>
+                                            <div class='top-info'>
+                                            <h2>${book.Title}</h2>
+                                            <h5 class='pink'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</h5>
+                                            <p>${limitStringLength(book.Description, 122)}</p>
+                                            </div>
+                                            </div>
+                                            </div >`;
 
                 }
 
                 else {
                     html += ` <div class='carousel-item'>
-                                        <div class='top-books-container'>
-                                        <img class='d-block  top-5-img'  alt='First slide' src='${book.Thumbnail}'>
-                                        <div class='top-info'>
-                                        <h2>${book.Title}</h2>
-                                        <h5 class='pink'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</h5>
-                                        <p>${limitStringLength(book.Description, 122)}</p>
-                                        </div>
-                                        </div>
-                                        </div >`;
+                                            <div class='top-books-container'>
+                                            <img class='d-block  top-5-img'  alt='First slide' src='${book.Thumbnail}'>
+                                            <div class='top-info'>
+                                            <h2>${book.Title}</h2>
+                                            <h5 class='pink'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</h5>
+                                            <p>${limitStringLength(book.Description, 122)}</p>
+                                            </div>
+                                            </div>
+                                            </div >`;
                 }
             })
             $("#recommendedBooks").html(html);
