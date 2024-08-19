@@ -163,7 +163,7 @@ function successToSendRequest(sellerId) {
     });
     sendNotificationToSeller(sellerId)
     showAllRequests();
-
+    closeBookInfo();
 }
 function errorToSendRequest(error) {
     if (error.status == 401) {
@@ -186,16 +186,23 @@ function errorToSendRequest(error) {
     }
 
 }
+let requestCount = 0;
 function showAllRequests() {
     showRequests();
+    requestCount = 0;
 }
 function showRequests() {
-    let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+    let userId = JSON.parse(localStorage.getItem("loginUserDetails"));
 
-    ajaxCall("GET", usersAPI + `/GetRequestsPerUser?userId=${userId}`, null, showMyRequests, errorShowRequest);
+    if (userId != null) {
+        userId = userId.userId
+        ajaxCall("GET", usersAPI + `/GetRequestsPerUser?userId=${userId}`, null, showMyRequests, errorShowRequest);
+    }
 }
 
+
 function showMyRequests(listOfRequest) {
+    requestCount = listOfRequest.length;
     ShowRequestToBuy();
 
     let requestBox = document.querySelector('.requestBox .dropdown-menu .got')
@@ -229,6 +236,8 @@ function ShowRequestToBuy() {
 }
 
 function ShowMyRequestToBuy(listOfRequest) {
+    requestCount += listOfRequest.length;
+
     let requestBox = document.querySelector('.requestBox .dropdown-menu .send');
     let htmlSend = "";
     htmlSend += `<h3> Request you send </h3>`
@@ -246,6 +255,7 @@ function ShowMyRequestToBuy(listOfRequest) {
         });
     }
     requestBox.innerHTML = htmlSend;
+    updateMessageCount(requestCount);
 }
 
 function errorShowRequest(error) {
@@ -276,6 +286,11 @@ function successToHandle(requestStatus,buyerId,bookName) {
     // Send notification to the buyer
     sendNotificationToBuyer(bookName, buyerId, requestStatus);
     showAllRequests();
+    allBooks = []
+    showBooks();
+    allMyBooks = [];
+    showMyBooks();
+    closeBookInfo();
 }
 
 function errorToHandle() {
@@ -297,9 +312,9 @@ connection.on("ReceiveMessage", function (user, message) {
     var currentUser = JSON.parse(localStorage.getItem('loginUserDetails'));
     console.log(currentUser)
     if (currentUser != null) {
-        let userId = currentUser.userId.toString(); // Ensure this is a string comparison
+        let userId = (currentUser.userId).toString(); // Ensure this is a string comparison
         if (userId === user) {
-                
+            showAllRequests();
             Swal.fire({
                 title: message,
                 background: "#fff",
@@ -313,6 +328,10 @@ connection.on("ReceiveMessage", function (user, message) {
                 allowOutsideClick: false
                 
             });
+            allBooks = [];
+            showBooks();
+            allMyBooks = [];
+            showMyBooks();
         }
     } else {
         console.log("User is not logged in or localStorage is empty.");
@@ -350,7 +369,17 @@ function sendNotificationToSeller(sellerId) {
         console.error("Connection is not established.");
     }
 }
+// set the requests
+$(document).ready(function () {
+    showAllRequests();
+})
 
+// Function to update the message count
+function updateMessageCount(count) {
+    const badge = document.getElementById("message-count");
 
+    // Always show the count, even if it's 0
+    badge.textContent = count;
+}
 
 
