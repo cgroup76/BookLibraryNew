@@ -132,6 +132,7 @@ namespace serverSide.DAL
                 {
                     dynamic member = new ExpandoObject();
                     member.userName = Convert.ToString(dataReader["userName"]);
+                    member.userId = Convert.ToString(dataReader["userId"]);
 
 
                     membersInClub.Add(member);
@@ -297,7 +298,7 @@ namespace serverSide.DAL
                 while (dataReader.Read())
                 {
                     dynamic BookClub = new ExpandoObject();
-                    BookClub.ClubId = Convert.ToString(dataReader["clubId"]);
+                    BookClub.ClubId = Convert.ToString(dataReader["id"]);
                     BookClub.ClubName = Convert.ToString(dataReader["bookName"]);
                     BookClub.ClubImage = Convert.ToString(dataReader["bookImage"]);
 
