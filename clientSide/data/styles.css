@@ -913,3 +913,22 @@ li {
         box-shadow: 0 8px 16px rgba(255, 255, 255, 0.2);
         cursor:pointer;
     }
+
+
+/* notification */
+
+/* Styling for the red notification badge */
+.badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%); /* Adjust position to top-right */
+    padding: 5px 8px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+}
