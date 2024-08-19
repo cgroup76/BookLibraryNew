@@ -58,12 +58,17 @@
             </nav>
         </div>
     </header>
+    <section>
+        <div class="title">
+            <h1>All Of Our Authors</h1>
+        </div>
+    </section>
     <div class="container booksbyAuthor-body mt-4">
         <label for="authorsDataList" class="form-label pink">Search author: </label>
         <input class="form-control" list="authorsNames" id="authorsNamesInput" placeholder="Type author name to search...">
         <datalist id="authorsNames">
         </datalist>
-        </hr class="pink">
+        <hr class="pink" />
         <div class="author-details"></div>
         <h2 class="text-center text-black authorName"></h2>
         <div id="authors-books" class="row"></div>
@@ -120,36 +125,36 @@
         function showSearchedAuthor(author) {
             var html = "";
             html += `
-                                <div class='card'>
+                                <div class=''>
                                     <div class='card-body'>
-                                        <h4 class='card-text'>${author.name}</h4>`;
+                                        <h2 class='card-text'>${author.name}</h2>`;
             if (author.dateOfBirth == undefined || author.dateOfBirth == "") { }
             else {
-                html += `<p class='card-text'>Born: ${author.dateOfBirth}</p>`
+                html += `<p class='card-text'><strong>Born:</strong> ${author.dateOfBirth}</p>`
             }
             if (author.dateOfDeath == undefined || author.dateOfDeath == "") { }
             else {
-                html += `<p class='card-text'>Died: ${author.dateOfDeath}</p>`
+                html += `<p class='card-text'><strong>Died:</strong> ${author.dateOfDeath}</p>`
             }
             if (author.age == undefined || author.age == "") { }
             else {
-                html += `<p class='card-text'>Age: ${author.age}</p>`
+                html += `<p class='card-text'><strong>Age:</strong> ${author.age}</p>`
             }
             if (author.nationality == undefined || author.nationality == "") { }
             else {
-                html += `<p class='card-text'>Nationality: ${author.nationality}</p>`
+                html += `<p class='card-text'><strong>Nationality:</strong> ${author.nationality}</p>`
             }
             if (author.notableWork == undefined || author.notableWork == "") { }
             else {
-                html += `<p class='card-text'>Notable Work: ${author.notableWork}</p>`
+                html += `<p class='card-text'><strong>Notable Work:</strong> ${author.notableWork}</p>`
             }
             if (author.awards == undefined || author.awards == "") { }
             else {
-                html += `<p class='card-text'>Awards: ${author.awards}</p>`
+                html += `<p class='card-text'><strong>Awards:</strong> ${author.awards}</p>`
             }
             if (author.description == undefined || author.description == "") { }
             else {
-                html += `<p class='card-text'>Description: ${author.description}</p>`
+                html += `<p class='card-text'><strong>Description:</strong> ${author.description}</p>`
             }
             html += `  <h4 class='authorBooksTitle'></h4>  <div class="row authour-books"></div> </div>
                                 </div>`;

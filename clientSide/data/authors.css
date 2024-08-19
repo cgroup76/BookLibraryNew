@@ -77,9 +77,15 @@ li {
 .pink {
     color: #ff0083
 }
-
+hr{
+    width: 70%;
+    font-size: 10px;
+}
+.title{
+    text-align: center;
+    padding: 3% 0 ;
+}
 /* notification */
-
 /* Styling for the red notification badge */
 .badge {
     position: absolute;
