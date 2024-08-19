@@ -2,6 +2,7 @@
 using System.Dynamic;
 using System.Data.SqlClient;
 using System.Data;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace serverSide.DAL
 {
@@ -348,7 +349,239 @@ namespace serverSide.DAL
 
 
 
+        //--------------------------------------------------------------------------------------------------
+        // This method adds a new Post
+        //--------------------------------------------------------------------------------------------------
+        public int addNewPost(int clubId,int userId,string description,string image)
+        {
+      
+            SqlConnection con;
+            SqlCommand cmd;
+            SqlParameter returnValue = new SqlParameter(); // add a return value parameter
+            try
+            {
+                con = connect("myProjDB"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
 
+            cmd = CreateCommandWithStoredProcedureaddNewPost("addNewPost", con, clubId, userId, description, image);             // create the command
+
+            returnValue.ParameterName = "@RETURN_VALUE";
+            returnValue.Direction = ParameterDirection.ReturnValue;
+            cmd.Parameters.Add(returnValue);
+
+            try
+            {
+                cmd.ExecuteNonQuery(); // execute the command
+
+                int numEffected = (int)cmd.Parameters["@RETURN_VALUE"].Value; // get the return value
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+
+        }
+
+
+        //---------------------------------------------------------------------------------
+        // Create the SqlCommand using a stored procedure to  adds a new post
+        //---------------------------------------------------------------------------------
+
+        private SqlCommand CreateCommandWithStoredProcedureaddNewPost(String spName, SqlConnection con, int clubId, int userId, string description, string image)
+        {
+
+            SqlCommand cmd = new SqlCommand(); // create the command object
+
+            cmd.Connection = con;              // assign the connection to the command object
+
+            cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+            cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+            cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+            cmd.Parameters.AddWithValue("@userId", userId);
+            cmd.Parameters.AddWithValue("@clubId", clubId);
+            cmd.Parameters.AddWithValue("@description", description);
+            cmd.Parameters.AddWithValue("@image", image);
+
+            
+
+            return cmd;
+        }
+
+
+        //---------------------------------------------------------------------------------
+        // Create the SqlCommand using a stored procedure to get Post Per Club
+        //---------------------------------------------------------------------------------
+
+
+        public List<object> getPostPerClub(int clubId)
+
+        {
+
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("myProjDB"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            cmd = CreateCommandWithStoredProceduregetPostPerClub("getPostPerClub", con,clubId);             // create the command
+
+
+            List<dynamic> posts = new List<dynamic>();
+
+            try
+            {
+                SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dataReader.Read())
+                {
+                    dynamic post = new ExpandoObject();
+                    post.PostId = Convert.ToInt32(dataReader["id"]);
+                    post.ClubId = Convert.ToInt32(dataReader["clubId"]);
+                    post.UserName = Convert.ToString(dataReader["userName"]);
+                    post.Description = Convert.ToString(dataReader["description"]);
+                    post.Image= Convert.ToString(dataReader["image"]);
+                    post.Likes = Convert.ToInt32(dataReader["numOfLikes"]);
+
+                    posts.Add(post);
+
+                }
+                return posts;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        //---------------------------------------------------------------------------------
+        // Create the SqlCommand using a stored procedure to get Post Per Club
+        //---------------------------------------------------------------------------------
+
+        private SqlCommand CreateCommandWithStoredProceduregetPostPerClub(String spName, SqlConnection con,int clubId)
+        {
+
+            SqlCommand cmd = new SqlCommand(); // create the command object
+
+            cmd.Connection = con;              // assign the connection to the command object
+
+            cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+            cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+            cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+            cmd.Parameters.AddWithValue("@clubId", clubId);
+            return cmd;
+        }
+        //--------------------------------------------------------------------------------------------------
+        // This method let user add Like To Post
+        //--------------------------------------------------------------------------------------------------
+        public int addLikeToPost(int postId, int userId)
+        {
+
+            SqlConnection con;
+            SqlCommand cmd;
+            SqlParameter returnValue = new SqlParameter(); // add a return value parameter
+            try
+            {
+                con = connect("myProjDB"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            cmd = CreateCommandWithStoredProcedureaddLikeToPost("addLikeToPost", con, postId, userId);             // create the command
+
+            returnValue.ParameterName = "@RETURN_VALUE";
+            returnValue.Direction = ParameterDirection.ReturnValue;
+            cmd.Parameters.Add(returnValue);
+
+            try
+            {
+                cmd.ExecuteNonQuery(); // execute the command
+
+                int numEffected = (int)cmd.Parameters["@RETURN_VALUE"].Value; // get the return value
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+
+        }
+
+
+        //---------------------------------------------------------------------------------
+        // Create the SqlCommand using a stored procedure to let users add Like To Post
+        //---------------------------------------------------------------------------------
+
+        private SqlCommand CreateCommandWithStoredProcedureaddLikeToPost(String spName, SqlConnection con, int postId, int userId)
+        {
+
+            SqlCommand cmd = new SqlCommand(); // create the command object
+
+            cmd.Connection = con;              // assign the connection to the command object
+
+            cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+
+            cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+
+            cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+
+            cmd.Parameters.AddWithValue("@userid", userId);
+
+            cmd.Parameters.AddWithValue("@postId", postId);
+
+            return cmd;
+        }
 
     }
 
