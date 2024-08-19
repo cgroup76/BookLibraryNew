@@ -20,22 +20,31 @@
 
 </head>
 <body>
-    <header class="bg-dark text-white py-3 fixed-top">
+    <header class="bg-dark text-white py-2 fixed-top">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="logo">
-                    <h1 class="h3">Book Store</h1>
-                </div>
-                <nav>
-                    <ul class="nav">
+            <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+
+                <a class="navbar-brand" id="nav-title">Book Store</a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="navbar-nav ml-auto">
                         <li class="nav-item"><a class="nav-link text-white" href="HTMLPage1.html">Home</a></li>
                         <li class="nav-item adminPage"><a class="nav-link text-white " href="adminPage.html">Admin Page</a></li>
-                        <li class="nav-item myBooks"><a class="nav-link text-white " href="myBooks.html">My Books</a></li>
+                        <li class="nav-item myBooks"><a class="nav-link text-white " href="#">My Books</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="author.html">Authors</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="TheGoodBookClub.html">Books Clubs</a></li>
-                        <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
-                        <li class="nav-item logoutBox"><a class="nav-link text-white logout">logout</a></li>
+                        <li class="nav-item games"><a class="nav-link text-white games" href="games.html">games</a></li>
+                        <li class="nav-item loginBox"><a class="nav-link text-white login">login</a></li>
+                        <li class="nav-item userNameBox">
+                            <a class="nav-link text-white userName"></a>
+                        </li>
+                        <li class="nav-item logoutBox"><a class="nav-link pink whiteHover logout" style="color: #ff0083">logout</a></li>
                         <li class="nav-item dropdown requestBox">
+                            <span id="message-count" class="badge">0</span> <!-- Badge -->
                             <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
                                     <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
@@ -47,8 +56,8 @@
                             </div>
                         </li>
                     </ul>
-                </nav>
-            </div>
+                </div>
+            </nav>
         </div>
     </header>
 
@@ -104,7 +113,7 @@
         <div class="reviewABook-body">
             <img class="reviewABook-book-img" />
             <h3 class="reviewABook-book-title"></h3>
-            <hr />
+            <hr class="pink" />
             <h5 class="pink">Let us know your opinion:</h5>
 
             <form id="reviewABook-form">
@@ -130,9 +139,56 @@
             </form>
         </div>
     </div>
-    <div id="overlay" class=""></div>
+    <!-- book info -->
+    <div id="book-info-container">
+        <div class="book-info-header">
+            <button data-close-button class="close-button closeBookInfoButton" onclick="closeBookInfo()">&times;</button>
+            <br />
+            <img class="book-info-img" />
+            <h2 class="text-center book-info-title"></h2>
+            <hr class="top-line" />
+            <span class="bold white">Author: </span>
+            <span class="book-info-author pink"></span>
+            <span class="bold white">published: </span>
+            <span class="book-info-publish pink"></span><br />
+            <span class="book-info-rating pink"></span>
+            <hr class="bot-line" />
+        </div>
+        <span class="white bold info">Info:</span><br />
+        <br />
+        <div id="book-info-body">
+            <span class="white">Publish date: </span>
+            <span class="pink book-info-publish right"></span>
+            <span class="white">Author:</span>
+            <span class="pink book-info-author right"></span>
+            <span class="white">Category: </span>
+            <span class="pink book-info-category right"></span>
+            <span class="white">Pages: </span>
+            <span class="pink book-info-numOfPages right"></span>
+            <span class="white">Format: </span>
+            <span class="pink book-info-format right"></span>
+            <span class="white">Language: </span>
+            <span class="pink book-info-lang right"></span>
+        </div>
+        <div class="buy-the-book"></div>
+        <div class="book-info-reviews">
+            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner" id="review-carosel">
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.5/signalr.min.js"></script>
+    <!---------------->
+    <div id="overlay" class=""></div>
 
     <script>
 
@@ -140,6 +196,7 @@
         var booksAPI = "https://localhost:7225/api/Books";
 
         var allMyBooks = [];
+        var allRecommendedBooks = [];
 
         var bookIdToRate;
         var bookRating;
@@ -160,8 +217,6 @@
             $('.logout').click(logoutUser);
 
             $('.closeReviewButton').click(closeReviewForm);
-
-          
 
         });
         // review
@@ -291,26 +346,26 @@
 
             allMyBooks.forEach((book) => {
 
-                booksHtml += `
-                                                <div class='col-md-4'>
-                                                    <div class='card mb-4 book-card'>
-                                                        <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
-                                                        <div class='card-body' id='markAsRead-${book.Id}'>
-                                                            <h5 class='card-title'>${book.Title}</h5>`
-                                                            /*<p>${book.Rating}</p>*/;
+                booksHtml += `<div class='col-lg-3 col-sm-4 col-12'>`
+
+                if (book.IsRead == 'True') { booksHtml += `<div class='card mb-4 book-card book-${book.Id} readTheBook read'>` }
+                else { booksHtml += `<div class='card mb-4 book-card book-${book.Id} '>` }
+
+                booksHtml += `<img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
+                                                            <div class='card-body' id='markAsRead-${book.Id}'>
+                                                                <h5 class='card-title'>${book.Title}</h5>
+                                                                <p>Written by: ${book.FirstAuthorName}</p>`;
                 if (book.IsRead == 'False') {
                     booksHtml += `<a class='btn btn-outline-dark pinkB' onclick="ReadTheBook(${book.UserId}, ${book.Id})">Mark as read</a>`;
                 } else if (book.WasRated == 0) {
                     booksHtml += `<a class='btn btn-outline-dark pinkB ' onclick='showReviewForm(${book.Id})''>Review</a>
-                                                    </div>`;
+                                                        </div>`;
                 }
-                else {
-                    booksHtml += `<a class='btn btn-outline-dark pinkB '>Already read this book</a>`
-                }
+                else {   }
                 booksHtml += `
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </div>`;
+                                                    </div>`;
             });
 
             booksContainer.innerHTML = booksHtml;
@@ -333,10 +388,13 @@
         function successToMarkAsRead() {
             const bookElement = document.getElementById(`markAsRead-${currentBookId}`);
             let bookHtml = `
-                                                        <h5 class='card-title'>${currentBookTitle}</h5>
-                                                         <a class='btn btn-outline-dark pinkB ' onclick='showReviewForm(${currentBookId})''>Review</a>
-                                                        </div>`;
+                                                            <h5 class='card-title'>${currentBookTitle}</h5>
+                                                             <a class='btn btn-outline-dark pinkB ' onclick='showReviewForm(${currentBookId})''>Review</a>
+                                                            </div>`;
             bookElement.innerHTML = bookHtml;
+
+            $(`.book-${currentBookId}`).addClass('readTheBook');
+            $(`.book-${currentBookId}`).addClass('read');
             Swal.fire('Success', 'Book marked as read.', 'success');
         }
 
@@ -354,37 +412,49 @@
             ajaxCall("GET", usersAPI + "/getRecommendedBook?userId=" + userId, null, successRecommendedBooks, errorToLoadBooks)
         }
         function successRecommendedBooks(recommended) {
+            allRecommendedBooks = recommended;
             let html = "";
             let index = 0;
-            console.log(recommended)
+            const buyerId = (JSON.parse(localStorage.getItem("loginUserDetails"))).userId;
+
             recommended.forEach((book) => {
 
                 if (index++ == 0) {
 
                     html += ` <div class='carousel-item active '>
-                                            <div class='top-books-container'>
-                                            <img class='d-block  top-5-img'  alt='First slide' src='${book.Thumbnail}'>
-                                            <div class='top-info'>
-                                            <h2>${book.Title}</h2>
-                                            <h5 class='pink'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</h5>
-                                            <p>${limitStringLength(book.Description, 122)}</p>
-                                            </div>
-                                            </div>
-                                            </div >`;
+                                <div class='container'>
+                                        <div class='top-books-container row recommended-book' onclick='showBookInfo(${book.Id})'>
+                                        <div class='col-md-5 col-xs-6'>
+                                        <img class='d-block  top-5-img'  alt='First slide' src='${book.Thumbnail}'>
+                                        </div>
+                                        <div class='top-info col-md-7 col-xs-6'>
+                                        <h2>${book.Title}</h2>
+                                        <h5 class='pink'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</h5>
+                                        <p>${limitStringLength(book.Description, 122)}</p>
+                                        <a class='btn btn-outline-dark disabledB pinkB' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${book.UserName}")'>Buy</a>
+                                        </div>
+                                        </div>
+                                        </div>
+                                        </div >`;
 
                 }
 
                 else {
-                    html += ` <div class='carousel-item'>
-                                            <div class='top-books-container'>
-                                            <img class='d-block  top-5-img'  alt='First slide' src='${book.Thumbnail}'>
-                                            <div class='top-info'>
-                                            <h2>${book.Title}</h2>
-                                            <h5 class='pink'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</h5>
-                                            <p>${limitStringLength(book.Description, 122)}</p>
-                                            </div>
-                                            </div>
-                                            </div >`;
+                    html += ` <div class='carousel-item  '>
+                                <div class='container'>
+                                        <div class='top-books-container row recommended-book' onclick='showBookInfo(${book.Id})'>
+                                        <div class='col-md-5 col-xs-6'>
+                                        <img class='d-block  top-5-img '  alt='First slide' src='${book.Thumbnail}'>
+                                        </div>
+                                        <div class='top-info col-md-7 col-xs-6'>
+                                        <h2>${book.Title}</h2>
+                                        <h5 class='pink'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</h5>
+                                        <p>${limitStringLength(book.Description, 122)}</p>
+                                        <a class='btn btn-outline-dark disabledB pinkB'  onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${book.UserName}")'>Buy</a>
+                                        </div>
+                                        </div>
+                                        </div>
+                                        </div >`;
                 }
             })
             $("#recommendedBooks").html(html);
@@ -397,7 +467,145 @@
                 return str;
             }
         }
+        //send request
+        function sendRequest(buyerId, sellerId, bookId, sellerName) {
 
+            var buyer = JSON.parse(localStorage.getItem("loginUserDetails"))
+
+            if (buyer != null) { // check for login user
+
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: "btn btn-success",
+                        cancelButton: "btn btn-danger"
+                    },
+                    buttonsStyling: false
+                });
+                swalWithBootstrapButtons.fire({
+                    title: `The book already belong to ${sellerName}`,
+                    text: "Do you want to send him a request to purchase the book from him?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No, cancel!",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        ajaxCall("POST", usersAPI + "/insertNewRequest?sellerId=" + sellerId + "&buyerId=" + buyerId + "&bookId=" + bookId, null, successToSendRequest, errorToSendRequest);
+
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons.fire({
+                            title: "Cancelled",
+                            icon: "error"
+                        });
+                    }
+                });
+            }
+
+        }
+        function successToSendRequest() {
+            Swal.fire({
+                icon: "success",
+                title: "The request has been sent",
+                showConfirmButton: false,
+                timer: 1500
+            });
+            showAllRequests();
+
+        }
+        function errorToSendRequest(error) {
+            if (error.status == 401) {
+
+                Swal.fire("Connection time ended - Please login first");
+
+                localStorage.clear();
+
+                checkForLoginUser();
+
+                showLoginForm();
+            }
+            else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "There was a problem sending the request, please try again",
+
+                });
+            }
+
+        }
+        // book info
+
+        function showBookInfo(bookId) {
+
+            ajaxCall("GET", booksAPI + `/getBookReviews?bookId=${bookId}`, null, seccessToLoadReviews, errorR)
+
+            let book = allRecommendedBooks.find((book) => book.Id === bookId);
+            const buyerId = (JSON.parse(localStorage.getItem("loginUserDetails"))).userId;
+
+            $('#book-info-container').addClass('active');
+            $('#overlay').addClass('active');
+            $('.book-info-img').attr('src', book.Thumbnail);
+            $('.book-info-title').html(book.Title);
+            $('.book-info-rating').html(rating(book.Rating) + "   " + (book.Rating).toFixed(1));
+            $('.book-info-author').html(book.FirstAuthorName);
+            $('.book-info-publish').html(book.PublishDate);
+            $('.book-info-category').html(book.Category);
+            $('.book-info-numOfPages').html(book.NumOfPages);
+            $('.buy-the-book').html(`<a class='btn btn-outline-dark pinkB' disabled onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${book.UserName}")'>Buy</a>`);
+
+            if (book.IsEbook == 0) { $('.book-info-format').html('Hard Cover'); }
+            else { $('.book-info-format').html('EBook'); }
+
+            $('.book-info-lang').html('English');
+
+        }
+        function seccessToLoadReviews(reviews) {
+            let html = '';
+            let index = 1;
+
+            if (reviews.length > 0) {
+                reviews.forEach((review) => {
+                    if (index++ == 1) {
+                        html += `<div class="carousel-item active">
+                        <div class='padding'>
+                        <div class='book-review'>
+                        <svg class='user-image-info' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>
+                                <h5 class='review-user'>${review.UserName}</h5>
+                                <h5 class='review-rating pink'>${rating(review.Rating)}  ${(review.Rating).toFixed(1)}</h5>
+                                <p class='review-text'>${review.Review}</p>
+                                </div>
+                                </div>
+                                </div>`;
+                    }
+                    else {
+                        html += `<div class="carousel-item">
+                        <div class='padding'>
+                                <div class='book-review'>
+                                <svg class='user-image-info' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>
+                                <h5 class='review-user'>${review.UserName}</h5>
+                                <h5 class='review-rating'>${rating(review.Rating)}  ${(review.Rating).toFixed(1)}</h5>
+                                <p class='review-text'>${review.Review}</p>
+                                </div>
+                                </div>
+                                </div>`;
+                    }
+
+                })
+                $('#review-carosel').html(html);
+            }
+        }
+
+        function errorR(err) { console.log(err) }
+
+        function closeBookInfo() {
+            $('#book-info-container').removeClass('active');
+            $('#overlay').removeClass('active');
+            $('#review-carosel').html("");
+        }
     </script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
