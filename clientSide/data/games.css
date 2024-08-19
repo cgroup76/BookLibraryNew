@@ -116,8 +116,8 @@ button {
     height: 600px;
     width: 750px;
     max-height: 80%;
-    max-width: 70%;
-    top: 55%;
+    max-width: 60%;
+    top: 50%;
     left: 50%;
     padding: 1%;
     transform: translate(-50%, -50%);
@@ -178,7 +178,7 @@ button {
     height: 600px;
     width: 750px;
     max-height: 80%;
-    max-width: 90%;
+    max-width: 60%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -191,15 +191,17 @@ button {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 100%;
 }
 
 .game-board {
-    width:100%
+    display: grid;
+    grid-template-columns: repeat(4, 150px); /* Increase card size */
+    grid-gap: 15px; /* Adjust spacing */
+ 
 }
 
 .card {
-
+    width: 150px; /* Increase card size */
     height: 150px; /* Increase card size */
     background-color: #ff0083;
     border-radius: 8px;
@@ -213,7 +215,6 @@ button {
     transform-style: preserve-3d; /* Ensure 3D transforms work */
     transform: rotateY(0deg); /* Start with the back side visible */
     transition: transform 0.5s;
-    margin: 1%;
 }
 
     .card.flip {
@@ -262,35 +263,9 @@ button {
 #start-game-btn {
     background-color: #ff0083;
 }
-.col-new-2 {
-    flex: 0 0 23.0%;
-    max-width: 23.0%;
-}
 
-@media only screen and (max-width: 576px){
-    .card-front{
-        font-size:13px;
-    }
-    #games {
-        position: fixed;
-        background-color: white;
-        color: black;
-        text-align: center;
-        height: 600px;
-        width: 750px;
-        max-height: 80%;
-        max-width: 90%;
-        top: 55%;
-        left: 50%;
-        padding: 1%;
-        transform: translate(-50%, -50%);
-        transition: 200ms ease-in-out;
-        border: 1px solid #ff0083;
-        border-radius: 5px;
-        display: none;
-        z-index: 2;
-    }
-}
+
+
 /*hangMan*/
 .failedGuess b {
     display: inline; /* Ensure guesses are shown inline */
@@ -392,7 +367,4 @@ h6 {
 
 .pinkB {
     background-color: #ff0083;
-}
-.form-check-label{
-    color:black;
 }

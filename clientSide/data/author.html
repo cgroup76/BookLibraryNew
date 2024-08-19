@@ -18,32 +18,23 @@
 </head>
 <body>
 
-    <header class="bg-dark text-white py-2 fixed-top">
+    <header class="bg-dark text-white py-3 fixed-top">
         <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-
-                <a class="navbar-brand" id="nav-title">Book Store</a>
-
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="navbar-nav ml-auto">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="logo">
+                    <h1 class="h3">Book Store</h1>
+                </div>
+                <nav>
+                    <ul class="nav">
                         <li class="nav-item"><a class="nav-link text-white" href="HTMLPage1.html">Home</a></li>
                         <li class="nav-item adminPage"><a class="nav-link text-white " href="adminPage.html">Admin Page</a></li>
                         <li class="nav-item myBooks"><a class="nav-link text-white " href="myBooks.html">My Books</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#">Authors</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="TheGoodBookClub.html">Books Clubs</a></li>
-                        <li class="nav-item games"><a class="nav-link text-white games" href="games.html">games</a></li>
-                        <li class="nav-item loginBox"><a class="nav-link text-white login">login</a></li>
-                        <li class="nav-item userNameBox">
-                            <a class="nav-link text-white userName"></a>
-                        </li>
-                        <li class="nav-item logoutBox"><a class="nav-link pink whiteHover logout" style="color: #ff0083">logout</a></li>
-                        <li class="nav-item dropdown requestBox message-box">
+                        <li class="nav-item"><a class="nav-link text-white" href="author.html">Authors</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
+                        <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
+                        <li class="nav-item logoutBox"><a class="nav-link text-white logout">logout</a></li>
+                        <li class="nav-item dropdown requestBox">
                             <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span id="message-count" class="badge">0</span> <!-- Badge -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
                                     <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
                                 </svg>
@@ -54,21 +45,16 @@
                             </div>
                         </li>
                     </ul>
-                </div>
-            </nav>
+                </nav>
+            </div>
         </div>
     </header>
-    <section>
-        <div class="title">
-            <h1>All Of Our Authors</h1>
-        </div>
-    </section>
     <div class="container booksbyAuthor-body mt-4">
         <label for="authorsDataList" class="form-label pink">Search author: </label>
         <input class="form-control" list="authorsNames" id="authorsNamesInput" placeholder="Type author name to search...">
         <datalist id="authorsNames">
         </datalist>
-        <hr class="pink" />
+        <h2 class="text-center text-black">---------------------</h2>
         <div class="author-details"></div>
         <h2 class="text-center text-black authorName"></h2>
         <div id="authors-books" class="row"></div>
@@ -89,7 +75,6 @@
         var booksAPI = "https://localhost:7225/api/Books";
         var authorsAPI = "https://localhost:7225/api/Authors";
         var allAuthors = '';
-        let messageCount = 0;
 
         $(document).ready(function () {
 
@@ -99,7 +84,6 @@
 
             $('.logout').click(logoutUser);
 
-            updateMessageCount(0);
         });
         // search author by name
         document.addEventListener('DOMContentLoaded', () => {
@@ -125,39 +109,39 @@
         function showSearchedAuthor(author) {
             var html = "";
             html += `
-                                <div class=''>
-                                    <div class='card-body'>
-                                        <h2 class='card-text'>${author.name}</h2>`;
+                            <div class='card'>
+                                <div class='card-body'>
+                                    <h4 class='card-text'>${author.name}</h4>`;
             if (author.dateOfBirth == undefined || author.dateOfBirth == "") { }
             else {
-                html += `<p class='card-text'><strong>Born:</strong> ${author.dateOfBirth}</p>`
+                html += `<p class='card-text'>Born: ${author.dateOfBirth}</p>`
             }
             if (author.dateOfDeath == undefined || author.dateOfDeath == "") { }
             else {
-                html += `<p class='card-text'><strong>Died:</strong> ${author.dateOfDeath}</p>`
+                html += `<p class='card-text'>Died: ${author.dateOfDeath}</p>`
             }
             if (author.age == undefined || author.age == "") { }
             else {
-                html += `<p class='card-text'><strong>Age:</strong> ${author.age}</p>`
+                html += `<p class='card-text'>Age: ${author.age}</p>`
             }
             if (author.nationality == undefined || author.nationality == "") { }
             else {
-                html += `<p class='card-text'><strong>Nationality:</strong> ${author.nationality}</p>`
+                html += `<p class='card-text'>Nationality: ${author.nationality}</p>`
             }
             if (author.notableWork == undefined || author.notableWork == "") { }
             else {
-                html += `<p class='card-text'><strong>Notable Work:</strong> ${author.notableWork}</p>`
+                html += `<p class='card-text'>Notable Work: ${author.notableWork}</p>`
             }
             if (author.awards == undefined || author.awards == "") { }
             else {
-                html += `<p class='card-text'><strong>Awards:</strong> ${author.awards}</p>`
+                html += `<p class='card-text'>Awards: ${author.awards}</p>`
             }
             if (author.description == undefined || author.description == "") { }
             else {
-                html += `<p class='card-text'><strong>Description:</strong> ${author.description}</p>`
+                html += `<p class='card-text'>Description: ${author.description}</p>`
             }
             html += `  <h4 class='authorBooksTitle'></h4>  <div class="row authour-books"></div> </div>
-                                </div>`;
+                            </div>`;
             $(".author-details").html(html)
         }
         // load all the books by author
@@ -175,13 +159,13 @@
             authorBooks.forEach((book) => {
 
                 html += `
-                            <div class='col-md-3'>
-                                <div class='card mb-4 book-card'>
-                                    <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
-                                    <div class='card-body w-100'>
-                                        <h6 class='card-title'>${book.Title}</h6>
-                                        <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
-                                        <span class='card-text'>${book.Price}$</span></div></div></div>`;
+                        <div class='col-md-3'>
+                            <div class='card mb-4 book-card'>
+                                <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
+                                <div class='card-body w-100'>
+                                    <h6 class='card-title'>${book.Title}</h6>
+                                    <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
+                                    <span class='card-text'>${book.Price}$</span></div></div></div>`;
             })
             $(".authour-books").html(html);
         }
@@ -206,12 +190,6 @@
             allAuthors.forEach((author) => { authorNameSearchBar += `<option value='${author.name}'>` })
 
             $("#authorsNames").html(authorNameSearchBar);
-        }
-        function updateMessageCount(count) {
-            const badge = document.getElementById("message-count");
-
-            // Always show the count, even if it's 0
-            badge.textContent = count;
         }
 
     </script>

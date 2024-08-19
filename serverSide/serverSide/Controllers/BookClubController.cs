@@ -16,18 +16,13 @@ namespace serverSide.Controllers
             return BookClub.getAllMembersPerClub(clubId);
         }
 
-        [HttpGet("getAllClubs")]
-        public List<dynamic> Get()
-        {
-            return BookClub.getAllClubs();
-        }
-
+   
 
         // POST api/<BookClubController>
         [HttpPost("creatClub")]
-        public IActionResult CreateClub([FromQuery] string clubName, [FromQuery] int userId)
+        public IActionResult Post(int bookId,string clubName, int userId)
         {
-           int status= BookClub.createNewClub( clubName, userId);
+           int status= BookClub.createNewClub(bookId, clubName, userId);
             if (status == 1) { return Ok(true); }
 
             else if (status == 0) { return NotFound(false); }
