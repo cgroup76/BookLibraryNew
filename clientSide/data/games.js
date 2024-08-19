@@ -743,3 +743,7 @@ function postGameReasults(gameResult) {
 function successPost(status) {
     console.log(status)
 }
+///
+function showBooks() { };
+function showMyBooks() { };
+function closeBookInfo() { };

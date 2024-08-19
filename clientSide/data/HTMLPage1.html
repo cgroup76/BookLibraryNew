@@ -302,9 +302,6 @@
             // logout user
             $('.logout').click(logoutUser);
 
-            //user requst
-            $('.requestBox').click(showAllRequests);
-
             //search book by title / author / text
             $(".search-book-btn").click(searchBook);
 
@@ -656,6 +653,8 @@
 
         function errorSignup(errorMassage) { console.log(errorMassage); }
 
+        function showMyBooks() { }
+
         // show books
 
 
@@ -838,7 +837,7 @@
 
         function successToBuyABook(status) {
             Swal.fire('Success', "The book has been successfully purchased", 'success');
-
+            closeBookInfo();
             $(`.book-${currentBookId}`).addClass('bought');
             setBooksDetails(allBooks);
             setBooksDetails(top5Books);
