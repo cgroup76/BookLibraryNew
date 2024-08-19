@@ -112,7 +112,9 @@ function checkUserLogoutReason() {
         localStorage.removeItem('logoutReason');
     }
 }
+
 //requests
+
 //send request
 function sendRequest(buyerId, sellerId, bookId, sellerName) {
 
@@ -325,6 +327,7 @@ function startConnection() {
         })
         .catch(err => console.error("SignalR Connection Error:", err));
 }
+
 startConnection();
 
 
