@@ -299,11 +299,10 @@ namespace serverSide.DAL
                 while (dataReader.Read())
                 {
                     dynamic BookClub = new ExpandoObject();
-                    BookClub.ClubId = Convert.ToString(dataReader["id"]);
+                    BookClub.ClubId = Convert.toInt32 (dataReader["id"]);
                     BookClub.ClubName = Convert.ToString(dataReader["bookName"]);
                     BookClub.ClubImage = Convert.ToString(dataReader["bookImage"]);
-
-
+                    BookClub.ClubMembers=Convert.toInt32(dataReader["clubMembers"]);
 
                     Clubs.Add(BookClub);
 
