@@ -260,6 +260,7 @@
         .post-privacy {
             color: gray;
             font-size: 12px;
+            text-align:left;
         }
 
         textarea {
@@ -376,6 +377,7 @@
         .post-timestamp {
             color: gray;
             font-size: 12px;
+            text-align: left;
         }
 
         .post-content {
@@ -400,8 +402,56 @@
                 opacity: 2;
                 pointer-events: all;
             }
-        .add-post-image{
-            height: 50px;
+        .add-post-image, .post-pic {
+            height: 150px;
+            padding: 2% 0;
+        }
+        .post-likes {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .like-btn {
+            border: none;
+            background: none;
+            padding: 0;
+            cursor: pointer;
+        }
+            .like-btn:focus {
+                outline: none; /* Ensure there's no outline on focus */
+            }
+        .like-btn i{
+            font-weight:100;
+        }
+            .like-btn.liked i {
+                font-weight: 900;
+                color: #ff0083;
+            }
+
+        /* Loading Spinner Style */
+        #loadingSpinner {
+            display: none;
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            position: relative;
+            top: 50%;
+            left: 50%;
+            margin-top: -30px;
+            margin-left: -30px;
+            z-index:10
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 </style>
 
@@ -512,12 +562,11 @@
                 <img class="club-image-info" />
                 <h1 class="club-info-title"></h1>
                 <div class="club-members"></div>
-                <input type='file' class='form-control-file image-input' style='display:none;'>
+              
                 <div class='image-preview'></div>
 
                 <div class="add-post-to-club">
                     <input type="text" class="text-input form-control" placeholder="Enter description here...">
-                    <button class='btn btn-light generate-btn' type="button">Generate Image</button>
                     <img class="result-img img-fluid" style="display:none;" alt="Generated Image">
                     <div class="comment">
                         <label for="comment" class="pink">Tell us more:</label><br>
@@ -536,13 +585,18 @@
                             </span>
                         </div>
                     </div>
+                    <div id="loadingSpinner"></div>
                     <img class="add-post-image" />
                     <textarea id="comment" name="comment" oninput="updateCharacterCount()" placeholder="What's on your mind?" maxlength="255"></textarea>
                     <p id="charCount">0/255 characters</p>
                     <div class="actions">
                         <button class="add-post-options emoji-btn"><i class="fas fa-smile"></i></button>
+                        <input type='file' class='form-control-file image-input' id="uploadImage" style='display:none;'>
+                        <button class="add-post-options add-ai-btn generate-btn">
+                            <i class="fas fa-microchip"></i>
+                        </button>
                         <button class="add-post-options add-image-btn"><i class="fas fa-image"></i></button>
-                        <button class="add-post-options" type="file"><i class="fas fa-map-marker-alt"></i></button>
+                        <button class="add-post-options"><i class="fas fa-map-marker-alt"></i></button>
                         <div class="emoji-picker hidden">
                             <div class="emoji-grid">
                                 <!-- Add your emojis here -->
@@ -600,12 +654,16 @@
         var clubBooksAPI = "https://localhost:7225/api/BookClub";
         var uploadFilesAPI = 'https://localhost:7225/api/upload';
         var usersAPI = "https://localhost:7225/api/IUsers";
+        var imageFolder = "https://localhost:7225/Images"; 
         var allBooks = [];
         var allClubs = [];
         let booksDict = [];
         let clubsDict = [];
         let currentClub;
         let imageLink;
+        let currentLikeBtn;
+        let imageCounter = 0;
+
 
         function searchClub() {
             let searchstring = $('.search-string').val();
@@ -647,6 +705,7 @@
             });
         }
 
+        // create a new club
 
         function createNewClub() {
             document.getElementById('overlay').style.display = 'block';
@@ -710,6 +769,8 @@
             showclubInfo(currentClub.ClubId);
         }
 
+        // join club
+
         function joinClub() {
 
             var userId = JSON.parse(localStorage.getItem("loginUserDetails"))
@@ -721,6 +782,8 @@
             }
 
         }
+        // show all clubs
+
         function showAllClubs(response) {
             allClubs = response;
             const clubsContainer = document.getElementById("container-clubs");
@@ -746,48 +809,13 @@
                     ;
             });
             clubsContainer.innerHTML = clubsHtml;
-            setupGenerateButtons(); //
-            //document.querySelectorAll('.add-image-btn').forEach(button => {
-            //    button.addEventListener('click', function () {
-            //        const cardBody = this.closest('.card-body');
-            //        const fileInput = cardBody.querySelector('.image-input');
+            setupGenerateButtons(); 
 
-            //        // Trigger the file selection
-            //        fileInput.click();
-
-            //        fileInput.addEventListener('change', function () {
-            //            const formData = new FormData();
-            //            const files = fileInput.files;
-
-            //            // Add the uploaded file to the form data collection
-            //            if (files.length > 0) {
-            //                for (let f = 0; f < files.length; f++) {
-            //                    formData.append("files", files[f]);
-            //                }
-
-            //                // Perform AJAX request to upload the image
-            //                ajaxCall("POST", uploadFilesAPI, JSON.stringify(formData), successShowImages, errorToLoadImage);
-            //            }
-            //        });
-            //    });
-            //});
             var clubNameSearchBar = "";
             allClubs.forEach((club) => {
                 clubNameSearchBar += `<option value='${club.ClubName}'>`
             })
             $("#clubSearch").html(clubNameSearchBar);
-        }
-
-        function successShowImages(imageLinkA) {
-
-            imageLink = imageLinkA;
-
-            $('.add-post-image').attr("src", imageLink);
-
-        }
-
-        function errorToLoadImage(err) {
-            console.error("Error uploading image:", err);
         }
 
         function ajaxCall(method, url, data, successCallback, errorCallback) {
@@ -859,10 +887,9 @@
             }
             return response.blob();
         }
-
+        
         async function TextToImage(cardBody) {
             const textInput = cardBody.querySelector(".text-input").value.trim(); // עדכון לקרוא את שדה התיאור מהכרטיס
-            const resultImg = cardBody.querySelector(".result-img"); // עדכון לקרוא את תמונת התוצאה מהכרטיס
 
             console.log("Text input value:", textInput); // Debugging line
 
@@ -871,16 +898,31 @@
                 return;
             }
 
-            if (!resultImg) {
-                console.error("Result image element not found.");
-                return;
-            }
-
             try {
+                // Show the loading spinner
+                loadingSpinner.style.display = "block";
+
                 const imageBlob = await queryTEXTtoIMG(textInput);
+
+                // Hide the loading spinner once the image is generated
+                loadingSpinner.style.display = "none";
+
                 const imageUrl = URL.createObjectURL(imageBlob);
-                resultImg.src = imageUrl;
-                resultImg.style.display = "block";
+
+                const formData = new FormData();
+                formData.append('file', imageBlob, `generated-image${imageCounter++}.png`);
+            
+                $.ajax({
+                    type: "POST",
+                    url: uploadFilesAPI + "/upload",
+                    contentType: false,
+                    processData: false,
+                    async: false,
+                    data: formData,
+                    success: showImage,
+                    error: errorR
+                });
+
             } catch (error) {
                 alert(error.message);
             }
@@ -903,10 +945,13 @@
             document.querySelector('textarea').value = "";
         }
 
+        // open club info 
+
         function showclubInfo(clubId) {
             let currentUser = JSON.parse(localStorage.getItem("loginUserDetails")).userName;
             const postsContainer = document.querySelector('.posts-container');
             postsContainer.innerHTML = "";
+            $('.add-post-image').hide();
 
             $("#join-club").show();
 
@@ -933,6 +978,8 @@
             ajaxCall("GET", clubBooksAPI + `/getPostPerClub?clubId=${clubId}`, null, successToLoadPost, errorToshowclubMembers)
         }
 
+        // show posts
+
         function successToLoadPost(posts) {
             const postsContainer = document.querySelector('.posts-container');
             postsContainer.innerHTML = "";
@@ -946,7 +993,7 @@
                 postHeader.classList.add('post-header');
 
                 const postProfilePic = document.createElement('img');
-                postProfilePic.src = post.Image;
+                postProfilePic.src = "";
                 postProfilePic.alt = 'Profile Picture';
                 postProfilePic.classList.add('post-profile-pic');
 
@@ -979,22 +1026,26 @@
                 likeNum.classList.add('num-of-likes');
                 likeNum.innerHTML = post.Likes;
 
-                // Add event listener for the like button
-                likeButton.addEventListener('click', () => {
-                    likeButton.classList.toggle('liked');
-                    if (likeButton.classList.contains('liked')) {
-                        likeButton.innerHTML = '<i class="fas fa-heart pink"></i>';
-                        postLike(post.UserId, post.PostId);
-                    } else {
-                        likeButton.innerHTML = '<i class="fas fa-heart"></i>';
-                    }
-                });
+                const postLikesDiv = document.createElement('div');
+                postLikesDiv.classList.add('post-likes');
+                postLikesDiv.appendChild(likeNum)
+                postLikesDiv.appendChild(likeButton)
+
+                const postPic = document.createElement('img');
+                postPic.src = post.Image;
+                postPic.alt = 'post picture';
+                postPic.classList.add('post-pic');
+
+                // Add on click for the like button
+                likeButton.onclick = function () {
+                    postLike(post.UserId, post.PostId, this, this.parentElement);
+                };
 
                 // Append all elements to the post div
                 postDiv.appendChild(postHeader);
+                postDiv.appendChild(postPic);
                 postDiv.appendChild(postContentDiv);
-                postDiv.appendChild(likeNum);
-                postDiv.appendChild(likeButton);
+                postDiv.appendChild(postLikesDiv);
 
                 // Append the post to the posts container
                 postsContainer.prepend(postDiv); // Adds the post at the top of the container
@@ -1104,15 +1155,68 @@
         }
 
         // add like to post
-        function postLike(userId, postId) {
+        let currentLikeDiv;
 
-            ajaxCall("PUT", clubBooksAPI + `/addLikeToPost?postId=${postId}&userId=${userId}`, null, loadPosts(currentClub.ClubId), errorR)
+        function postLike(userId, postId, likeBtn, likeDiv) {
+            currentLikeBtn = likeBtn;
+            currentLikeDiv = likeDiv;
+            ajaxCall("PUT", clubBooksAPI + `/addLikeToPost?postId=${postId}&userId=${userId}`, null, successToLike, errorLike)
         }
+        function successToLike() {
 
+            // add 1 more like to the post
+            let oldLikeNum = Number(currentLikeDiv.querySelector('span').innerHTML); 
+
+            currentLikeDiv.querySelector('span').innerHTML = oldLikeNum + 1;
+
+            currentLikeBtn.classList.add("liked");
+            currentLikeBtn.disabled = true;
+        }
+        function errorLike(error) {
+            if (error.status == 401) {
+
+                logoutUser('endSession');
+            }
+            else {
+                Swal.fire('Error', "Could not submit your like - please try again later", 'error');
+            }
+        }
         function addImageToPost() {
+
             const fileInput = document.querySelector('.image-input');
 
             fileInput.click();
+
+            fileInput.addEventListener('change', function () {
+                const Data = new FormData();
+                const files = $("#uploadImage").get(0).files;
+
+                // Add the uploaded file to the form data collection
+                if (files.length > 0) {
+                    for (let f = 0; f < files.length; f++) {
+                       Data.append("files", files[f]);
+                    }
+                    // Ajax upload  
+                    $.ajax({
+                        type: "POST",
+                        url: uploadFilesAPI,
+                        contentType: false,
+                        processData: false,
+                        async: false,
+                        data: Data,
+                        success: showImage,
+                        error: errorR
+                    });
+                }      
+            });
+        }
+
+        function showImage(data) {
+
+            imageLink = imageFolder + "/" + data;
+            console.log(imageLink)
+            $('.add-post-image').show();
+            $(".add-post-image").attr("src", imageLink);
         }
     </script>
 
