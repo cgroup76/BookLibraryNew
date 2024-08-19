@@ -12,10 +12,13 @@
             crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@7.0.0/dist/browser/signalr.min.js"></script>
+
     <style>
         .pinkB {
             background-color: #ff0083;
         }
+
         .add-image-btn {
             background-color: #ff0083;
             margin-bottom: 10px;
@@ -53,6 +56,7 @@
             flex-direction: column;
             align-items: center;
         }
+
         .overlay {
             display: none;
             position: fixed;
@@ -111,7 +115,7 @@
 
         .club-info {
             background-color: #2c2c2c;
-            color:white;
+            color: white;
         }
 
         .add-image-btn {
@@ -151,6 +155,7 @@
             flex-direction: column;
             align-items: center;
         }
+
         .overlay {
             display: none;
             position: fixed;
@@ -210,6 +215,7 @@
             border: 1px solid rgba(0, 0, 0, .125);
             border-radius: .25rem;
         }
+
         #club-info-container.active {
             display: block;
             transform: translate(-50%, -50%) scale(1);
@@ -234,7 +240,7 @@
         function searchClub() {
             let searchstring = $('.search-string').val();
             console.log(searchstring);
-            let searchClub=[];
+            let searchClub = [];
             allClubs.forEach((club) => {
                 if (club.ClubName == searchstring) {
                     searchClub.push(club);
@@ -250,15 +256,15 @@
 
             searchClub.forEach(club => {
                 clubsHtml += `
-                <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
-                    <div class='col-md-3 club-info'>
-                        <div class='card mb-4 club-card'>
-                                <h6 class='card-title'>${club.ClubName}</h6>
-                                <img src='${club.ClubImage}'>
-                                <br/>
-                                <button type="submit" class="btn btn-light pinkB">Add post</button>
-                        </div>
-                    </div></a>`
+                    <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
+                        <div class='col-md-3 club-info'>
+                            <div class='card mb-4 club-card'>
+                                    <h6 class='card-title'>${club.ClubName}</h6>
+                                    <img src='${club.ClubImage}'>
+                                    <br/>
+                                    <button type="submit" class="btn btn-light pinkB">Add post</button>
+                            </div>
+                        </div></a>`
                     ;
             });
             clubsContainer.innerHTML = clubsHtml;
@@ -356,15 +362,15 @@
 
             allClubs.forEach(club => {
                 clubsHtml += `
-                <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
-                    <div class='col-md-3 club-info'>
-                        <div class='card mb-4 club-card'>
-                                <h6 class='card-title'>${club.ClubName}</h6>
-                                <img src='${club.ClubImage}'>
-                                <br/>
-                                <button type="submit" class="btn btn-light pinkB" onclick=joinClub(${club.ClubId})>Join club</button>
-                        </div>
-                    </div></a>`
+                    <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
+                        <div class='col-md-3 club-info'>
+                            <div class='card mb-4 club-card'>
+                                    <h6 class='card-title'>${club.ClubName}</h6>
+                                    <img src='${club.ClubImage}'>
+                                    <br/>
+                                    <button type="submit" class="btn btn-light pinkB" onclick=joinClub(${club.ClubId})>Join club</button>
+                            </div>
+                        </div></a>`
                     ;
             });
             clubsContainer.innerHTML = clubsHtml;
@@ -521,7 +527,7 @@
                 });
             });
         }
-        //function that show club extra information 
+        //function that show club extra information
         function closeclubInfo() {
             $('#club-info-container').removeClass('active');
             $('#overlay').removeClass('active');
@@ -537,7 +543,7 @@
                 if (club.clubId == clubId) {
                     currentClub = club;
                 }
-            } )
+            })
             console.log(currentClub);
             $('#club-info-container').addClass('active');
             $('#overlay').addClass('active');

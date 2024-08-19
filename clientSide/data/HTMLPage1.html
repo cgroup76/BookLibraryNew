@@ -26,6 +26,7 @@
 
     <!-- sweet aleret -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@7.0.0/dist/browser/signalr.min.js"></script>
 
 
 </head>
@@ -867,76 +868,7 @@
                 }
             }
         }
-        //send request
-        function sendRequest(buyerId, sellerId, bookId, sellerName) {
-
-            var buyer = JSON.parse(localStorage.getItem("loginUserDetails"))
-
-            if (buyer != null) { // check for login user
-
-                const swalWithBootstrapButtons = Swal.mixin({
-                    customClass: {
-                        confirmButton: "btn btn-success",
-                        cancelButton: "btn btn-danger"
-                    },
-                    buttonsStyling: false
-                });
-                swalWithBootstrapButtons.fire({
-                    title: `The book already belong to ${sellerName}`,
-                    text: "Do you want to send him a request to purchase the book from him?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Yes",
-                    cancelButtonText: "No, cancel!",
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        ajaxCall("POST", usersAPI + "/insertNewRequest?sellerId=" + sellerId + "&buyerId=" + buyerId + "&bookId=" + bookId, null, successToSendRequest, errorToSendRequest);
-
-                    } else if (
-                        /* Read more about handling dismissals below */
-                        result.dismiss === Swal.DismissReason.cancel
-                    ) {
-                        swalWithBootstrapButtons.fire({
-                            title: "Cancelled",
-                            icon: "error"
-                        });
-                    }
-                });
-            }
-
-        }
-        function successToSendRequest() {
-            Swal.fire({
-                icon: "success",
-                title: "The request has been sent",
-                showConfirmButton: false,
-                timer: 1500
-            });
-            showAllRequests();
-
-        }
-        function errorToSendRequest(error) {
-            if (error.status == 401) {
-
-                Swal.fire("Connection time ended - Please login first");
-
-                localStorage.clear();
-
-                checkForLoginUser();
-
-                showLoginForm();
-            }
-            else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "There was a problem sending the request, please try again",
-
-                });
-            }
-
-        }
+       
 
      
         //------------------------
