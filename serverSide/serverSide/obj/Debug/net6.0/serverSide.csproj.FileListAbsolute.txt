@@ -230,3 +230,5 @@ C:\Users\user\OneDrive\Desktop\BookLibraryNew\BookLibraryNew\serverSide\serverSi
 C:\Users\user\OneDrive\Desktop\BookLibraryNew\BookLibraryNew\serverSide\serverSide\obj\Debug\net6.0\ref\serverSide.dll
 C:\Users\adida\OneDrive\שולחן העבודה\לימודים\שנה ב\סמסטר ב\צד שרת\BookLibraryNew\BookLibraryNew\serverSide\serverSide\bin\Debug\net6.0\Newtonsoft.Json.dll
 C:\Users\adida\OneDrive\שולחן העבודה\לימודים\שנה ב\סמסטר ב\צד שרת\BookLibraryNew\BookLibraryNew\serverSide\serverSide\bin\Debug\net6.0\System.Net.WebSockets.WebSocketProtocol.dll
+C:\Users\user\OneDrive\Desktop\BookLibraryNew\BookLibraryNew\serverSide\serverSide\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\user\OneDrive\Desktop\BookLibraryNew\BookLibraryNew\serverSide\serverSide\bin\Debug\net6.0\System.Net.WebSockets.WebSocketProtocol.dll
