@@ -15,7 +15,7 @@ namespace serverSide.Controllers
         {
             return BookClub.getAllMembersPerClub(clubId);
         }
-        [HttpGet(" getPostPerClub")]
+        [HttpGet("getPostPerClub")]
         public List<dynamic> getPostPerClub(int clubId)
         {
             return BookClub.getPostPerClub(clubId);
