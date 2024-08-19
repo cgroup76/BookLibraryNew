@@ -13,6 +13,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@7.0.0/dist/browser/signalr.min.js"></script>
+    <!--imoji-->
+    <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.2/dist/emoji-button.min.js"></script>
+
     <script src="sharedFunc.js"></script>
     <style>
         .pinkB {
@@ -220,7 +223,182 @@
             display: block;
             transform: translate(-50%, -50%) scale(1);
         }
-    </style>
+
+        .create-post {
+            width: 400px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: bold;
+        }
+
+        .post-privacy {
+            color: gray;
+            font-size: 12px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 80px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 14px;
+            resize: none;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+
+        .add-post-options {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: gray;
+            cursor: pointer;
+        }
+
+            .add-post-options:hover {
+                color: #007bff;
+            }
+
+        .post-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+            .post-btn:disabled {
+                background-color: #aaa;
+            }
+
+     
+        /* Emoji Picker styles */
+        .emoji-picker {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            width: 300px;
+            max-height: 200px;
+            overflow-y: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .emoji-grid {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .emoji {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+            .emoji:hover {
+                background-color: #f0f0f0;
+                border-radius: 4px;
+            }
+
+        /* Hidden by default */
+        .hidden {
+            display: none;
+        }
+        .posts-container {
+            width: 400px;
+            margin-top: 20px;
+        }
+
+        .post {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 16px;
+            font-family: Arial, sans-serif;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .post-profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .post-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-user-name {
+            font-weight: bold;
+        }
+
+        .post-timestamp {
+            color: gray;
+            font-size: 12px;
+        }
+
+        .post-content {
+            margin-top: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        #overlay {
+            position: fixed;
+            opacity: 0;
+            transition: 200ms ease-in-out;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+            #overlay.active {
+                opacity: 2;
+                pointer-events: all;
+            }
+</style>
 
 </head>
 <body>
@@ -287,8 +465,7 @@
                 <div class="nav-item dropdown requestBox">
                     <button class="btn btn-outline-dark my-2 my-sm-0 pinkB" onclick="createNewClub()" type="button">
                         Create new book club
-                    </button><!-- Overlay -->
-                    <div id="overlay" class="overlay"></div>
+                    </button>
 
                     <!-- Form Modal -->
                     <div id="form-modal" class="modal">
@@ -306,7 +483,7 @@
                             </form>
                         </div>
                     </div>
-                    <div id="overlay" class="overlay"></div>
+
 
                     <div id="create" class="dropdown-menu dropdown-menu-dark"></div>
                 </div>
@@ -340,10 +517,47 @@
                     <img class="result-img img-fluid" style="display:none;" alt="Generated Image">
                     <div class="comment">
                         <label for="comment" class="pink">Tell us more:</label><br>
-                        <textarea id="comment" name="comment" oninput="updateCharacterCount()" maxlength="255"></textarea>
-                        <p id="charCount">0/255 characters</p>
+
+
                     </div>
                 </div>
+
+                <div class="create-post">
+                    <div class="header">
+                        <svg class='profile-pic' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z" /></svg>
+                        <div class="user-info">
+                            <span class="user-name"></span>
+                            <span class="post-privacy">
+                                <i class="fas fa-globe"></i> Public
+                            </span>
+                        </div>
+                    </div>
+                    <textarea id="comment" name="comment" oninput="updateCharacterCount()" placeholder="What's on your mind?" maxlength="255"></textarea>
+                    <p id="charCount">0/255 characters</p>
+                    <div class="actions">
+                        <button class="add-post-options emoji-btn"><i class="fas fa-smile"></i></button>
+                        <button class="add-post-options"><i class="fas fa-image"></i></button>
+                        <button class="add-post-options"><i class="fas fa-map-marker-alt"></i></button>
+                        <div class="emoji-picker hidden">
+                            <div class="emoji-grid">
+                                <!-- Add your emojis here -->
+                                <span class="emoji">😀</span>
+                                <span class="emoji">😁</span>
+                                <span class="emoji">😂</span>
+                                <span class="emoji">🤣</span>
+                                <span class="emoji">😃</span>
+                                <span class="emoji">😄</span>
+                                <span class="emoji">😅</span>
+                                <span class="emoji">😆</span>
+                                <span class="emoji">😉</span>
+                                <span class="emoji">😊</span>
+                                <!-- Add more emojis -->
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-dark pinkB post-btn">Post</button>
+                </div>
+                <div class="posts-container"></div>
             </div>
         </div>
     </div>
@@ -362,10 +576,17 @@
     <script>
 
         $(document).ready(function () {
+
             checkForLoginUser();
+
             showBooks();
+
             getClubs();
+
             $('#search-club-btn').click(searchClub);
+
+            $('.post-btn').click(sendPost);
+
         });
 
         var booksAPI = "https://localhost:7225/api/Books";
@@ -675,13 +896,20 @@
         function closeclubInfo() {
             $('#club-info-container').removeClass('active');
             $('#overlay').removeClass('active');
+
+            document.querySelector('textarea').value = "";
         }
         
         function showclubInfo(clubId) {
+            let currentUser = JSON.parse(localStorage.getItem("loginUserDetails")).userName;
+            const postsContainer = document.querySelector('.posts-container');
+            postsContainer.innerHTML = "";
 
             $("#join-club").show();
 
             ajaxCall("GET", clubBooksAPI + `/getAllClubMembers?clubId=${clubId}`, null, seccessToshowclubMembers, errorToshowclubMembers)
+
+            loadPosts(clubId);
 
             allClubs.forEach((club) => {
                 if (club.ClubId == clubId) {
@@ -693,7 +921,60 @@
             $('#club-info-container').addClass('active');
             $('#overlay').addClass('active');
             $('.club-info-title').html(currentClub.ClubName);
-            $('.club-image-info').attr("src",currentClub.ClubImage);
+            $('.user-name').html(currentUser);
+            $('.club-image-info').attr("src", currentClub.ClubImage);
+
+        }
+
+        function loadPosts(clubId) {
+            ajaxCall("GET", clubBooksAPI + `/getPostPerClub?clubId=${clubId}`, null, successToLoadPost, errorToshowclubMembers)
+        }
+
+        function successToLoadPost(posts) {
+            const postsContainer = document.querySelector('.posts-container');
+            postsContainer.innerHTML = "";
+
+            posts.forEach((post) => {
+                // Create elements for the post
+                const postDiv = document.createElement('div');
+                postDiv.classList.add('post');
+
+                const postHeader = document.createElement('div');
+                postHeader.classList.add('post-header');
+
+                const postProfilePic = document.createElement('img');
+                postProfilePic.src = "";
+                postProfilePic.alt = 'Profile Picture';
+                postProfilePic.classList.add('post-profile-pic');
+
+                const postUserInfo = document.createElement('div');
+                postUserInfo.classList.add('post-user-info');
+
+                const postUserName = document.createElement('span');
+                postUserName.classList.add('post-user-name');
+                postUserName.textContent = post.UserName;
+
+                const postTimestamp = document.createElement('span');
+                postTimestamp.classList.add('post-timestamp');
+                postTimestamp.textContent = post.PostDate; // Adds current timestamp
+
+                postUserInfo.appendChild(postUserName);
+                postUserInfo.appendChild(postTimestamp);
+
+                postHeader.appendChild(postProfilePic);
+                postHeader.appendChild(postUserInfo);
+
+                const postContentDiv = document.createElement('div');
+                postContentDiv.classList.add('post-content');
+                postContentDiv.textContent = post.Description;
+
+                // Append all elements to the post div
+                postDiv.appendChild(postHeader);
+                postDiv.appendChild(postContentDiv);
+
+                // Append the post to the posts container
+                postsContainer.prepend(postDiv); // Adds the post at the top of the container
+            })
         }
 
         function errorToshowclubMembers(err) {
@@ -702,12 +983,19 @@
         function seccessToshowclubMembers(members) {
             let currentUserId = JSON.parse(localStorage.getItem("loginUserDetails")).userId
             let html = "";
+            let status = false;
 
             members.forEach((member) => {
                 html += `<p>${member.userName}</p>`
 
-                if (currentUserId == member.userId) { $("#join-club").hide(); }
+                if (currentUserId == member.userId) {
+                    $("#join-club").hide();
+                    status = true;
+                }
             })
+
+            if (status) { $(".add-post-to-club").show(); }
+            else { $(".add-post-to-club").hide(); }
 
             $(".club-members").html(html);
         }
@@ -724,10 +1012,12 @@
 
             return false;
         }
+
         ///
         function showBooks() { };
         function showMyBooks() { };
         function closeBookInfo() { };
+        ///
 
         function updateCharacterCount() {
             const textInput = document.getElementById('comment');
@@ -735,6 +1025,58 @@
             const currentLength = textInput.value.length;
 
             charCount.textContent = `${currentLength}/255 characters`;
+        }
+
+
+        // emoji
+
+        const emojiBtn = document.querySelector('.emoji-btn');
+        const emojiPicker = document.querySelector('.emoji-picker');
+        const emojis = document.querySelectorAll('.emoji');
+        const textarea = document.querySelector('textarea');
+
+        // Toggle emoji picker visibility
+        emojiBtn.addEventListener('click', () => {
+            emojiPicker.classList.toggle('hidden');
+        });
+
+        // Add selected emoji to the textarea
+        emojis.forEach(emoji => {
+            emoji.addEventListener('click', () => {
+                textarea.value += emoji.textContent;
+                updateCharacterCount();
+                textarea.focus(); // Keep focus on the textarea after inserting emoji
+            });
+        });
+
+        // Close the emoji picker when clicking outside of it
+        document.addEventListener('click', (event) => {
+            if (!emojiBtn.contains(event.target) && !emojiPicker.contains(event.target)) {
+                emojiPicker.classList.add('hidden');
+            }
+        });
+
+        // send post
+        function sendPost() {
+
+            let text = document.querySelector('textarea').value;
+            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+            let image = "ilayadiofri";
+
+            ajaxCall("POST", clubBooksAPI + `/addNewPost?clubId=${currentClub.ClubId}&userId=${userId}&description=${text}&image=${image}`, null, successToPost, errorToPost);
+        }
+        function successToPost() {
+            Swal.fire("Post Was Published!");
+            loadPosts(currentClub.ClubId);
+        }
+        function errorToPost(error) {
+            if (error.status == 401) {
+
+                logoutUser('endSession');
+            }
+            else {
+                Swal.fire('Error', "Could not submit your post - please try again later", 'error');
+            }
         }
     </script>
 
