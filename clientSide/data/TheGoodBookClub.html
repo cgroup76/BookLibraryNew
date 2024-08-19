@@ -6,18 +6,113 @@
     <title>Book Store</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <!--<link rel="stylesheet" href="styles.css">-->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
             integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
             crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        .pinkB {
+            background-color: #ff0083;
+        }
+        .add-image-btn {
+            background-color: #ff0083;
+            margin-bottom: 10px;
+        }
+
+        .card-body, club-card {
+            font-size: 15px;
+            color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .uploaded-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin-top: 10px;
+        }
+
+        #result-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
 
 
 
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
 
- 
+        #form-modal {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #2c2c2c;
+            color: #fff;
+        }
+
+        .club-card {
+            height: 350px;
+            width: 250px;
+            align-items: center;
+            background-color: #2c2c2c;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #club-info-container {
+            position: fixed;
+            background-color: #2c2c2c;
+            color: black;
+            text-align: center;
+            height: 550px;
+            width: 500px;
+            max-height: 80%;
+            max-width: 50%;
+            top: 55%;
+            left: 50%;
+            padding: 1%;
+            transform: translate(-50%, -50%);
+            transition: 200ms ease-in-out;
+            border: 1px solid #ff0083;
+            border-radius: 5px;
+            display: none;
+            z-index: 2;
+            overflow: auto;
+        }
+
+        .club-info {
+            background-color: #2c2c2c;
+            color:white;
+        }
 
         .add-image-btn {
             background-color: #ff0083;
@@ -56,7 +151,6 @@
             flex-direction: column;
             align-items: center;
         }
-        /* Overlay styles */
         .overlay {
             display: none;
             position: fixed;
@@ -80,13 +174,14 @@
 
         #form-modal {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color:  rgba(0, 0, 0, .125);
+            background-color: rgba(0, 0, 0, .125);
             color: #fff;
         }
+
         .form-group {
             align-content: center;
         }
-/*        .modal {
+        /*        .modal {
             display: none;
             position: fixed;
             top: 50%;
@@ -95,7 +190,7 @@
             z-index: 1001;
         }*/
 
- /*       .modal-content {
+        /*       .modal-content {
             background-color: #2c2c2c;
             color: #fff;
             padding: 20px;
@@ -115,14 +210,17 @@
             border: 1px solid rgba(0, 0, 0, .125);
             border-radius: .25rem;
         }
-
-
+        #club-info-container.active {
+            display: block;
+            transform: translate(-50%, -50%) scale(1);
+        }
     </style>
     <script>
 
         $(document).ready(function () {
             showBooks();
             showClubInfo();
+            $('#search-club-btn').click(searchClub);
         });
 
         var booksAPI = "https://localhost:7225/api/Books";
@@ -133,7 +231,38 @@
         let booksDict = [];
         let clubsDict = [];
 
+        function searchClub() {
+            let searchstring = $('.search-string').val();
+            console.log(searchstring);
+            let searchClub=[];
+            allClubs.forEach((club) => {
+                if (club.ClubName == searchstring) {
+                    searchClub.push(club);
+                }
+            })
+            console.log(searchClub);
+            const clubsContainer = document.getElementById("container-clubs");
+            let clubsHtml = '';
+            if (!clubsContainer) {
+                console.error("Container for clubs not found.");
+                return;
+            }
 
+            searchClub.forEach(club => {
+                clubsHtml += `
+                <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
+                    <div class='col-md-3 club-info'>
+                        <div class='card mb-4 club-card'>
+                                <h6 class='card-title'>${club.ClubName}</h6>
+                                <img src='${club.ClubImage}'>
+                                <br/>
+                                <button type="submit" class="btn btn-light pinkB">Add post</button>
+                        </div>
+                    </div></a>`
+                    ;
+            });
+            clubsContainer.innerHTML = clubsHtml;
+        }
         // Function to initialize clubsDict
         function activateSearchBooksBar() {
             allClubs.forEach((club) => {
@@ -166,9 +295,9 @@
 
                         userId = userId.userId; // set the user id from the json
                     }
-                    
+
                     console.log(userId);
-                    await ajaxCall("POST", clubBooksAPI +`/creatClub?clubName=${selectedTitle}&userId=${userId}`, JSON.stringify({ ClubName: selectedTitle, userId: userId }), successCreateBookClub, errorCreateBookClub);
+                    await ajaxCall("POST", clubBooksAPI + `/creatClub?clubName=${selectedTitle}&userId=${userId}`, JSON.stringify({ ClubName: selectedTitle, userId: userId }), successCreateBookClub, errorCreateBookClub);
                     closeForm();
                     ajaxCall("GET", clubBooksAPI + "/getAllClubs", null, showAllClubs, errorR);
 
@@ -192,10 +321,29 @@
         }
 
         function showClubInfo() {
-            console.log("Fetching club info...");
-            ajaxCall("GET", clubBooksAPI + "/getAllClubs", null, showAllClubs, errorR);
+            if (allClubs.length == 0) {
+                ajaxCall("GET", clubBooksAPI + "/getAllClubs", null, showAllClubs, errorR);
+
+            }
+            else {
+                showAllClubs(allClubs);
+            }
+        }
+        function successjoinClub() {
+            console.log('success join club');
         }
 
+        function joinClub(ClubId) {
+
+            var userId = JSON.parse(localStorage.getItem("loginUserDetails"))
+
+            if (userId != null) {
+
+                userId = userId.userId; // set the user id from the json
+                ajaxCall("POST", clubBooksAPI + `/joinClub?clubId=${ClubId}&userId=${userId}`, null, successjoinClub, errorR);
+            }
+
+        }
         function showAllClubs(response) {
             console.log("Received clubs data:", response);
             allClubs = response;
@@ -205,21 +353,19 @@
                 console.error("Container for clubs not found.");
                 return;
             }
+
             allClubs.forEach(club => {
                 clubsHtml += `
-                <div class='col-md-3 book-info'>
-                    <div class='card mb-4 book-card'>
-                        <div class='card-body'>
-                            <h6 class='card-title'>${club.ClubName}</h6>
-                            <input type='file' class='form-control-file image-input' style='display:none;'>
-                            <div class='image-preview'></div>
-                             <button class='btn add-image-btn'>Add Image</button>
-                            <input type="text" class="text-input form-control" placeholder="Enter description here...">
-                            <button class='btn btn-light generate-btn' type="button">Generate Image</button>
-                            <img class="result-img img-fluid" style="display:none;" alt="Generated Image">
+                <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
+                    <div class='col-md-3 club-info'>
+                        <div class='card mb-4 club-card'>
+                                <h6 class='card-title'>${club.ClubName}</h6>
+                                <img src='${club.ClubImage}'>
+                                <br/>
+                                <button type="submit" class="btn btn-light pinkB" onclick=joinClub(${club.ClubId})>Join club</button>
                         </div>
-                    </div>
-                </div>`;
+                    </div></a>`
+                    ;
             });
             clubsContainer.innerHTML = clubsHtml;
             setupGenerateButtons(); //
@@ -247,9 +393,12 @@
                     });
                 });
             });
+            var clubNameSearchBar = "";
+            allClubs.forEach((club) => {
+                clubNameSearchBar += `<option value='${club.ClubName}'>`
+            })
+            $("#clubSearch").html(clubNameSearchBar);
         }
-
-
 
         function showImages(response, cardBody) {
             console.log("Image uploaded successfully:", response);
@@ -372,7 +521,51 @@
                 });
             });
         }
+        //function that show club extra information 
+        function closeclubInfo() {
+            $('#club-info-container').removeClass('active');
+            $('#overlay').removeClass('active');
+        }
+
+        function showclubInfo(clubId) {
+
+            //ajaxCall("GET", clubBooksAPI + `/getAllClubMembers?clubId=${clubId}`, null, seccessToshowclubInfo, errorToshowclubInfo)
+            console.log(allClubs);
+            console.log(clubId);
+            let currentClub = {};
+            allClubs.forEach((club) => {
+                if (club.clubId == clubId) {
+                    currentClub = club;
+                }
+            } )
+            console.log(currentClub);
+            $('#club-info-container').addClass('active');
+            $('#overlay').addClass('active');
+            $('.club-info-title').html(currentClub.ClubName);
+        }
+
+        function errorToshowclubInfo(err) {
+            console.log(err);
+        }
+        function seccessToshowclubInfo() {
+            console.log("success to show club info");
+        }
+        function postReviewClub() {
+            if (document.querySelector('input[name="rating"]:checked') == null) { }
+            else {
+                bookRating = document.querySelector('input[name="rating"]:checked').value;
+            }
+            var comment = document.getElementById("comment").value;
+            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+
+
+            ajaxCall("PUT", booksAPI + `/RateBook?bookID=${bookIdToRate}&newRating=${bookRating}&userID=${userId}&review=${comment}`, null, successRating, errorRating);
+
+            return false;
+        }
     </script>
+
+
 </head>
 <body>
     <header class="bg-dark text-white py-3 fixed-top">
@@ -420,8 +613,9 @@
                     </svg>
                 </span>
                 <form class="form-inline">
-                    <input class="form-control mr-sm-2 search-string" type="search" placeholder="Search By Book Title" aria-label="Search">
-                    <button class="btn btn-outline-dark my-2 my-sm-0 pinkB search-book-btn" type="submit">Search</button>
+                    <input class="form-control mr-sm-2 search-string" list="clubSearch"  type="search" placeholder="Search By Book Title" aria-label="Search">
+                    <datalist id="clubSearch"></datalist>
+                    <button id="search-club-btn" class="btn btn-outline-dark my-2 my-sm-0 pinkB " type="button"> Search</button>
                 </form>
                 <div class="nav-item dropdown requestBox">
                     <button class="btn btn-outline-dark my-2 my-sm-0 pinkB" onclick="createNewClub()" type="button">
@@ -454,6 +648,43 @@
         </div>
     </section>
 
+
+
+
+    <!-- book club info -->
+    <div id="overlay" class="overlay"></div>
+
+    <div id="club-info-container">
+        <div class="club-info-header">
+            <button data-close-button class="close-button closeBookInfoButton" onclick="closeclubInfo()">&times;</button>
+            <br />
+            <div class='card-body'>
+                <input type='file' class='form-control-file image-input' style='display:none;'>
+                <div class='image-preview'></div>
+                <button class='btn add-image-btn'>Add Image</button>
+                <input type="text" class="text-input form-control" placeholder="Enter description here...">
+                <button class='btn btn-light generate-btn' type="button">Generate Image</button>
+                <img class="result-img img-fluid" style="display:none;" alt="Generated Image">
+
+            </div>
+        </div>
+            <!--
+    <div class="book-info-reviews">
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner" id="review-carosel">
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+    -->
+        </div>
     <section class="books py-5">
         <div class="container">
             <div class="row" id="myBooks"></div>
