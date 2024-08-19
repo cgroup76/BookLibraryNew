@@ -16,10 +16,12 @@
     <!--imoji-->
     <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.2/dist/emoji-button.min.js"></script>
 
-    <script src="sharedFunc.js"></script>
     <style>
         .pinkB {
             background-color: #ff0083;
+        }
+        .pink {
+            color: #ff0083;
         }
 
         .add-image-btn {
@@ -398,6 +400,9 @@
                 opacity: 2;
                 pointer-events: all;
             }
+        .add-post-image{
+            height: 50px;
+        }
 </style>
 
 </head>
@@ -511,7 +516,6 @@
                 <div class='image-preview'></div>
 
                 <div class="add-post-to-club">
-                    <button class='btn add-image-btn'>Add Image</button>
                     <input type="text" class="text-input form-control" placeholder="Enter description here...">
                     <button class='btn btn-light generate-btn' type="button">Generate Image</button>
                     <img class="result-img img-fluid" style="display:none;" alt="Generated Image">
@@ -532,12 +536,13 @@
                             </span>
                         </div>
                     </div>
+                    <img class="add-post-image" />
                     <textarea id="comment" name="comment" oninput="updateCharacterCount()" placeholder="What's on your mind?" maxlength="255"></textarea>
                     <p id="charCount">0/255 characters</p>
                     <div class="actions">
                         <button class="add-post-options emoji-btn"><i class="fas fa-smile"></i></button>
-                        <button class="add-post-options"><i class="fas fa-image"></i></button>
-                        <button class="add-post-options"><i class="fas fa-map-marker-alt"></i></button>
+                        <button class="add-post-options add-image-btn"><i class="fas fa-image"></i></button>
+                        <button class="add-post-options" type="file"><i class="fas fa-map-marker-alt"></i></button>
                         <div class="emoji-picker hidden">
                             <div class="emoji-grid">
                                 <!-- Add your emojis here -->
@@ -587,6 +592,8 @@
 
             $('.post-btn').click(sendPost);
 
+            $('.add-image-btn').click(addImageToPost);
+
         });
 
         var booksAPI = "https://localhost:7225/api/Books";
@@ -598,6 +605,7 @@
         let booksDict = [];
         let clubsDict = [];
         let currentClub;
+        let imageLink;
 
         function searchClub() {
             let searchstring = $('.search-string').val();
@@ -618,15 +626,15 @@
 
             searchClub.forEach(club => {
                 clubsHtml += `
-                            <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
-                                <div class='col-md-3 club-info'>
-                                    <div class='card mb-4 club-card'>
-                                            <h6 class='card-title'>${club.ClubName}</h6>
-                                            <img src='${club.ClubImage}'>
-                                            <br/>
-                                            <button type="submit" class="btn btn-light pinkB">Add post</button>
-                                    </div>
-                                </div></a>`
+                                <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
+                                    <div class='col-md-3 club-info'>
+                                        <div class='card mb-4 club-card'>
+                                                <h6 class='card-title'>${club.ClubName}</h6>
+                                                <img src='${club.ClubImage}'>
+                                                <br/>
+                                                <button type="submit" class="btn btn-light pinkB">Add post</button>
+                                        </div>
+                                    </div></a>`
                     ;
             });
             clubsContainer.innerHTML = clubsHtml;
@@ -725,42 +733,44 @@
 
             allClubs.forEach(club => {
                 clubsHtml += `
-                            <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
-                                <div class='col-md-3 club-info'>
-                                    <div class='card mb-4 club-card'>
-                                            <h6 class='card-title'>${club.ClubName}</h6>
-                                            <img src='${club.ClubImage}'>
-                                            <br/>
-                                    </div>
-                                </div></a>`
+                                <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
+                                    <div class='col-md-3 club-info'>
+                                        <div class='card mb-4 club-card'>
+                                                <h6 class='card-title'>${club.ClubName}</h6>
+                                                <img src='${club.ClubImage}'>
+                                                <br/>
+                                                <p>Members in club:</p>
+                                                <span>${club.ClubMembers}</span>
+                                        </div>
+                                    </div></a>`
                     ;
             });
             clubsContainer.innerHTML = clubsHtml;
             setupGenerateButtons(); //
-            document.querySelectorAll('.add-image-btn').forEach(button => {
-                button.addEventListener('click', function () {
-                    const cardBody = this.closest('.card-body');
-                    const fileInput = cardBody.querySelector('.image-input');
+            //document.querySelectorAll('.add-image-btn').forEach(button => {
+            //    button.addEventListener('click', function () {
+            //        const cardBody = this.closest('.card-body');
+            //        const fileInput = cardBody.querySelector('.image-input');
 
-                    // Trigger the file selection
-                    fileInput.click();
+            //        // Trigger the file selection
+            //        fileInput.click();
 
-                    fileInput.addEventListener('change', function () {
-                        const formData = new FormData();
-                        const files = fileInput.files;
+            //        fileInput.addEventListener('change', function () {
+            //            const formData = new FormData();
+            //            const files = fileInput.files;
 
-                        // Add the uploaded file to the form data collection
-                        if (files.length > 0) {
-                            for (let f = 0; f < files.length; f++) {
-                                formData.append("files", files[f]);
-                            }
+            //            // Add the uploaded file to the form data collection
+            //            if (files.length > 0) {
+            //                for (let f = 0; f < files.length; f++) {
+            //                    formData.append("files", files[f]);
+            //                }
 
-                            // Perform AJAX request to upload the image
-                            ajaxCall("POST", uploadFilesAPI, formData, showImages(formData, cardBody), errorToLoadImage);
-                        }
-                    });
-                });
-            });
+            //                // Perform AJAX request to upload the image
+            //                ajaxCall("POST", uploadFilesAPI, JSON.stringify(formData), successShowImages, errorToLoadImage);
+            //            }
+            //        });
+            //    });
+            //});
             var clubNameSearchBar = "";
             allClubs.forEach((club) => {
                 clubNameSearchBar += `<option value='${club.ClubName}'>`
@@ -768,19 +778,12 @@
             $("#clubSearch").html(clubNameSearchBar);
         }
 
-        function showImages(response, cardBody) {
-            console.log("Image uploaded successfully:", response);
+        function successShowImages(imageLinkA) {
 
-            const imagePreviewContainer = cardBody.querySelector('.image-preview');
+            imageLink = imageLinkA;
 
-            // Create and append new images
-            response.forEach(image => {
-                const imgElement = document.createElement('img');
-                imgElement.src = `https://localhost:7225/uploadedFiles/${image}`; // Adjust path as needed
-                imgElement.alt = "Uploaded Image";
-                imgElement.className = "uploaded-image img-fluid mt-2";
-                imagePreviewContainer.appendChild(imgElement);
-            });
+            $('.add-post-image').attr("src", imageLink);
+
         }
 
         function errorToLoadImage(err) {
@@ -899,7 +902,7 @@
 
             document.querySelector('textarea').value = "";
         }
-        
+
         function showclubInfo(clubId) {
             let currentUser = JSON.parse(localStorage.getItem("loginUserDetails")).userName;
             const postsContainer = document.querySelector('.posts-container');
@@ -943,7 +946,7 @@
                 postHeader.classList.add('post-header');
 
                 const postProfilePic = document.createElement('img');
-                postProfilePic.src = "";
+                postProfilePic.src = post.Image;
                 postProfilePic.alt = 'Profile Picture';
                 postProfilePic.classList.add('post-profile-pic');
 
@@ -956,7 +959,7 @@
 
                 const postTimestamp = document.createElement('span');
                 postTimestamp.classList.add('post-timestamp');
-                postTimestamp.textContent = post.PostDate; // Adds current timestamp
+                postTimestamp.textContent = (post.PostDate).split(" ")[0]; // Adds current timestamp
 
                 postUserInfo.appendChild(postUserName);
                 postUserInfo.appendChild(postTimestamp);
@@ -968,9 +971,30 @@
                 postContentDiv.classList.add('post-content');
                 postContentDiv.textContent = post.Description;
 
+                const likeButton = document.createElement('button');
+                likeButton.classList.add('like-btn');
+                likeButton.innerHTML = '<i class="fas fa-heart"></i> ';
+
+                const likeNum = document.createElement('span');
+                likeNum.classList.add('num-of-likes');
+                likeNum.innerHTML = post.Likes;
+
+                // Add event listener for the like button
+                likeButton.addEventListener('click', () => {
+                    likeButton.classList.toggle('liked');
+                    if (likeButton.classList.contains('liked')) {
+                        likeButton.innerHTML = '<i class="fas fa-heart pink"></i>';
+                        postLike(post.UserId, post.PostId);
+                    } else {
+                        likeButton.innerHTML = '<i class="fas fa-heart"></i>';
+                    }
+                });
+
                 // Append all elements to the post div
                 postDiv.appendChild(postHeader);
                 postDiv.appendChild(postContentDiv);
+                postDiv.appendChild(likeNum);
+                postDiv.appendChild(likeButton);
 
                 // Append the post to the posts container
                 postsContainer.prepend(postDiv); // Adds the post at the top of the container
@@ -1061,7 +1085,7 @@
 
             let text = document.querySelector('textarea').value;
             let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
-            let image = "ilayadiofri";
+            let image = imageLink;
 
             ajaxCall("POST", clubBooksAPI + `/addNewPost?clubId=${currentClub.ClubId}&userId=${userId}&description=${text}&image=${image}`, null, successToPost, errorToPost);
         }
@@ -1078,8 +1102,20 @@
                 Swal.fire('Error', "Could not submit your post - please try again later", 'error');
             }
         }
+
+        // add like to post
+        function postLike(userId, postId) {
+
+            ajaxCall("PUT", clubBooksAPI + `/addLikeToPost?postId=${postId}&userId=${userId}`, null, loadPosts(currentClub.ClubId), errorR)
+        }
+
+        function addImageToPost() {
+            const fileInput = document.querySelector('.image-input');
+
+            fileInput.click();
+        }
     </script>
 
-
+    <script src="sharedFunc.js"></script>
 </body>
 </html>
