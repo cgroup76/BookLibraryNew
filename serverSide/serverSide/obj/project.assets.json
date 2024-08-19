@@ -683,19 +683,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\user\\.nuget\\packages\\": {}
+    "C:\\Users\\ofri9\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\user\\OneDrive\\Desktop\\BookLibraryNew\\BookLibraryNew\\serverSide\\serverSide\\serverSide.csproj",
+      "projectUniqueName": "C:\\Users\\ofri9\\OneDrive\\Desktop\\לימודים שנה ב\\מערכות אינטרנט- צד שרת\\BookLibraryNew\\BookLibraryNew\\serverSide\\serverSide\\serverSide.csproj",
       "projectName": "serverSide",
-      "projectPath": "C:\\Users\\user\\OneDrive\\Desktop\\BookLibraryNew\\BookLibraryNew\\serverSide\\serverSide\\serverSide.csproj",
-      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\user\\OneDrive\\Desktop\\BookLibraryNew\\BookLibraryNew\\serverSide\\serverSide\\obj\\",
+      "projectPath": "C:\\Users\\ofri9\\OneDrive\\Desktop\\לימודים שנה ב\\מערכות אינטרנט- צד שרת\\BookLibraryNew\\BookLibraryNew\\serverSide\\serverSide\\serverSide.csproj",
+      "packagesPath": "C:\\Users\\ofri9\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ofri9\\OneDrive\\Desktop\\לימודים שנה ב\\מערכות אינטרנט- צד שרת\\BookLibraryNew\\BookLibraryNew\\serverSide\\serverSide\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ofri9\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -749,7 +749,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }
