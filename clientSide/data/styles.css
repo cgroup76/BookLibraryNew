@@ -8,7 +8,15 @@
 .nav-link {
     font-size: 1.1em;
 }
-
+#nav-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding:0
+}
+.whiteHover:hover {
+    color: #ff0083;
+    text-shadow: -1px 0px 11px rgba(255,255,255,0.54);
+}
 .hero {
     /*background: url('https://via.placeholder.com/1500x500') no-repeat center center;*/
     color: #fff;
@@ -39,7 +47,9 @@
         background-color: #e67e22;
         border-color: #e67e22;
     }
-
+.card-body{
+    padding: 0.7rem;
+}
 footer {
     background-color: #1c1c1c;
 }
@@ -60,10 +70,12 @@ footer {
 
 .books .card {
     animation: fadeIn 1s ease-in-out;
+    padding: 5% 2%
 }
-
+#notAllowed {
+    cursor: not-allowed;
+}
 /**  log in from  **/
-
 #logInForm {
     position: fixed;
     background-color: white;
@@ -130,16 +142,36 @@ li {
 #logoutColor {
     color: darkred;
 }
-
+.userNameBox{
+    display: flex;
+    justify-content: space-between;
+}
+.user-image-nav{
+    height: 30px;
+    color: white
+}
 /* books */
-.card-img-top{
+.card-img-top {
     height: 150px;
     width: 100px;
 }
 .book-card {
-    height: 350px;
-    width: 250px;
-    align-items: center
+    /* height: 350px;
+    width: 250px;*/
+    align-items: center;
+    position: relative;/*
+    display: inline-block;*/
+}
+.book-card.read::after {
+    content: "✔ Read";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 128, 0, 0.8);
+    color: white !important;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
 }
 .buyABookBtn {
     float: right;
@@ -147,7 +179,17 @@ li {
 #pinkStars {
     color: #ff0083
 }
-
+.book-card.bought::after, .book-card-search.bought::after {
+    content: "✔ Purchased";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 128, 0, 0.8);
+    color: white !important;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+}
 /* Ensure the dropdown is wide enough and contents are aligned */
 .dropdown-menu {
     width: 300px;
@@ -249,16 +291,13 @@ li {
 .top-5-img{
     height: 250px;
     width: 200px;
-    margin-left: 20%;
+    margin-left: 45%;
 }
-.top-books-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    padding: 0 18%;
-    gap: 20px;
-    grid-auto-rows: minmax(100px, auto);
+.top-info{
+    padding-right: 14%;
 }
-.top-5-books{
+
+.top-5-books {
     padding-top: 5%;
 }
 /*head bubble*/
@@ -270,14 +309,7 @@ li {
     left: -14%;
     z-index: -1
 }
-.bubble-head-left-s {
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    top: 4.5%;
-    left: 17%;
-    z-index: -1
-}
+
 .bubble-head-right {
     position: absolute;
     width: 500px;
@@ -286,13 +318,44 @@ li {
     right: -13%;
     z-index: -1
 }
+.bubble-head {
+    top: -200px; /* Off-screen */
+    animation: dropDown 3s ease-in-out forwards; /* Slower animation */
+}
+.bubble-head-left-s {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    left: 17%;
+    z-index: -1;
+    top: -200px; /* Off-screen */
+    animation: dropDownS 3s ease-in-out forwards; /* Slower animation */
+}
+@keyframes dropDown {
+    from {
+        top: -100%; /* Start off-screen */
+    }
+
+    to {
+        top: -18%; /* Final position */
+    }
+}
+@keyframes dropDownS {
+    from {
+        top: -100%; /* Start off-screen */
+    }
+
+    to {
+        top: 4.5%; /* Final position */
+    }
+}
 /*star animation*/
 .top5-logo {
     position: absolute;
     width: 130px;
     height: 130px;
     top: -20%;
-    left: 20%;
+    left: 32%;
     animation: rotate 5s linear infinite;
     z-index: 1
 }
@@ -313,6 +376,7 @@ li {
     font-weight: bold;
     color: #000;
     position: relative;
+    z-index:1
 }
 
     .star::before {
@@ -357,10 +421,86 @@ li {
         transform: rotate(360deg);
     }
 }
+@media only screen and (max-width: 992px) {
+    .top-info {
+        padding: 0 7%;
+    }
+
+    .top-5-img {
+        height: 250px;
+        width: 200px;
+        margin-left: 30%;
+    }
+
+    .top5-logo {
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        top: -20%;
+        left: 13%;
+        animation: rotate 5s linear infinite;
+        z-index: 1
+    }
+    .top-5-books {
+        padding-top: 7%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+
+    .top5-logo {
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        top: -20%;
+        left: 18%;
+        animation: rotate 5s linear infinite;
+        z-index: 1
+    }
+}
+@media only screen and (max-width: 576px) {
+    .top-info {
+        padding: 0 15%;
+    }
+
+    .top-5-img {
+        height: 250px;
+        width: 200px;
+        margin: 0 auto;
+    }
+
+    .top5-logo {
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        top: -20%;
+        left: 15%;
+        animation: rotate 5s linear infinite;
+        z-index: 1
+    }
+
+    .top-5-books {
+        padding-top: 15%;
+    }
+}
+@media only screen and (max-width: 420px) {
+    .top5-logo {
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        top: -20%;
+        left: 5%;
+        animation: rotate 5s linear infinite;
+        z-index: 1;
+    }
+}
 /*my books*/
 .disabled {
     pointer-events: none; /* Prevents any mouse events */
     opacity: 0.5; /* Makes the div appear faded */
+}
+.disabledB {
+    pointer-events: none; /* Prevents any mouse events */
 }
 #quiz-container {
     position: fixed;
@@ -414,17 +554,24 @@ li {
     margin-top: 5%;
     margin-bottom: 10%;
 }
+.readTheBook {
+    border: 1px solid rgb(157 254 87 / 69%);
+}
 /*search books*/
 .search-books-bar {
     border-radius: 5px;
     margin-bottom: 20px;
 }
 .book-card-search, .card-img-search {
-    height: 250px;
-    width: 150px;
     align-items: center;
 }
-
+.card-img-search {
+    height: 200px;
+    width: 150px;
+}
+.book-card-search{
+    padding-top: 2%;
+}
 .form {
     position: relative;
     margin : 0 2%;
@@ -469,6 +616,22 @@ li {
 .speech-to-text:hover{
     cursor: pointer;
 }
+@media only screen and (max-width: 820px){
+    .search-div {
+        width: 60%;
+    }
+}
+@media only screen and (max-width: 768px){
+    .search-div {
+        width: 50%;
+    }
+    .search-bar-title{
+        display: none
+    }
+    .search-div{
+        width: 100%;
+    }
+}
 /*review a book */
 #reviewABook {
     position: fixed;
@@ -478,7 +641,7 @@ li {
     height: 550px;
     width: 500px;
     max-height: 80%;
-    max-width: 50%;
+    max-width: 70%;
     top: 55%;
     left: 50%;
     padding: 1%;
@@ -539,8 +702,8 @@ li {
     height: 550px;
     width: 550px;
     max-height: 80%;
-    max-width: 50%;
-    top: 55%;
+    max-width: 75%;
+    top: 50%;
     left: 50%;
     padding: 1%;
     transform: translate(-50%, -50%);
@@ -625,10 +788,13 @@ li {
     width: 30%;
     background-color: #ff0083;
 }
+.buy-the-book {
+    display: flex;
+    justify-content: center;
+}
 
 /* google login button */
-
-.google-login{
+.google-login {
     margin-top: 3%;
 }
 .gsi-material-button {
@@ -738,6 +904,31 @@ li {
             opacity: 8%;
         }
 
+/*my books recommended books */
+.recommended-book {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+    .recommended-book:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(255, 255, 255, 0.2);
+        cursor:pointer;
+    }
 
 
+/* notification */
 
+/* Styling for the red notification badge */
+.badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%); /* Adjust position to top-right */
+    padding: 5px 8px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+}
