@@ -14,11 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("serverSide")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c77e5ee0894a6a5adf909c1d7ed6795d328f482b")]
->>>>>>> mostUpdated
 [assembly: System.Reflection.AssemblyProductAttribute("serverSide")]
 [assembly: System.Reflection.AssemblyTitleAttribute("serverSide")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
