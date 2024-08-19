@@ -467,6 +467,7 @@ namespace serverSide.DAL
                     post.Description = Convert.ToString(dataReader["description"]);
                     post.Image= Convert.ToString(dataReader["image"]);
                     post.Likes = Convert.ToInt32(dataReader["numOfLikes"]);
+                    post.PostDate=Convert.ToString(dataReader["postDate"]);
 
                     posts.Add(post);
 
