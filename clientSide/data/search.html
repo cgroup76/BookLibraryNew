@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <script>
+                // Search function
+        function searchClub(event) {
+            event.preventDefault(); // Prevent form submission
+
+            let searchString = $(".search-string").val().trim().toLowerCase(); // Convert to lowercase for case-insensitive search
+            let filteredClubs = []; // Array to store filtered clubs
+
+            if (searchString === "") {
+                filteredClubs = allClubs; // Show all clubs if no search string
+            } else {
+                for (let key in clubsDict) {
+                    let clubText = clubsDict[key].toLowerCase();
+                    let index = clubText.indexOf(searchString);
+
+                    if (index !== -1) {
+                        let str = clubsDict[key];
+                        let section1 = str.substring(Math.max(0, index - 50), index);
+                        let section2 = str.substring(index + searchString.length);
+                        let findSearchString = searchString;
+
+                        let club = JSON.parse(key);
+                        club['foundString'] = `<p>...${section1}<strong class='pink'>${findSearchString}</strong>${section2}...</p>`;
+                        filteredClubs.push(club);
+                    }
+                }
+            }
+
+            const clubsContainer = document.getElementById("container-clubs");
+            if (filteredClubs.length === 0) {
+                clubsContainer.innerHTML = "<h5>0 clubs were found...</h5>";
+            } else {
+                clubsContainer.classList.remove("row");
+                clubsContainer.classList.add("container");
+
+                let searchClubsHtml = '';
+
+                filteredClubs.forEach((club) => {
+                    searchClubsHtml += `
+                <div class='col-md-3 book-info'>
+                    <div class='card mb-4 book-card'>
+                        <div class='card-body'>
+                            <h6 class='card-title'>${club.ClubName}</h6>
+                            <input type='file' class='form-control-file image-input' style='display:none;'>
+                            <div class='image-preview'></div>
+                            <button class='btn add-image-btn'>Add Image</button>
+                            <input type="text" class="text-input form-control" placeholder="Enter description here...">
+                            <button class='btn btn-light generate-btn' type="button">Generate Image</button>
+                            <img class="result-img img-fluid" style="display:none;" alt="Generated Image">
+                        </div>
+                    </div>
+                </div>`;
+                });
+
+                clubsContainer.innerHTML = searchClubsHtml;
+                setupGenerateButtons(); // Ensure this is called to set up event listeners
+                setupAddImageButtons(); // Ensure this is called to set up event listeners for adding images
+            }
+        }
+
+        // Function to set up event listeners for add image buttons
+        function setupAddImageButtons() {
+            document.querySelectorAll('.add-image-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const cardBody = this.closest('.card-body');
+                    const fileInput = cardBody.querySelector('.image-input');
+
+                    // Trigger the file selection
+                    fileInput.click();
+
+                    fileInput.addEventListener('change', function () {
+                        const formData = new FormData();
+                        const files = fileInput.files;
+
+                        // Add the uploaded file to the form data collection
+                        if (files.length > 0) {
+                            for (let f = 0; f < files.length; f++) {
+                                formData.append("files", files[f]);
+                            }
+
+                            // Perform AJAX request to upload the image
+                            ajaxCall("POST", uploadFilesAPI, formData, showImages.bind(null, cardBody), errorToLoadImage);
+                        }
+                    });
+                });
+            });
+        }
+
+        // Function to set up event listeners for generate image buttons
+        function setupGenerateButtons() {
+            document.querySelectorAll('.generate-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const cardBody = this.closest('.card-body');
+                    TextToImage(cardBody); // Call the function with the specific card
+                });
+            });
+        }
+    </script>
+</body>
+</html>

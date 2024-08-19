@@ -7,23 +7,26 @@ namespace serverSide.BL
         int clubId;
         int bookId;
         string clubName;
+        string bookImage;
         public int ClubId { get => clubId; set => clubId = value; }
         public int BookId { get=>bookId; set => bookId = value; }
         public string ClubName { get => clubName; set => clubName = value; }
+        public string BookImage { get => bookImage; set => bookImage = value; }
 
 
-        public BookClub(int clubId,int bookId, string clubName)
+        public BookClub(int clubId,int bookId, string clubName, string bookImage)
         {
             ClubId = clubId;
             BookId = bookId;
             ClubName = clubName;
+            BookImage = bookImage;
         }
 
-        public static int createNewClub(int bookId,string clubName, int userId)
+        public static int createNewClub(string clubName, int userId)
         {
             DBserviceBookClub dBservicesBookClub = new DBserviceBookClub();
 
-           return (dBservicesBookClub.AddNewBookClub(bookId,clubName, userId));
+           return (dBservicesBookClub.AddNewBookClub(clubName, userId));
 
            
         }
@@ -41,6 +44,14 @@ namespace serverSide.BL
 
 
         }
+        public static List<dynamic> getAllClubs()
+        {
+            DBserviceBookClub dBservicesBookClub = new DBserviceBookClub();
+            return dBservicesBookClub.getAllBookClub();
+
+        }
+
     }
+
 
 }
