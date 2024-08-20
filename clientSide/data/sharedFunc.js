@@ -146,8 +146,10 @@ function loginUser() {
 function successLogin(userDetails) {
 
     localStorage.setItem("loginUserDetails", JSON.stringify(userDetails));
-    console.log(userDetails);
+  
     checkForLoginUser();
+
+    showAllRequests();
 
     showBooks();
 
@@ -516,6 +518,95 @@ function updateMessageCount(count) {
 
     // Always show the count, even if it's 0
     badge.textContent = count;
+}
+
+
+
+// login with google 
+const clientId = "330257384068-acpk14o95tj991u9u5l9vngpmll1c38g.apps.googleusercontent.com"; // Your Client ID
+const redirectUri = "http://localhost:65055/HTMLPage1.html"; // Replace with your actual redirect URI
+
+/*
+* Create form to request access token from Google's OAuth 2.0 server.
+*/
+function oauthSignIn() {
+    // Google's OAuth 2.0 endpoint for requesting an access token
+    var oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
+
+    // Create <form> element to submit parameters to OAuth 2.0 endpoint.
+    var form = document.createElement('form');
+    form.setAttribute('method', 'GET'); // Send as a GET request.
+    form.setAttribute('action', oauth2Endpoint);
+
+    // Parameters to pass to OAuth 2.0 endpoint.
+    var params = {
+        'client_id': clientId,
+        'redirect_uri': redirectUri,
+        'response_type': 'token',
+        'scope': 'email',
+        'include_granted_scopes': 'true',
+        'state': ''
+    };
+
+    // Add form parameters as hidden input values.
+    for (var p in params) {
+        var input = document.createElement('input');
+        input.setAttribute('type', 'hidden');
+        input.setAttribute('name', p);
+        input.setAttribute('value', params[p]);
+        form.appendChild(input);
+    }
+
+    // Add form to page and submit it to open the OAuth 2.0 endpoint.
+    document.body.appendChild(form);
+    form.submit();
+}
+
+var accessToken = null;
+
+const hash = window.location.hash.substring(1);
+
+// Parse the hash into a query string format
+const params = new URLSearchParams(hash);
+
+// Retrieve the access token
+accessToken = params.get('access_token');
+
+if (accessToken) { trySampleRequest(); }
+
+
+function trySampleRequest() {
+
+    if (accessToken) {
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET',
+            'https://www.googleapis.com/oauth2/v2/userinfo?fields=email&' +
+            'access_token=' + accessToken);
+        xhr.onreadystatechange = function (e) {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var userEmail = JSON.parse(xhr.response).email;
+                console.log(userEmail.email)
+                let user = {
+                    "id": 0,
+                    "userName": userEmail.split('@')[0],
+                    "eMail": userEmail,
+                    "password": "123",
+                    "isAdmin": false,
+                    "isActive": true,
+                    "isLogIn": true
+                }
+                ajaxCall("PUT", usersAPI + '/loginGoogleUser', JSON.stringify(user), successLogin, error);
+
+            } else if (xhr.status === 401) {
+                // Token invalid, so prompt for user permission.
+                oauth2SignIn();
+            }
+        };
+        xhr.send(null);
+    } else {
+        oauth2SignIn();
+    }
 }
 
 
