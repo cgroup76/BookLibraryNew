@@ -15,7 +15,14 @@ namespace serverSide.Controllers
         {
             return BookClub.getAllMembersPerClub(clubId);
         }
+        [HttpGet("getPostPerClub")]
+        public List<dynamic> getPostPerClub(int clubId)
+        {
+            return BookClub.getPostPerClub(clubId);
+        }
 
+
+       
         [HttpGet("getAllClubs")]
         public List<dynamic> Get()
         {
@@ -28,6 +35,17 @@ namespace serverSide.Controllers
         public IActionResult CreateClub([FromQuery] string clubName, [FromQuery] int userId)
         {
            int status= BookClub.createNewClub( clubName, userId);
+            if (status == 1) { return Ok(true); }
+
+            else if (status == 0) { return NotFound(false); }
+
+            return Unauthorized("user session has ended");
+        }  
+       
+        [HttpPost("addNewPost")]
+        public IActionResult addNewPost(int clubId, int userId, string description, string image)
+        {
+           int status= BookClub.addNewPost(clubId,userId, description, image);
             if (status == 1) { return Ok(true); }
 
             else if (status == 0) { return NotFound(false); }
@@ -48,9 +66,15 @@ namespace serverSide.Controllers
 
 
         // PUT api/<BookClubController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("addLikeToPost")]
+        public IActionResult Put(int postId,int userId)
         {
+            int status = BookClub.addLikeToPost(postId, userId);
+            if (status == 1) { return Ok(true); }
+
+            else if (status == 0) { return NotFound(false); }
+
+            return Unauthorized("user session has ended");
         }
 
         // DELETE api/<BookClubController>/5

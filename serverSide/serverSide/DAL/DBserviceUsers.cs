@@ -1074,6 +1074,7 @@ public class DBservicesUsers
                 book.Rating = (float)Convert.ToDouble(dataReader["rating"]);
                 book.TextSnippet = Convert.ToString(dataReader["textSnippet"]);
                 book.UserId = Convert.ToString(dataReader["userid"]);
+                book.UserName = Convert.ToString(dataReader["userName"]);
                 Books.Add(book);
 
                 string userid = Convert.ToString(dataReader["userId"]);

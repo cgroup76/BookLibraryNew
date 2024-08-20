@@ -20,7 +20,8 @@
 
     <script src="images.js"></script>
     <script src="sharedFunc.js"></script>
-  
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@7.0.0/dist/browser/signalr.min.js"></script>
+
 
 
     <script>
@@ -28,12 +29,11 @@
         const booksAPI = "https://localhost:7225/api/Books";
         const authorsAPI = "https://localhost:7225/api/Authors";
         let gameName;
-        let allBooks =[];
-        let wordList=[];
-        let allAuthors=[];
+        let allBooks = [];
+        let wordList = [];
+        let allAuthors = [];
 
-        $(document).ready(function ()
-        {
+        $(document).ready(function () {
             getBooks();
             loadAuthors();
             $('button').click(openGame)
@@ -70,7 +70,7 @@
 
         function getAllBooks(books) {
             allBooks = books;
-              for (let i = 0; i < books.length; i++) {
+            for (let i = 0; i < books.length; i++) {
                 wordList.push(books[i].Title);
             }
         }
@@ -79,82 +79,90 @@
             console.error("The books could not be loaded.");
         }
 
-        function closeGame(){
-                    $('#games').removeClass('active');
-                    $('#overlay').removeClass('active');
-                    clearHangMan();
-                    closeQuiz();
+        function closeGame() {
+            $('#games').removeClass('active');
+            $('#overlay').removeClass('active');
+            clearHangMan();
+            closeQuiz();
         }
-            function openGame(){
-                    gameName = $(this).attr('id');
-                    $('#games').addClass('active');
-                    $('#overlay').addClass('active');
+        function openGame() {
+            gameName = $(this).attr('id');
+            $('#games').addClass('active');
+            $('#overlay').addClass('active');
 
-                    console.log(gameName);
-                switch (gameName){
-                    case 'HangMan':
-                        {
+            console.log(gameName);
+            switch (gameName) {
+                case 'HangMan':
+                    {
                         $('#container-quiz').hide()
                         $('#container-Memorybody').hide()
                         $('#container-hangMan').show()
                         startHangManGame();
-                                            }
-                        break;
-                    case 'MemoryGame':
-                        {
+                    }
+                    break;
+                case 'MemoryGame':
+                    {
                         $('#container-quiz').hide()
                         $('#container-Memorybody').show()
                         $('#container-hangMan').hide()
                         startMemoryGame();
 
-                                            }
-                        break;
-                    case 'BookQuiz':{
-                        $('#container-quiz').show()
-                        $('#container-Memorybody').hide()
-                        $('#container-hangMan').hide()
-                        createQuiz();
-                                            }
-                        break;
+                    }
+                    break;
+                case 'BookQuiz': {
+                    $('#container-quiz').show()
+                    $('#container-Memorybody').hide()
+                    $('#container-hangMan').hide()
+                    createQuiz();
                 }
-
+                    break;
             }
+
+        }
 
 
     </script>
 </head>
 
 <body>
-    <header class="bg-dark text-white py-3 fixed-top">
+    <header class="bg-dark text-white py-2 fixed-top">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="logo">
-                    <h1>Games</h1>
-                </div>
-                <nav>
-                    <ul class="nav">
+            <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+
+                <a class="navbar-brand" id="nav-title">Book Store</a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="navbar-nav ml-auto">
                         <li class="nav-item"><a class="nav-link text-white" href="HTMLPage1.html">Home</a></li>
-                        <li class="nav-item adminPage"><a class="nav-link text-white" href="adminPage.html">Admin Page</a></li>
-                        <li class="nav-item myBooks"><a class="nav-link text-white" href="myBooks.html">My Books</a></li>
+                        <li class="nav-item adminPage"><a class="nav-link text-white " href="adminPage.html">Admin Page</a></li>
+                        <li class="nav-item myBooks"><a class="nav-link text-white " href="myBooks.html">My Books</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="author.html">Authors</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="games.html">Games</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="TheGoodBookClub.html">Books Clubs</a></li>
-                        <li class="nav-item userNameBox"><a class="nav-link text-white userName"></a></li>
-                        <li class="nav-item logoutBox"><a class="nav-link text-white logout">Logout</a></li>
+                        <li class="nav-item games"><a class="nav-link text-white games" href="games.html">games</a></li>
+                        <li class="nav-item loginBox"><a class="nav-link text-white login">login</a></li>
+                        <li class="nav-item userNameBox">
+                            <a class="nav-link text-white userName"></a>
+                        </li>
+                        <li class="nav-item logoutBox"><a class="nav-link pink whiteHover logout" style="color: #ff0083">logout</a></li>
                         <li class="nav-item dropdown requestBox">
                             <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span id="message-count" class="badge">0</span> <!-- Badge -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
                                     <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
                                 </svg>
                             </button>
                             <div class="dropdown-menu dropdown-menu-dark dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                                 <div class="send"> </div>
-                                <div class="got"> </div>
+                                <div class="got"> </div>
                             </div>
                         </li>
                     </ul>
-                </nav>
-            </div>
+                </div>
+            </nav>
         </div>
     </header>
     <div class="container mt-5 pt-5">
@@ -163,7 +171,6 @@
                 <div class="cardMain mb-4 game-card">
                     <h6>HangMan</h6>
                     <div class="card-body text-center">
-                        <!--<img id="hangman-img" class="card-img-top">-->
                         <button id="HangMan">Play</button>
                     </div>
                 </div>
@@ -172,7 +179,6 @@
                 <div class="cardMain mb-4 game-card">
                     <h6>Memory Game</h6>
                     <div class="card-body text-center">
-                        <!--<img id="memory-game-img" class="card-img-top">-->
                         <button id="MemoryGame">Play</button>
                     </div>
                 </div>
@@ -181,7 +187,6 @@
                 <div class="cardMain mb-4 game-card">
                     <h6>Quiz</h6>
                     <div class="card-body text-center">
-                        <!--<img id="quiz-img" class="card-img-top">-->
                         <button id="BookQuiz">Play</button>
                     </div>
                 </div>
@@ -198,11 +203,9 @@
             <h5 class="timer"></h5>
             <div class="quis-instruction">
                 <h4 class="text-center pink">Instructions:</h4>
-                <pre>
-                1.You have 1 minute to answer all the questions.
-                2.Read each question carefully before selecting your answer.
-                3.Click 'Submit' when you're done to see your score.
-                </pre>
+                <p>1. You have 1 minute to answer all the questions.</p>
+                <p>2. Read each question carefully before selecting your answer.</p>
+                <p>3. Click 'Submit' when you're done to see your score.</p>                
             </div>
             <div id="questionContainer"></div>
             <div class="resultContainer pink"></div>
@@ -212,14 +215,14 @@
                 <button class='btn btn-outline-dark pinkB btn-next'>Next</button>
             </div>
         </div>
-        <div id="container-Memorybody" class="Memorybody">
+        <div id="container-Memorybody" class="Memorybody ">
             <button data-close-button class="close-button closeGameButton">&times;</button>
-            <div class="game-container">
-                <div class="stats">
+            <div class="game-container ">
+                <div class="stats ">
                     <p class="pink">Attempts: <span id="attempts">0</span></p>
                     <p class="pink">Time: <span id="time">0</span> seconds</p>
                 </div>
-                <div id="game-board" class="game-board"></div>
+                <div id="game-board" class="game-board row"></div>
             </div>
             <div class="resultContainer pink"></div>
         </div>

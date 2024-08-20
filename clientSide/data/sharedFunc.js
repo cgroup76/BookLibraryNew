@@ -1,4 +1,5 @@
 // JavaScript source code
+
 function checkForLoginUser() {
     var loginUser = JSON.parse(localStorage.getItem("loginUserDetails"))
 
@@ -111,17 +112,97 @@ function checkUserLogoutReason() {
         localStorage.removeItem('logoutReason');
     }
 }
-// show requests
+
+//requests
+
+//send request
+function sendRequest(buyerId, sellerId, bookId, sellerName) {
+
+    var buyer = JSON.parse(localStorage.getItem("loginUserDetails"))
+
+    if (buyer != null) { // check for login user
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({
+            title: `The book already belong to ${sellerName}`,
+            text: "Do you want to send him a request to purchase the book from him?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                ajaxCall("POST", usersAPI + "/insertNewRequest?sellerId=" + sellerId + "&buyerId=" + buyerId + "&bookId=" + bookId, null, successToSendRequest(sellerId), errorToSendRequest);
+
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire({
+                    title: "Cancelled",
+                    icon: "error"
+                });
+            }
+        });
+    }
+
+}
+function successToSendRequest(sellerId) {
+    Swal.fire({
+        icon: "success",
+        title: "The request has been sent",
+        showConfirmButton: false,
+        timer: 1500
+    });
+    sendNotificationToSeller(sellerId)
+    showAllRequests();
+    closeBookInfo();
+}
+function errorToSendRequest(error) {
+    if (error.status == 401) {
+
+        Swal.fire("Connection time ended - Please login first");
+
+        localStorage.clear();
+
+        checkForLoginUser();
+
+        showLoginForm();
+    }
+    else {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "There was a problem sending the request, please try again",
+
+        });
+    }
+
+}
+let requestCount = 0;
 function showAllRequests() {
     showRequests();
+    requestCount = 0;
 }
 function showRequests() {
-    let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+    let userId = JSON.parse(localStorage.getItem("loginUserDetails"));
 
-    ajaxCall("GET", usersAPI + `/GetRequestsPerUser?userId=${userId}`, null, showMyRequests, errorShowRequest);
+    if (userId != null) {
+        userId = userId.userId
+        ajaxCall("GET", usersAPI + `/GetRequestsPerUser?userId=${userId}`, null, showMyRequests, errorShowRequest);
+    }
 }
 
+
 function showMyRequests(listOfRequest) {
+    requestCount = listOfRequest.length;
     ShowRequestToBuy();
 
     let requestBox = document.querySelector('.requestBox .dropdown-menu .got')
@@ -141,8 +222,8 @@ function showMyRequests(listOfRequest) {
                                                     <strong>Book:</strong> ${request.bookName} <br>
                                                     <strong>Want to buy:</strong> ${request.buyerName} <br>
                                                     <strong>Status:</strong> ${request.status} <br>
-                                                    <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}')">Approve</button>
-                                                    <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}')">Reject</button>
+                                                    <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}','${request.bookName}')">Approve</button>
+                                                    <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}','${request.bookName}')">Reject</button>
                                                 </div>`;
         });
     }
@@ -155,6 +236,8 @@ function ShowRequestToBuy() {
 }
 
 function ShowMyRequestToBuy(listOfRequest) {
+    requestCount += listOfRequest.length;
+
     let requestBox = document.querySelector('.requestBox .dropdown-menu .send');
     let htmlSend = "";
     htmlSend += `<h3> Request you send </h3>`
@@ -172,18 +255,22 @@ function ShowMyRequestToBuy(listOfRequest) {
         });
     }
     requestBox.innerHTML = htmlSend;
+    updateMessageCount(requestCount);
 }
 
 function errorShowRequest(error) {
     logoutUser('endSession');
 }
 
-function handleRequest(buyerId, sellerId, bookId, requestStatus) {
-    console.log(buyerId, sellerId, bookId, requestStatus);
-    ajaxCall("PUT", `${usersAPI}/requestHandling?sellerId=${sellerId}&buyerId=${buyerId}&bookId=${bookId}&requeststatus=${requestStatus}`, null, successToHandle(requestStatus), errorToHandle);
-}
 
-function successToHandle(requestStatus) {
+function handleRequest(buyerId, sellerId, bookId, requestStatus, bookName) {
+    console.log(buyerId, sellerId, bookId, requestStatus);
+    ajaxCall("PUT", `${usersAPI}/requestHandling?sellerId=${sellerId}&buyerId=${buyerId}&bookId=${bookId}&requeststatus=${requestStatus}`, null,
+        function (response) { successToHandle(requestStatus, buyerId, bookName); },
+        errorToHandle
+    );
+}
+function successToHandle(requestStatus,buyerId,bookName) {
     if (requestStatus == 'approved') {
         Swal.fire({
             icon: "success",
@@ -195,7 +282,15 @@ function successToHandle(requestStatus) {
             title: "The request was successfully rejected"
         });
     }
+
+    // Send notification to the buyer
+    sendNotificationToBuyer(bookName, buyerId, requestStatus);
     showAllRequests();
+    allBooks = []
+    showBooks();
+    allMyBooks = [];
+    showMyBooks();
+    closeBookInfo();
 }
 
 function errorToHandle() {
@@ -205,4 +300,86 @@ function errorToHandle() {
         text: 'There was an error handling the request. Please try again.'
     });
 }
+
+
+//connect to hub chat for live message
+
+let connection = new signalR.HubConnectionBuilder()
+    .withUrl("https://localhost:7225/chatHub")
+    .build();
+
+connection.on("ReceiveMessage", function (user, message) {
+    var currentUser = JSON.parse(localStorage.getItem('loginUserDetails'));
+    console.log(currentUser)
+    if (currentUser != null) {
+        let userId = (currentUser.userId).toString(); // Ensure this is a string comparison
+        if (userId === user) {
+            showAllRequests();
+            Swal.fire({
+                title: message,
+                background: "#fff",
+                color: "#121212",
+                html: `
+                <div style="text-align: center;">
+                <iframe src="https://giphy.com/embed/3tESFsOZxN9qAJbfK8" width="300" height="300" style="" frameBorder="0" class="giphy-embed"></iframe>
+                </div>`,
+                timer: 3000, 
+                showConfirmButton: false, 
+                allowOutsideClick: false
+                
+            });
+            allBooks = [];
+            showBooks();
+            allMyBooks = [];
+            showMyBooks();
+        }
+    } else {
+        console.log("User is not logged in or localStorage is empty.");
+    }
+});
+
+function startConnection() {
+
+    connection.start()
+        .then(() => {
+            console.log("SignalR Connected.");
+        })
+        .catch(err => console.error("SignalR Connection Error:", err));
+}
+
+startConnection();
+
+
+function sendNotificationToBuyer(bookName, buyerId, requestStatus) {
+    if (connection.state === signalR.HubConnectionState.Connected) {
+       
+        let messageToBuyer = `Your request for the book '${bookName}' has been ${requestStatus}.`
+      
+        connection.invoke("SendMessage", buyerId.toString(), messageToBuyer).catch(err => console.error("Error sending message:", err));
+    } else {
+        console.error("Connection is not established.");
+    }
+}
+function sendNotificationToSeller(sellerId) {
+    if (connection.state === signalR.HubConnectionState.Connected) {
+       
+        let messageToSeller = `You have new request! check your message box'.`
+        connection.invoke("SendMessage",sellerId.toString(), messageToSeller).catch(err => console.error("Error sending message:", err));
+    } else {
+        console.error("Connection is not established.");
+    }
+}
+// set the requests
+$(document).ready(function () {
+    showAllRequests();
+})
+
+// Function to update the message count
+function updateMessageCount(count) {
+    const badge = document.getElementById("message-count");
+
+    // Always show the count, even if it's 0
+    badge.textContent = count;
+}
+
 

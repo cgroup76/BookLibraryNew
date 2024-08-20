@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using serverSide.BL;
 using System.Dynamic;
 
@@ -10,6 +11,15 @@ namespace serverSide.Controllers
     [ApiController]
     public class IUsersController : ControllerBase
     {
+
+        private readonly IHubContext<ChatHub> _hubContext;
+
+        public IUsersController(IHubContext<ChatHub> hubContext)
+        {
+            _hubContext = hubContext;
+        }
+
+
         // GET: api/<IUsersController>
         [HttpGet]
         public List<dynamic> Get(int userId)
@@ -155,6 +165,15 @@ namespace serverSide.Controllers
             else { return NotFound(); }
         }
 
+        // PUT: api/<IUsersController>/sendMessage
+        [HttpPut("sendMessage")]
+      
+        public async Task<IActionResult> SendMessage( string message)
+        {
+            // send message to specific user
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", message);
+            return Ok();
+        }
 
     }
 }

@@ -40,6 +40,7 @@ function createMemoryCards() {
 function createCardElement(card) {
     const cardElement = document.createElement('div');
     cardElement.classList.add('card');
+    cardElement.classList.add('col-new-2');
     cardElement.dataset.name = card.Title;
     cardElement.dataset.type = card.type;
     cardElement.dataset.AuthorName = card.FirstAuthorName;
@@ -57,7 +58,6 @@ function createCardElement(card) {
         cardFront.style.display = 'flex';
         cardFront.style.justifyContent = 'center';
         cardFront.style.alignItems = 'center';
-        cardFront.style.fontSize = '16px';
         cardFront.innerText = card.FirstAuthorName || "Unknown Author";
     }
 
@@ -100,8 +100,9 @@ function checkForMatch() {
     console.log('Checking match for:', firstCard.dataset.name, secondCard.dataset.name);
 
     const isMatch = firstCard.dataset.AuthorName === secondCard.dataset.AuthorName;
-
-    if (isMatch)
+    const isCardAndAuthor = firstCard.dataset.type !== secondCard.dataset.type;
+    console.log(isCardAndAuthor, firstCard.dataset.type, secondCard.dataset.type)
+    if (isMatch && isCardAndAuthor)
     {
         disableCards();
         if (firstCard)
@@ -742,3 +743,7 @@ function postGameReasults(gameResult) {
 function successPost(status) {
     console.log(status)
 }
+///
+function showBooks() { };
+function showMyBooks() { };
+function closeBookInfo() { };

@@ -50,6 +50,23 @@ namespace serverSide.BL
             return dBservicesBookClub.getAllBookClub();
 
         }
+        public static int addNewPost(int clubId, int userId, string description, string image)
+        {
+            DBserviceBookClub dBservicesBookClub = new DBserviceBookClub();
+
+            return (dBservicesBookClub.addNewPost(clubId,userId,description,image));
+        }
+        public static List<dynamic> getPostPerClub(int clubId)
+        {
+            DBserviceBookClub dBservicesBookClub = new DBserviceBookClub();
+            return dBservicesBookClub.getPostPerClub(clubId);
+        }
+        public static int addLikeToPost(int postId,int userId)
+        {
+            DBserviceBookClub dBservicesBookClub = new DBserviceBookClub();
+
+            return (dBservicesBookClub.addLikeToPost(postId, userId));
+        }
 
     }
 
