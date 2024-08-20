@@ -10,6 +10,7 @@ namespace serverSide.Controllers
     public class BookClubController : ControllerBase
     {
         // GET: api/<BookClubController>
+
         [HttpGet("getAllClubMembers")]
         public List<dynamic> Get( int clubId)
         {
@@ -22,7 +23,6 @@ namespace serverSide.Controllers
         }
 
 
-       
         [HttpGet("getAllClubs")]
         public List<dynamic> Get()
         {
