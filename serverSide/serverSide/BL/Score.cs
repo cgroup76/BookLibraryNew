@@ -25,7 +25,7 @@
         {
             DBservicesScoreTable dBserviecesScore = new DBservicesScoreTable();
 
-            return 1 == dBserviecesScore.AddNewScore(score);
+            return 1 <= dBserviecesScore.AddNewScore(score);
         }
         public static List<Score> GetTop5Score(string gameName) 
         {

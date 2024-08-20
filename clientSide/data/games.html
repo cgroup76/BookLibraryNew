@@ -20,8 +20,6 @@
     <!--signalR-->
     <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@7.0.0/dist/browser/signalr.min.js"></script>
 
-    <script src="images.js"></script>
-    <script src="sharedFunc.js"></script>
 
 
 </head>
@@ -52,7 +50,7 @@
                         <li class="nav-item logoutBox"><a class="nav-link pink whiteHover logout" style="color: #ff0083">logout</a></li>
                         <li class="nav-item dropdown requestBox">
                             <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span id="message-count" class="badge">0</span> <!-- Badge -->
+                                <span id="message-count" class="badge">0</span> 
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
                                     <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
                                 </svg>
@@ -68,7 +66,6 @@
         </div>
     </header>
 
-    <!--login form-->
     <!-- login form -->
 
     <div class="logInForm" id="logInForm">
@@ -130,7 +127,7 @@
                 <div class="cardMain mb-4 game-card">
                     <h6>HangMan</h6>
                     <div class="card-body text-center">
-                        <button id="HangMan">Play</button>
+                        <button class="playBtn" id="HangMan">Play</button>
                     </div>
                 </div>
             </div>
@@ -138,7 +135,7 @@
                 <div class="cardMain mb-4 game-card">
                     <h6>Memory Game</h6>
                     <div class="card-body text-center">
-                        <button id="MemoryGame">Play</button>
+                        <button class="playBtn" id="MemoryGame">Play</button>
                     </div>
                 </div>
             </div>
@@ -146,12 +143,13 @@
                 <div class="cardMain mb-4 game-card">
                     <h6>Quiz</h6>
                     <div class="card-body text-center">
-                        <button id="BookQuiz">Play</button>
+                        <button class="playBtn" id="BookQuiz">Play</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- games -->
     <div id="games">
         <div id="container-quiz">
             <div class="quiz-header">
@@ -209,8 +207,6 @@
                 <div id="image-container" class="row d-flex justify-content-center"></div>
                 <div id="row-1" class="row keyboard-row d-flex flex-wrap justify-content-center"></div>
 
-                <!--<div id="button-container">-->
-                <!--</div>-->
             </div>
 
             <div class="resultContainer pink text-center"></div>
@@ -219,108 +215,16 @@
 
     </div>
 
-    <div id="overlay"></div>
+    <div id="overlay"></div> 
+    <!--img functions-->
+    <script src="images.js"></script>
 
+    <!--sherd functions-->
+    <script src="sharedFunc.js"></script>
+
+    <!--games functions-->
     <script src="games.js"></script>
-    <script>
-        const gameAPI = "https://localhost:7225/api/Score";
-        const booksAPI = "https://localhost:7225/api/Books";
-        const authorsAPI = "https://localhost:7225/api/Authors";
-        let gameName;
-        let allBooks = [];
-        let wordList = [];
-        let allAuthors = [];
 
-        $(document).ready(function () {
-
-            getBooks();
-            loadAuthors();
-            $('button').click(openGame)
-            $('.closeGameButton').click(closeGame);
-            $(".btn-next-back").hide();
-            $(".btn-back").hide();
-            $(".btn-back").click(backQuestion);
-            $(".btn-next").click(nextQuestion);
-            $(".clear-ans-btn").click(clearAnswersCheckBox);
-            $(".start-quiz").click(startQuiz)
-        });
-
-        function loadAuthors() {
-            if (allAuthors.length == 0) {
-                ajaxCall("GET", authorsAPI, null, SuccessLoadAuthors, errorLoadAuthors);
-            }
-        }
-
-
-        function SuccessLoadAuthors(authors) {
-            allAuthors = authors;
-        }
-
-
-
-        function errorLoadAuthors(error) {
-            console.log('Error loading authors:', error);
-        }
-        function getBooks() {
-            if (allBooks.length == 0) {
-                ajaxCall("GET", booksAPI, null, getAllBooks, errorToLoadBooks);
-            }
-        }
-
-        function getAllBooks(books) {
-            allBooks = books;
-            for (let i = 0; i < books.length; i++) {
-                wordList.push(books[i].Title);
-            }
-        }
-
-        function errorToLoadBooks() {
-            console.error("The books could not be loaded.");
-        }
-
-        function closeGame() {
-            $('#games').removeClass('active');
-            $('#overlay').removeClass('active');
-            clearHangMan();
-            closeQuiz();
-        }
-        function openGame() {
-            gameName = $(this).attr('id');
-            $('#games').addClass('active');
-            $('#overlay').addClass('active');
-
-            console.log(gameName);
-            switch (gameName) {
-                case 'HangMan':
-                    {
-                        $('#container-quiz').hide()
-                        $('#container-Memorybody').hide()
-                        $('#container-hangMan').show()
-                        startHangManGame();
-                    }
-                    break;
-                case 'MemoryGame':
-                    {
-                        $('#container-quiz').hide()
-                        $('#container-Memorybody').show()
-                        $('#container-hangMan').hide()
-                        startMemoryGame();
-
-                    }
-                    break;
-                case 'BookQuiz': {
-                    $('#container-quiz').show()
-                    $('#container-Memorybody').hide()
-                    $('#container-hangMan').hide()
-                    createQuiz();
-                }
-                    break;
-            }
-
-        }
-
-
-    </script>
 </body>
 
 </html>
