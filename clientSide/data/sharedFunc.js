@@ -607,7 +607,7 @@ function trySampleRequest() {
     } else {
         oauth2SignIn();
     }
-    //heyy ofri
+    
 }
 
 

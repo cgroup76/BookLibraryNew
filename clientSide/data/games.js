@@ -1,4 +1,104 @@
 // JavaScript source code
+
+const gameAPI = "https://localhost:7225/api/Score";
+const booksAPI = "https://localhost:7225/api/Books";
+const authorsAPI = "https://localhost:7225/api/Authors";
+let gameName;
+let allBooks = [];
+let wordList = [];
+let allAuthors = [];
+
+    $(document).ready(function () {
+
+    getBooks();
+    loadAuthors();
+    $('.playBtn').click(openGame)
+    $('.closeGameButton').click(closeGame);
+    $(".btn-next-back").hide();
+    $(".btn-back").hide();
+    $(".btn-back").click(backQuestion);
+    $(".btn-next").click(nextQuestion);
+    $(".clear-ans-btn").click(clearAnswersCheckBox);
+    $(".start-quiz").click(startQuiz)
+    });
+
+    function loadAuthors() {
+            if (allAuthors.length == 0) {
+        ajaxCall("GET", authorsAPI, null, SuccessLoadAuthors, errorLoadAuthors);
+            }
+        }
+
+
+    function SuccessLoadAuthors(authors) {
+        allAuthors = authors;
+        }
+
+
+
+    function errorLoadAuthors(error) {
+        console.log('Error loading authors:', error);
+        }
+    function getBooks() {
+            if (allBooks.length == 0) {
+        ajaxCall("GET", booksAPI, null, getAllBooks, errorToLoadBooks);
+            }
+        }
+
+    function getAllBooks(books) {
+        allBooks = books;
+    for (let i = 0; i < books.length; i++) {
+        wordList.push(books[i].Title);
+            }
+        }
+
+    function errorToLoadBooks() {
+        console.error("The books could not be loaded.");
+        }
+
+function closeGame()
+{
+    $('#games').removeClass('active');
+    $('#overlay').removeClass('active');
+    clearHangMan();
+    closeQuiz();
+ 
+  }
+    function openGame() {
+    gameName = $(this).attr('id');
+    $('#games').addClass('active');
+    $('#overlay').addClass('active');
+
+    console.log(gameName);
+    switch (gameName) {
+                case 'HangMan':
+    {
+       $('#container-quiz').hide()
+       $('#container-Memorybody').hide()
+         $('#container-hangMan').show()
+    startHangManGame();
+                    }
+    break;
+    case 'MemoryGame':
+    {
+       $('#container-quiz').hide()
+      $('#container-Memorybody').show()
+         $('#container-hangMan').hide()
+    startMemoryGame();
+
+                    }
+    break;
+    case 'BookQuiz': {
+        $('#container-quiz').show()
+                    $('#container-Memorybody').hide()
+    $('#container-hangMan').hide()
+    createQuiz();
+                }
+    break;
+            }
+
+    }
+
+
 // Memory Game
 let victoryTime = null;
 let victoryAttempts = null;
@@ -10,7 +110,6 @@ let attempts = 0;
 let matches = 0;
 let timer = null;
 let time = 0;
-
 
 function startMemoryGame() {
     $(".game-container" ).show();
@@ -249,7 +348,6 @@ function clearHangMan() {
     document.querySelector('.word-display').innerHTML = '';
     document.getElementById('image-container').innerHTML = '';
     document.getElementById('row-1').innerHTML = '';
-    document.getElementById('row-2').innerHTML = '';
     document.querySelector('.failedGuess').innerHTML =
         `Incorrect guesses: <b></b><br />`;
    
@@ -334,6 +432,34 @@ function displayWord() {
         else if (choosenWord[i] == ')') {
             span.innerText = ')';
         }
+        else if (choosenWord[i] == 1) {
+            span.innerText = 1;
+        }
+        else if (choosenWord[i] == 2) {
+            span.innerText = 2;
+        }
+        else if (choosenWord[i] == 3) {
+            span.innerText = 2;
+        }
+        else if (choosenWord[i] == 4) {
+            span.innerText = 2;
+        }
+        else if (choosenWord[i] == 5) {
+            span.innerText = 2;
+        }
+        else if (choosenWord[i] == 6) {
+            span.innerText = 2;
+        }
+        else if (choosenWord[i] == 7) {
+            span.innerText = 2;
+        }
+        else if (choosenWord[i] == 8) {
+            span.innerText = 2;
+        }
+        else if (choosenWord[i] == 9) {
+            span.innerText = 2;
+        }
+
         else {
             span.innerText = correctGuess.includes(choosenWord[i]) ? choosenWord[i] : '_';
         }
@@ -367,7 +493,7 @@ function handleGuess(letter) {
 //check if the user win
 function checkWin() {
     let allGuessed = choosenWord.split('').every(letter => {
-        return letter == ' ' || letter == ',' || letter == ':' || letter == '#' || letter == '!' || letter == ')' ||letter == '(' || correctGuess.includes(letter);
+        return letter == ' ' || letter == ',' || letter == ':' || letter == '#' || letter == '!' || letter == ')' || letter == '(' || letter == '1' || letter == '2' || letter == '3' || letter == '4' || letter == '5' || letter == '6' || letter == '7' || letter == '8' || letter == '9' || correctGuess.includes(letter);
     });
     if (allGuessed) {
         getScore(incorrectGuess);
@@ -527,6 +653,7 @@ function createQuiz() {
 var intervalId; // to stop the intervals
 
 function closeQuiz() {
+    console.log("hey");
     clearInterval(intervalId); // stop th interval
     $(".question").remove();
     $("#quiz-container").removeClass('active');
@@ -718,7 +845,7 @@ function successTop5(topResult) {
 function errorTop5(err) { console.log(err); }
 
 function postGameReasults(gameResult) {
-    ajaxCallSync("POST", gameAPI + ``, JSON.stringify(gameResult), successPost, errorTop5);
+    ajaxCallSync("POST", gameAPI, JSON.stringify(gameResult), successPost, errorTop5);
 }
 function successPost(status) {
     console.log(status)
