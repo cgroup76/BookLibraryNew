@@ -56,10 +56,10 @@ namespace serverSide.BL
 
             return (dBservicesBookClub.addNewPost(clubId,userId,description,image));
         }
-        public static List<dynamic> getPostPerClub(int clubId)
+        public static List<dynamic> getPostPerClub(int clubId, int userId)
         {
             DBserviceBookClub dBservicesBookClub = new DBserviceBookClub();
-            return dBservicesBookClub.getPostPerClub(clubId);
+            return dBservicesBookClub.getPostPerClub(clubId, userId);
         }
         public static int addLikeToPost(int postId,int userId)
         {

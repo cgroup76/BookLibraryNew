@@ -432,7 +432,7 @@ namespace serverSide.DAL
         //---------------------------------------------------------------------------------
 
 
-        public List<object> getPostPerClub(int clubId)
+        public List<object> getPostPerClub(int clubId, int userId)
 
         {
 
@@ -449,7 +449,7 @@ namespace serverSide.DAL
                 throw (ex);
             }
 
-            cmd = CreateCommandWithStoredProceduregetPostPerClub("getPostPerClub", con,clubId);             // create the command
+            cmd = CreateCommandWithStoredProceduregetPostPerClub("getPostPerClub", con,clubId, userId);             // create the command
 
 
             List<dynamic> posts = new List<dynamic>();
@@ -463,12 +463,14 @@ namespace serverSide.DAL
                     dynamic post = new ExpandoObject();
                     post.PostId = Convert.ToInt32(dataReader["id"]);
                     post.ClubId = Convert.ToInt32(dataReader["clubId"]);
-                    post.UserId = Convert.ToInt32(dataReader["userId"]);
-                    post.UserName = Convert.ToString(dataReader["userName"]);
+                    post.UserCreateId = Convert.ToInt32(dataReader["userId"]);
+                    post.UserCreateName = Convert.ToString(dataReader["userName"]);
                     post.Description = Convert.ToString(dataReader["description"]);
                     post.Image= Convert.ToString(dataReader["image"]);
                     post.Likes = Convert.ToInt32(dataReader["numOfLikes"]);
                     post.PostDate=Convert.ToString(dataReader["postDate"]);
+                    post.userLike = Convert.ToInt32(dataReader["hasLiked"]);
+
 
                     posts.Add(post);
 
@@ -495,7 +497,7 @@ namespace serverSide.DAL
         // Create the SqlCommand using a stored procedure to get Post Per Club
         //---------------------------------------------------------------------------------
 
-        private SqlCommand CreateCommandWithStoredProceduregetPostPerClub(String spName, SqlConnection con,int clubId)
+        private SqlCommand CreateCommandWithStoredProceduregetPostPerClub(String spName, SqlConnection con,int clubId, int userId)
         {
 
             SqlCommand cmd = new SqlCommand(); // create the command object
@@ -509,6 +511,8 @@ namespace serverSide.DAL
             cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
 
             cmd.Parameters.AddWithValue("@clubId", clubId);
+            cmd.Parameters.AddWithValue("@userId", userId);
+
             return cmd;
         }
         //--------------------------------------------------------------------------------------------------
