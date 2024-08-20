@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
         policy =>
         {
 
-            policy.WithOrigins("http://localhost:65055","http://localhost:62447", "https://localhost:7225", "http://localhost:52217")
+            policy.WithOrigins("http://localhost:65055","http://localhost:62447", "https://proj.ruppin.ac.il/cgroup76/test2/tar1", "https://proj.ruppin.ac.il/cgroup76/test2/tar6", "http://localhost:52217")
 
                   .AllowAnyHeader()
                   .AllowAnyMethod()

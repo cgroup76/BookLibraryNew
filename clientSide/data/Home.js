@@ -312,17 +312,17 @@
                             }
                         } else {
                             // If the book is available for purchase
-                            booksHtml += `< a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'buyABook(${book.Id})' > Buy</a >
+                            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'buyABook(${book.Id})' > Buy</a >
                                                                       </div >
                                                                       </div >
-                                                                      </div ></a > `;
+                                                                      </div ></a> `;
                         }
                     } else {
                         // If the user is not logged in, there's no need to show the purchase option
-                        booksHtml += `< a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'buyABook(${book.Id})' > Buy</a >
+                        booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'buyABook(${book.Id})' > Buy</a >
                                                                   </div >
                                                                   </div >
-                                                                  </div ></a > `;
+                                                                  </div ></a> `;
                     }
                 }
             });
@@ -411,7 +411,7 @@
                         let findSearchString = searchString
 
                         let book = JSON.parse(key);
-                        book['foundString'] = `<p>...${ section1 } <strong class='pink'>${findSearchString}</strong>${ section2 }...</p> `;
+                        book['foundString'] = `<p>...${ section1 } <strong class='pink'>${findSearchString}</strong>${ section2 }...</p > `;
                         bookList.push(book);
 
                     }
@@ -431,7 +431,7 @@
 
                     bookList.forEach((book) => {
                         booksHtml += `
-                                             <div class='row'>
+                                        <div class='row'>
                                                         <div class=' mb-4 book-card-search col-xl-2 col-lg-3 col-md-4 col-12'>
                                                             <img src='${book.SmallThumbnail}' class='card-img-search' alt='Book'>
                                                             </div>
@@ -447,7 +447,6 @@
                             if (book.IsAvailable == 0) {
                                 if (book.UserId == buyerId) { // The logged-in user bought this book
                                     booksHtml += ` <a class='btn buyABookBtn pinkB ' id = 'notAllowed' disabled > <s>Buy</s></a >
-                                                                          </div>
                                                                           </div>
                                                                           </div>`;
                                 } else {

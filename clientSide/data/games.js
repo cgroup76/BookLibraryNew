@@ -202,22 +202,18 @@ function checkForMatch() {
         return;
     }
 
-    console.log('Checking match for:', firstCard.dataset.name, secondCard.dataset.name);
 
     const isMatch = firstCard.dataset.AuthorName === secondCard.dataset.AuthorName;
     const isCardAndAuthor = firstCard.dataset.type !== secondCard.dataset.type;
-    console.log(isCardAndAuthor, firstCard.dataset.type, secondCard.dataset.type)
     if (isMatch && isCardAndAuthor)
     {
         disableCards();
         if (firstCard)
         {
-            console.log('Adding correct class to first card');
             firstCard.classList.add('correct');
         }
         if (secondCard)
         {
-            console.log('Adding correct class to second card');
             secondCard.classList.add('correct');
         }
         // Display message for correct match
@@ -426,6 +422,9 @@ function displayWord() {
         else if (choosenWord[i] == ',') {
             span.innerText = ',';
         }
+        else if (choosenWord[i] == "'") {
+            span.innerText = "'";
+        }
         else if (choosenWord[i] == ':') {
             span.innerText = ':';
         }
@@ -502,7 +501,7 @@ function handleGuess(letter) {
 //check if the user win
 function checkWin() {
     let allGuessed = choosenWord.split('').every(letter => {
-        return letter == ' ' || letter == ',' || letter == ':' || letter == '#' || letter == '!' || letter == ')' || letter == '(' || letter == '1' || letter == '2' || letter == '3' || letter == '4' || letter == '5' || letter == '6' || letter == '7' || letter == '8' || letter == '9' || correctGuess.includes(letter);
+        return letter == ' ' || letter == ',' || letter == "'" || letter == ':' || letter == '#' || letter == '!' || letter == ')' || letter == '(' || letter == '1' || letter == '2' || letter == '3' || letter == '4' || letter == '5' || letter == '6' || letter == '7' || letter == '8' || letter == '9' || correctGuess.includes(letter);
     });
     if (allGuessed) {
         getScore(incorrectGuess);
@@ -534,7 +533,7 @@ function getScore(incorrectGuess) {
             "scoreNum": finalScore,
             "time": ""
         }
-        
+     
         postGameReasults(gameResult);
         getTop5GameReasults("HangMan");
     }
