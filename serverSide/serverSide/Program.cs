@@ -49,6 +49,8 @@ app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
+app.UseStaticFiles(); // Enable serving static files
+
 app.MapControllers();
 
 app.MapHub<ChatHub>("/chatHub");
