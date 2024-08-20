@@ -6,7 +6,7 @@
     <title>Games</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href=" .css">
+    <link rel="stylesheet" href="games.css">
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
@@ -165,7 +165,7 @@
             </nav>
         </div>
     </header>
-    <div class="container mt-5 pt-5">
+    <div class=" container mt-5 pt-5">
         <div class="row">
             <div class="col-lg-4">
                 <div class="cardMain mb-4 game-card">
@@ -205,7 +205,7 @@
                 <h4 class="text-center pink">Instructions:</h4>
                 <p>1. You have 1 minute to answer all the questions.</p>
                 <p>2. Read each question carefully before selecting your answer.</p>
-                <p>3. Click 'Submit' when you're done to see your score.</p>                
+                <p>3. Click 'Submit' when you're done to see your score.</p>
             </div>
             <div id="questionContainer"></div>
             <div class="resultContainer pink"></div>
@@ -227,30 +227,37 @@
             <div class="resultContainer pink"></div>
         </div>
 
-        <div id="container-hangMan">
+        <div id="container-hangMan" >
             <button data-close-button class="close-button closeGameButton">&times;</button>
 
-            <div class="hangman-box">
-                <h1 class="text-center">Hangman Game</h1>
+            <div class="hangman-box text-center">
+                <h1>Hangman Game</h1>
             </div>
-            <div class="game-box">
-                <p class="word-display"></p>
+
+            <div class="game-box container-fluid">
+                <div class="row word-display text-center"></div>
+
                 <h3 class="failedGuess text-center">
                     Incorrect guesses:
                     <b></b>
                     <br />
                 </h3>
+
                 <h3 class="correctWord text-center" style="display: none;">
                     The Correct Word Was: <span></span>
                 </h3>
-                <div id="image-container" class="d-flex justify-content-center"></div>
-                <div id="button-container">
-                    <div id="row-1" class="keyboard-row"></div>
-                    <div id="row-2" class="keyboard-row"></div>
-                </div>
+
+                <div id="image-container" class="row d-flex justify-content-center"></div>
+                <div id="row-1" class="row keyboard-row d-flex flex-wrap justify-content-center"></div>
+
+                <!--<div id="button-container">-->
+                <!--</div>-->
             </div>
-            <div class="resultContainer pink"></div>
+
+            <div class="resultContainer pink text-center"></div>
         </div>
+
+
     </div>
 
     <div id="overlay"></div>
