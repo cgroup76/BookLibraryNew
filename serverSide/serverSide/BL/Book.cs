@@ -26,7 +26,7 @@ namespace serverSide.BL
         string textSnippet;
 
         Random randomPrice = new Random();  // generate a random price for each book
-        //public Book() { }
+        public Book() { }
         public Book(int id, string title, string subTitle, int isEbook, int isActive, int isAvailable, string category, string smallThumbnail,
             string thumbnail, int numOfPages, string description, string previewLink, string publishDate, string firstAuthorName, string secondAuthorName,
             int numOfReviews, double rating, string textSnippet)
