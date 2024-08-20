@@ -638,7 +638,7 @@
 
             checkForLoginUser();
 
-            showBooks();
+            loadBooks();
 
             getClubs();
 
@@ -708,6 +708,7 @@
         // create a new club
 
         function createNewClub() {
+            console.log(allBooks);
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('form-modal').style.display = 'block';
 
@@ -830,7 +831,8 @@
             });
         }
 
-        function showBooks() {
+        function loadBooks() {
+          
             if (allBooks.length == 0) {
                 ajaxCall("GET", booksAPI, null, showAllBooks, errorToLoadBooks);
             }
@@ -839,6 +841,7 @@
 
         function showAllBooks(response) {
             allBooks = response;
+          
             activateSearchBooksBar();
             populateDropdown(booksDict);
         }
@@ -1094,7 +1097,6 @@
         }
 
         ///
-        function showBooks() { };
         function showMyBooks() { };
         function closeBookInfo() { };
         ///
