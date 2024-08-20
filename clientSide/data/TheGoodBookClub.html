@@ -13,10 +13,15 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@7.0.0/dist/browser/signalr.min.js"></script>
-    <script src="sharedFunc.js"></script>
+    <!--imoji-->
+    <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.2/dist/emoji-button.min.js"></script>
+
     <style>
         .pinkB {
             background-color: #ff0083;
+        }
+        .pink {
+            color: #ff0083;
         }
 
         .add-image-btn {
@@ -220,7 +225,235 @@
             display: block;
             transform: translate(-50%, -50%) scale(1);
         }
-    </style>
+
+        .create-post {
+            width: 400px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: bold;
+        }
+
+        .post-privacy {
+            color: gray;
+            font-size: 12px;
+            text-align:left;
+        }
+
+        textarea {
+            width: 100%;
+            height: 80px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 14px;
+            resize: none;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+
+        .add-post-options {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: gray;
+            cursor: pointer;
+        }
+
+            .add-post-options:hover {
+                color: #007bff;
+            }
+
+        .post-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+            .post-btn:disabled {
+                background-color: #aaa;
+            }
+
+     
+        /* Emoji Picker styles */
+        .emoji-picker {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            width: 300px;
+            max-height: 200px;
+            overflow-y: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .emoji-grid {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .emoji {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+            .emoji:hover {
+                background-color: #f0f0f0;
+                border-radius: 4px;
+            }
+
+        /* Hidden by default */
+        .hidden {
+            display: none;
+        }
+        .posts-container {
+            width: 400px;
+            margin-top: 20px;
+        }
+
+        .post {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 16px;
+            font-family: Arial, sans-serif;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .post-profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .post-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-user-name {
+            font-weight: bold;
+        }
+
+        .post-timestamp {
+            color: gray;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        .post-content {
+            margin-top: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        #overlay {
+            position: fixed;
+            opacity: 0;
+            transition: 200ms ease-in-out;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+            #overlay.active {
+                opacity: 2;
+                pointer-events: all;
+            }
+        .add-post-image, .post-pic {
+            height: 150px;
+            padding: 2% 0;
+        }
+        .post-likes {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .like-btn {
+            border: none;
+            background: none;
+            padding: 0;
+            cursor: pointer;
+        }
+            .like-btn:focus {
+                outline: none; /* Ensure there's no outline on focus */
+            }
+        .like-btn i{
+            font-weight:100;
+        }
+            .like-btn.liked i {
+                font-weight: 900;
+                color: #ff0083;
+            }
+
+        /* Loading Spinner Style */
+        #loadingSpinner {
+            display: none;
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            position: relative;
+            top: 50%;
+            left: 50%;
+            margin-top: -30px;
+            margin-left: -30px;
+            z-index:10
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+</style>
 
 </head>
 <body>
@@ -287,8 +520,7 @@
                 <div class="nav-item dropdown requestBox">
                     <button class="btn btn-outline-dark my-2 my-sm-0 pinkB" onclick="createNewClub()" type="button">
                         Create new book club
-                    </button><!-- Overlay -->
-                    <div id="overlay" class="overlay"></div>
+                    </button>
 
                     <!-- Form Modal -->
                     <div id="form-modal" class="modal">
@@ -306,7 +538,7 @@
                             </form>
                         </div>
                     </div>
-                    <div id="overlay" class="overlay"></div>
+
 
                     <div id="create" class="dropdown-menu dropdown-menu-dark"></div>
                 </div>
@@ -330,20 +562,61 @@
                 <img class="club-image-info" />
                 <h1 class="club-info-title"></h1>
                 <div class="club-members"></div>
-                <input type='file' class='form-control-file image-input' style='display:none;'>
+              
                 <div class='image-preview'></div>
 
                 <div class="add-post-to-club">
-                    <button class='btn add-image-btn'>Add Image</button>
                     <input type="text" class="text-input form-control" placeholder="Enter description here...">
-                    <button class='btn btn-light generate-btn' type="button">Generate Image</button>
                     <img class="result-img img-fluid" style="display:none;" alt="Generated Image">
                     <div class="comment">
                         <label for="comment" class="pink">Tell us more:</label><br>
-                        <textarea id="comment" name="comment" oninput="updateCharacterCount()" maxlength="255"></textarea>
-                        <p id="charCount">0/255 characters</p>
+
+
                     </div>
                 </div>
+
+                <div class="create-post">
+                    <div class="header">
+                        <svg class='profile-pic' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z" /></svg>
+                        <div class="user-info">
+                            <span class="user-name"></span>
+                            <span class="post-privacy">
+                                <i class="fas fa-globe"></i> Public
+                            </span>
+                        </div>
+                    </div>
+                    <div id="loadingSpinner"></div>
+                    <img class="add-post-image" />
+                    <textarea id="comment" name="comment" oninput="updateCharacterCount()" placeholder="What's on your mind?" maxlength="255"></textarea>
+                    <p id="charCount">0/255 characters</p>
+                    <div class="actions">
+                        <button class="add-post-options emoji-btn"><i class="fas fa-smile"></i></button>
+                        <input type='file' class='form-control-file image-input' id="uploadImage" style='display:none;'>
+                        <button class="add-post-options add-ai-btn generate-btn">
+                            <i class="fas fa-microchip"></i>
+                        </button>
+                        <button class="add-post-options add-image-btn"><i class="fas fa-image"></i></button>
+                        <button class="add-post-options"><i class="fas fa-map-marker-alt"></i></button>
+                        <div class="emoji-picker hidden">
+                            <div class="emoji-grid">
+                                <!-- Add your emojis here -->
+                                <span class="emoji">😀</span>
+                                <span class="emoji">😁</span>
+                                <span class="emoji">😂</span>
+                                <span class="emoji">🤣</span>
+                                <span class="emoji">😃</span>
+                                <span class="emoji">😄</span>
+                                <span class="emoji">😅</span>
+                                <span class="emoji">😆</span>
+                                <span class="emoji">😉</span>
+                                <span class="emoji">😊</span>
+                                <!-- Add more emojis -->
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-dark pinkB post-btn">Post</button>
+                </div>
+                <div class="posts-container"></div>
             </div>
         </div>
     </div>
@@ -362,21 +635,35 @@
     <script>
 
         $(document).ready(function () {
+
             checkForLoginUser();
+
             showBooks();
+
             getClubs();
+
             $('#search-club-btn').click(searchClub);
+
+            $('.post-btn').click(sendPost);
+
+            $('.add-image-btn').click(addImageToPost);
+
         });
 
         var booksAPI = "https://localhost:7225/api/Books";
         var clubBooksAPI = "https://localhost:7225/api/BookClub";
         var uploadFilesAPI = 'https://localhost:7225/api/upload';
         var usersAPI = "https://localhost:7225/api/IUsers";
+        var imageFolder = "https://localhost:7225/Images"; 
         var allBooks = [];
         var allClubs = [];
         let booksDict = [];
         let clubsDict = [];
         let currentClub;
+        let imageLink;
+        let currentLikeBtn;
+        let imageCounter = 0;
+
 
         function searchClub() {
             let searchstring = $('.search-string').val();
@@ -397,15 +684,15 @@
 
             searchClub.forEach(club => {
                 clubsHtml += `
-                            <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
-                                <div class='col-md-3 club-info'>
-                                    <div class='card mb-4 club-card'>
-                                            <h6 class='card-title'>${club.ClubName}</h6>
-                                            <img src='${club.ClubImage}'>
-                                            <br/>
-                                            <button type="submit" class="btn btn-light pinkB">Add post</button>
-                                    </div>
-                                </div></a>`
+                                <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
+                                    <div class='col-md-3 club-info'>
+                                        <div class='card mb-4 club-card'>
+                                                <h6 class='card-title'>${club.ClubName}</h6>
+                                                <img src='${club.ClubImage}'>
+                                                <br/>
+                                                <button type="submit" class="btn btn-light pinkB">Add post</button>
+                                        </div>
+                                    </div></a>`
                     ;
             });
             clubsContainer.innerHTML = clubsHtml;
@@ -418,6 +705,7 @@
             });
         }
 
+        // create a new club
 
         function createNewClub() {
             document.getElementById('overlay').style.display = 'block';
@@ -481,6 +769,8 @@
             showclubInfo(currentClub.ClubId);
         }
 
+        // join club
+
         function joinClub() {
 
             var userId = JSON.parse(localStorage.getItem("loginUserDetails"))
@@ -492,6 +782,8 @@
             }
 
         }
+        // show all clubs
+
         function showAllClubs(response) {
             allClubs = response;
             const clubsContainer = document.getElementById("container-clubs");
@@ -504,66 +796,26 @@
 
             allClubs.forEach(club => {
                 clubsHtml += `
-                            <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
-                                <div class='col-md-3 club-info'>
-                                    <div class='card mb-4 club-card'>
-                                            <h6 class='card-title'>${club.ClubName}</h6>
-                                            <img src='${club.ClubImage}'>
-                                            <br/>
-                                    </div>
-                                </div></a>`
+                                <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
+                                    <div class='col-md-3 club-info'>
+                                        <div class='card mb-4 club-card'>
+                                                <h6 class='card-title'>${club.ClubName}</h6>
+                                                <img src='${club.ClubImage}'>
+                                                <br/>
+                                                <p>Members in club:</p>
+                                                <span>${club.ClubMembers}</span>
+                                        </div>
+                                    </div></a>`
                     ;
             });
             clubsContainer.innerHTML = clubsHtml;
-            setupGenerateButtons(); //
-            document.querySelectorAll('.add-image-btn').forEach(button => {
-                button.addEventListener('click', function () {
-                    const cardBody = this.closest('.card-body');
-                    const fileInput = cardBody.querySelector('.image-input');
+            setupGenerateButtons(); 
 
-                    // Trigger the file selection
-                    fileInput.click();
-
-                    fileInput.addEventListener('change', function () {
-                        const formData = new FormData();
-                        const files = fileInput.files;
-
-                        // Add the uploaded file to the form data collection
-                        if (files.length > 0) {
-                            for (let f = 0; f < files.length; f++) {
-                                formData.append("files", files[f]);
-                            }
-
-                            // Perform AJAX request to upload the image
-                            ajaxCall("POST", uploadFilesAPI, formData, showImages(formData, cardBody), errorToLoadImage);
-                        }
-                    });
-                });
-            });
             var clubNameSearchBar = "";
             allClubs.forEach((club) => {
                 clubNameSearchBar += `<option value='${club.ClubName}'>`
             })
             $("#clubSearch").html(clubNameSearchBar);
-        }
-
-        function showImages(response, cardBody) {
-            console.log("Image uploaded successfully:", response);
-
-            const imagePreviewContainer = cardBody.querySelector('.image-preview');
-
-            // Create and append new images
-            response.forEach(image => {
-                const imgElement = document.createElement('img');
-                imgElement.src = `https://localhost:7225/uploadedFiles/${image}`; // Adjust path as needed
-                imgElement.alt = "Uploaded Image";
-                imgElement.className = "uploaded-image img-fluid mt-2";
-                imagePreviewContainer.appendChild(imgElement);
-            });
-        }
-
-        function errorToLoadImage(err) {
-            console.error("Error uploading image:", err);
         }
 
         function ajaxCall(method, url, data, successCallback, errorCallback) {
@@ -635,10 +887,9 @@
             }
             return response.blob();
         }
-
+        
         async function TextToImage(cardBody) {
             const textInput = cardBody.querySelector(".text-input").value.trim(); // עדכון לקרוא את שדה התיאור מהכרטיס
-            const resultImg = cardBody.querySelector(".result-img"); // עדכון לקרוא את תמונת התוצאה מהכרטיס
 
             console.log("Text input value:", textInput); // Debugging line
 
@@ -647,18 +898,37 @@
                 return;
             }
 
-            if (!resultImg) {
-                console.error("Result image element not found.");
-                return;
-            }
-
             try {
+                // Show the loading spinner
+                loadingSpinner.style.display = "block";
+
                 const imageBlob = await queryTEXTtoIMG(textInput);
+
+                // Hide the loading spinner once the image is generated
+                loadingSpinner.style.display = "none";
+
                 const imageUrl = URL.createObjectURL(imageBlob);
-                resultImg.src = imageUrl;
-                resultImg.style.display = "block";
+
+                const formData = new FormData();
+                formData.append('file', imageBlob, `generated-image${imageCounter++}.png`);
+            
+                $.ajax({
+                    type: "POST",
+                    url: uploadFilesAPI + "/upload",
+                    contentType: false,
+                    processData: false,
+                    async: false,
+                    data: formData,
+                    success: showImage,
+                    error: errorR
+                });
+
             } catch (error) {
+                // Hide the loading spinner once the image is generated
+                loadingSpinner.style.display = "none";
+
                 alert(error.message);
+
             }
         }
 
@@ -675,13 +945,23 @@
         function closeclubInfo() {
             $('#club-info-container').removeClass('active');
             $('#overlay').removeClass('active');
+
+            document.querySelector('textarea').value = "";
         }
-        
+
+        // open club info 
+
         function showclubInfo(clubId) {
+            let currentUser = JSON.parse(localStorage.getItem("loginUserDetails")).userName;
+            const postsContainer = document.querySelector('.posts-container');
+            postsContainer.innerHTML = "";
+            $('.add-post-image').hide();
 
             $("#join-club").show();
 
             ajaxCall("GET", clubBooksAPI + `/getAllClubMembers?clubId=${clubId}`, null, seccessToshowclubMembers, errorToshowclubMembers)
+
+            loadPosts(clubId);
 
             allClubs.forEach((club) => {
                 if (club.ClubId == clubId) {
@@ -693,7 +973,87 @@
             $('#club-info-container').addClass('active');
             $('#overlay').addClass('active');
             $('.club-info-title').html(currentClub.ClubName);
-            $('.club-image-info').attr("src",currentClub.ClubImage);
+            $('.user-name').html(currentUser);
+            $('.club-image-info').attr("src", currentClub.ClubImage);
+
+        }
+
+        function loadPosts(clubId) {
+            ajaxCall("GET", clubBooksAPI + `/getPostPerClub?clubId=${clubId}`, null, successToLoadPost, errorToshowclubMembers)
+        }
+
+        // show posts
+
+        function successToLoadPost(posts) {
+            const postsContainer = document.querySelector('.posts-container');
+            postsContainer.innerHTML = "";
+
+            posts.forEach((post) => {
+                // Create elements for the post
+                const postDiv = document.createElement('div');
+                postDiv.classList.add('post');
+
+                const postHeader = document.createElement('div');
+                postHeader.classList.add('post-header');
+
+                const postProfilePic = document.createElement('img');
+                postProfilePic.src = "";
+                postProfilePic.alt = 'Profile Picture';
+                postProfilePic.classList.add('post-profile-pic');
+
+                const postUserInfo = document.createElement('div');
+                postUserInfo.classList.add('post-user-info');
+
+                const postUserName = document.createElement('span');
+                postUserName.classList.add('post-user-name');
+                postUserName.textContent = post.UserName;
+
+                const postTimestamp = document.createElement('span');
+                postTimestamp.classList.add('post-timestamp');
+                postTimestamp.textContent = (post.PostDate).split(" ")[0]; // Adds current timestamp
+
+                postUserInfo.appendChild(postUserName);
+                postUserInfo.appendChild(postTimestamp);
+
+                postHeader.appendChild(postProfilePic);
+                postHeader.appendChild(postUserInfo);
+
+                const postContentDiv = document.createElement('div');
+                postContentDiv.classList.add('post-content');
+                postContentDiv.textContent = post.Description;
+
+                const likeButton = document.createElement('button');
+                likeButton.classList.add('like-btn');
+                likeButton.innerHTML = '<i class="fas fa-heart"></i> ';
+
+                const likeNum = document.createElement('span');
+                likeNum.classList.add('num-of-likes');
+                likeNum.innerHTML = post.Likes;
+
+                const postLikesDiv = document.createElement('div');
+                postLikesDiv.classList.add('post-likes');
+                postLikesDiv.appendChild(likeNum)
+                postLikesDiv.appendChild(likeButton)
+
+                const postPic = document.createElement('img');
+                postPic.src = post.Image;
+                postPic.alt = 'post picture';
+                postPic.classList.add('post-pic');
+
+                // Add on click for the like button
+                likeButton.onclick = function () {
+                    postLike(post.UserId, post.PostId, this, this.parentElement);
+                };
+
+                // Append all elements to the post div
+                postDiv.appendChild(postHeader);
+                postDiv.appendChild(postPic);
+                postDiv.appendChild(postContentDiv);
+                postDiv.appendChild(postLikesDiv);
+
+                // Append the post to the posts container
+                postsContainer.prepend(postDiv); // Adds the post at the top of the container
+            })
         }
 
         function errorToshowclubMembers(err) {
@@ -702,12 +1062,19 @@
         function seccessToshowclubMembers(members) {
             let currentUserId = JSON.parse(localStorage.getItem("loginUserDetails")).userId
             let html = "";
+            let status = false;
 
             members.forEach((member) => {
                 html += `<p>${member.userName}</p>`
 
-                if (currentUserId == member.userId) { $("#join-club").hide(); }
+                if (currentUserId == member.userId) {
+                    $("#join-club").hide();
+                    status = true;
+                }
             })
+
+            if (status) { $(".add-post-to-club").show(); }
+            else { $(".add-post-to-club").hide(); }
 
             $(".club-members").html(html);
         }
@@ -724,10 +1091,12 @@
 
             return false;
         }
+
         ///
         function showBooks() { };
         function showMyBooks() { };
         function closeBookInfo() { };
+        ///
 
         function updateCharacterCount() {
             const textInput = document.getElementById('comment');
@@ -736,8 +1105,125 @@
 
             charCount.textContent = `${currentLength}/255 characters`;
         }
+
+
+        // emoji
+
+        const emojiBtn = document.querySelector('.emoji-btn');
+        const emojiPicker = document.querySelector('.emoji-picker');
+        const emojis = document.querySelectorAll('.emoji');
+        const textarea = document.querySelector('textarea');
+
+        // Toggle emoji picker visibility
+        emojiBtn.addEventListener('click', () => {
+            emojiPicker.classList.toggle('hidden');
+        });
+
+        // Add selected emoji to the textarea
+        emojis.forEach(emoji => {
+            emoji.addEventListener('click', () => {
+                textarea.value += emoji.textContent;
+                updateCharacterCount();
+                textarea.focus(); // Keep focus on the textarea after inserting emoji
+            });
+        });
+
+        // Close the emoji picker when clicking outside of it
+        document.addEventListener('click', (event) => {
+            if (!emojiBtn.contains(event.target) && !emojiPicker.contains(event.target)) {
+                emojiPicker.classList.add('hidden');
+            }
+        });
+
+        // send post
+        function sendPost() {
+
+            let text = document.querySelector('textarea').value;
+            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+            let image = imageLink;
+
+            ajaxCall("POST", clubBooksAPI + `/addNewPost?clubId=${currentClub.ClubId}&userId=${userId}&description=${text}&image=${image}`, null, successToPost, errorToPost);
+        }
+        function successToPost() {
+            Swal.fire("Post Was Published!");
+            loadPosts(currentClub.ClubId);
+        }
+        function errorToPost(error) {
+            if (error.status == 401) {
+
+                logoutUser('endSession');
+            }
+            else {
+                Swal.fire('Error', "Could not submit your post - please try again later", 'error');
+            }
+        }
+
+        // add like to post
+        let currentLikeDiv;
+
+        function postLike(userId, postId, likeBtn, likeDiv) {
+            currentLikeBtn = likeBtn;
+            currentLikeDiv = likeDiv;
+            ajaxCall("PUT", clubBooksAPI + `/addLikeToPost?postId=${postId}&userId=${userId}`, null, successToLike, errorLike)
+        }
+        function successToLike() {
+
+            // add 1 more like to the post
+            let oldLikeNum = Number(currentLikeDiv.querySelector('span').innerHTML); 
+
+            currentLikeDiv.querySelector('span').innerHTML = oldLikeNum + 1;
+
+            currentLikeBtn.classList.add("liked");
+            currentLikeBtn.disabled = true;
+        }
+        function errorLike(error) {
+            if (error.status == 401) {
+
+                logoutUser('endSession');
+            }
+            else {
+                Swal.fire('Error', "Could not submit your like - please try again later", 'error');
+            }
+        }
+        function addImageToPost() {
+
+            const fileInput = document.querySelector('.image-input');
+
+            fileInput.click();
+
+            fileInput.addEventListener('change', function () {
+                const Data = new FormData();
+                const files = $("#uploadImage").get(0).files;
+
+                // Add the uploaded file to the form data collection
+                if (files.length > 0) {
+                    for (let f = 0; f < files.length; f++) {
+                       Data.append("files", files[f]);
+                    }
+                    // Ajax upload  
+                    $.ajax({
+                        type: "POST",
+                        url: uploadFilesAPI,
+                        contentType: false,
+                        processData: false,
+                        async: false,
+                        data: Data,
+                        success: showImage,
+                        error: errorR
+                    });
+                }      
+            });
+        }
+
+        function showImage(data) {
+
+            imageLink = imageFolder + "/" + data;
+            console.log(imageLink)
+            $('.add-post-image').show();
+            $(".add-post-image").attr("src", imageLink);
+        }
     </script>
 
-
+    <script src="sharedFunc.js"></script>
 </body>
 </html>
