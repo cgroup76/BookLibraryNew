@@ -33,18 +33,13 @@ namespace serverSide.BL
         public bool IsLogIn { get => isLogIn; set => isLogIn = value; }
 
 
-        // static public List<IUser> ReadUsers() { return usersList; }
-
-
-
-        // add new user
         public int Insert(IUser newUser)
         {
             DBservicesUsers dBservicesUsers = new DBservicesUsers();
 
             int newUserId = dBservicesUsers.AddNewUser(newUser, TIMEOUT);
 
-            if (newUserId != 0) return newUserId; // success to add user
+            if (newUserId != 0) return newUserId; 
 
             else return 0;
         }
@@ -93,15 +88,7 @@ namespace serverSide.BL
             return dbservicesUsers.readBookByUser(bookId, userId);
 
         }
-        //// Add sale and buy book method
-        //public static bool saleAndBuyBook(int buyerId,int sellerId, int bookId)
-        //{
-        //    DBservicesUsers dBservicesUsers = new DBservicesUsers();
-
-        //    return 1 == dBservicesUsers.saleAndBuyBook(buyerId, sellerId, bookId);
-
-
-        //}
+       
         public static int insertNewRequest(int sellerId, int buyerId, int bookId)
         {
             DBservicesUsers dBservicesUsers = new DBservicesUsers();

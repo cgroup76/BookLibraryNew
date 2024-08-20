@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-
+//class for conaction to send and get live message 
 public class ChatHub : Hub
 {
     private readonly ILogger<ChatHub> _logger;
