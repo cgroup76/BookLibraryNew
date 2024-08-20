@@ -471,9 +471,9 @@
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item"><a class="nav-link text-white" href="HTMLPage1.html">Home</a></li>
                         <li class="nav-item adminPage"><a class="nav-link text-white " href="adminPage.html">Admin Page</a></li>
-                        <li class="nav-item myBooks"><a class="nav-link text-white " href="#">My Books</a></li>
+                        <li class="nav-item myBooks"><a class="nav-link text-white " href="myBooks.html">My Books</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="author.html">Authors</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="TheGoodBookClub.html">Books Clubs</a></li>
+                        <li class="nav-item bookClubPage"><a class="nav-link text-white" href="#">Books Clubs</a></li>
                         <li class="nav-item games"><a class="nav-link text-white games" href="games.html">games</a></li>
                         <li class="nav-item loginBox"><a class="nav-link text-white login">login</a></li>
                         <li class="nav-item userNameBox">
@@ -638,7 +638,7 @@
 
             checkForLoginUser();
 
-            showBooks();
+            loadBooks();
 
             getClubs();
 
@@ -708,6 +708,7 @@
         // create a new club
 
         function createNewClub() {
+            console.log(allBooks);
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('form-modal').style.display = 'block';
 
@@ -830,7 +831,8 @@
             });
         }
 
-        function showBooks() {
+        function loadBooks() {
+          
             if (allBooks.length == 0) {
                 ajaxCall("GET", booksAPI, null, showAllBooks, errorToLoadBooks);
             }
@@ -839,6 +841,7 @@
 
         function showAllBooks(response) {
             allBooks = response;
+          
             activateSearchBooksBar();
             populateDropdown(booksDict);
         }
@@ -1094,7 +1097,6 @@
         }
 
         ///
-        function showBooks() { };
         function showMyBooks() { };
         function closeBookInfo() { };
         ///
