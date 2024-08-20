@@ -160,7 +160,7 @@
             let currentBook = allMyBooks.find(book => book.Id === bookId);
             currentBookTitle = currentBook.Title;
 
-            ajaxCall("PUT", `${ usersAPI } /readBookByUser?bookId=${bookId}&userId=${userId}`, null, successToMarkAsRead, errorToMarkAsRead);
+            ajaxCall("PUT", `${usersAPI}/readBookByUser?bookId=${bookId}&userId=${userId}`, null, successToMarkAsRead, errorToMarkAsRead);
         }
 
 function successToMarkAsRead() {

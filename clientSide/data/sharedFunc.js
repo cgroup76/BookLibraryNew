@@ -364,13 +364,14 @@ function showMyRequests(listOfRequest) {
     else {
         let sellerId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
         listOfRequest.forEach((request) => {
+            let bookName = (request.bookName).replace(/[^\w\s]/gi, '')
             htmlGot += `
                                                 <div class="dropdown-item">
                                                     <strong>Book:</strong> ${request.bookName} <br>
                                                     <strong>Want to buy:</strong> ${request.buyerName} <br>
                                                     <strong>Status:</strong> ${request.status} <br>
-                                                    <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}','${request.bookName}')">Approve</button>
-                                                    <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}','${request.bookName}')">Reject</button>
+                                                    <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}','${bookName}')">Approve</button>
+                                                    <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}', '${bookName}')">Reject</button>
                                                 </div>`;
         });
     }
@@ -411,9 +412,9 @@ function errorShowRequest(error) {
 
 
 //approve/ deniened requests
-function handleRequest(buyerId, sellerId, bookId, requestStatus, bookName) {
+function handleRequest(buyerId,sellerId,bookId,requestStatus,bookName) {
     console.log(buyerId, sellerId, bookId, requestStatus);
-    ajaxCall("PUT", `${usersAPI}/requestHandling?sellerId=${sellerId}&buyerId=${buyerId}&bookId=${bookId}&requeststatus=${requestStatus}`, null,
+    ajaxCall("PUT",`${usersAPI}/requestHandling?sellerId=${sellerId}&buyerId=${buyerId}&bookId=${bookId}&requeststatus=${requestStatus}`, null,
         function (response) { successToHandle(requestStatus, buyerId, bookName); },
         errorToHandle
     );

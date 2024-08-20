@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using serverSide.BL;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace serverSide.Controllers
 {
@@ -9,12 +8,15 @@ namespace serverSide.Controllers
     [ApiController]
     public class AuthorsController : ControllerBase
     {
+        // GET api/AuthorsController>/
+
         // GET: ShowAllAuthors
         [HttpGet]
         public IEnumerable<Author> Get()
         {
             return Author.showAllAuthors();
         }
+
         // GET: find book By author Name
         [HttpGet("findBookByAuthor")]
         public IActionResult Get(int authorId)
@@ -32,13 +34,8 @@ namespace serverSide.Controllers
         {
             return Author.getLibrariesPerAuthor();
         }
-        // GET api/AuthorsController>/5
-        [HttpGet("{name}")]
-        //public string Get(string name)
-        //{
-        //    return "value";
-        //}
-        // POST api/<AuthorsController>
+        
+      
         [HttpPost]
         public void Post([FromBody] string value)
         {
