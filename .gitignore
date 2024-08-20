@@ -45,3 +45,5 @@ clientSide/.vs/clientSide/FileContentIndex/merges/00467110-0712-4e79-bfff-2249ca
 clientSide/.vs/clientSide/FileContentIndex/0e003167-544d-4b16-a137-343727054e89.vsidx
 clientSide/.vs/clientSide/FileContentIndex/78c4d10e-4dda-4b97-bec1-1d47b3f988ae.vsidx
 *.vsidx
+clientSide/.vs/slnx.sqlite
+serverSide/serverSide/bin/Debug/net6.0/serverSide.exe
