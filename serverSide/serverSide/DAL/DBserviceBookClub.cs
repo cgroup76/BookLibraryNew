@@ -96,6 +96,7 @@ namespace serverSide.DAL
 
             cmd.Parameters.AddWithValue("@title", clubName);
 
+
             return cmd;
         }
 
