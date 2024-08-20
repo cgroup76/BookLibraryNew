@@ -85,13 +85,12 @@ hr{
     text-align: center;
     padding: 3% 0 ;
 }
-/* notification */
-/* Styling for the red notification badge */
+
 .badge {
     position: absolute;
     top: 0;
     right: 0;
-    transform: translate(50%, -50%); /* Adjust position to top-right */
+    transform: translate(50%, -50%);
     padding: 5px 8px;
     border-radius: 50%;
     background-color: red;
