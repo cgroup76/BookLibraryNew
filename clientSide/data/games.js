@@ -432,31 +432,6 @@ let questionNumInQuiz = 0;
 let topGameResults = [];
 
 
-function ajaxCall(method, api, data, successCB, errorCB) {
-    $.ajax({
-        type: method,
-        url: api,
-        data: JSON.stringify(data),
-        cache: false,
-        contentType: "application/json",
-        dataType: "json",
-        success: successCB,
-        error: errorCB
-    });
-}
-function ajaxCallSync(method, api, data, successCB, errorCB) {
-    $.ajax({
-        type: method,
-        url: api,
-        data: data,
-        cache: false,
-        async: false,
-        contentType: "application/json",
-        dataType: "json",
-        success: successCB,
-        error: errorCB
-    });
-}
 function shuffle(array) {
     let index = array.length - 1;
 

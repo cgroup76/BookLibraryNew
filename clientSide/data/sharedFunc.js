@@ -1,8 +1,31 @@
 // JavaScript source code
 
+
+var usersAPI = "https://localhost:7225/api/IUsers";
+
+
+$(document).ready(function () {
+    checkUserLogoutReason();
+    checkForLoginUser();
+
+    showAllRequests();
+    // log in or sign up forms
+    $('.login').click(showLoginForm);
+    $('.signup').click(showSignupForm);
+
+    // close form
+    $('.closeLoginButton').click(closeLoginForm);
+
+    // submit form
+    $('#logInButton').click(loginUser);
+    $('#signupButton').click(signupNewUser);
+
+    // logout user
+    $('.logout').click(logoutUser);
+})
 function checkForLoginUser() {
     var loginUser = JSON.parse(localStorage.getItem("loginUserDetails"))
-
+   
     if (loginUser != null) {
         $('.userNameBox').show();
         $('.logoutBox').show();
@@ -62,10 +85,119 @@ function ajaxCallSync(method, api, data, successCB, errorCB) {
     });
 }
 //-----------------------
+//log in //
+// login or signup form
 
+function showLoginForm() {
+    $('#logInForm').addClass('active');
+    $('#overlay').addClass('active');
+    $('.loginQuestion').hide();
+    $('.signupQuestion').show();
+    $('.userNameDiv').hide();
+    $('#signupButton').hide();
+    $('#logInButton').show();
+}
+function closeLoginForm() {
+    $('#logInForm').removeClass('active');
+    $('#overlay').removeClass('active');
+}
+function showSignupForm() {
+    $('.userNameDiv').show();
+    $('#signupButton').show();
+    $('.loginQuestion').show();
+    $('#logInButton').hide();
+    $('.signupQuestion').hide();
+}
+
+// login user
+
+function loginUser() {
+
+    var regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+    var userEmail = $('#userEmail').val();
+    var userPassword = $('#userPassword').val();
+
+    // check email and password in the correct format
+    if (regexEmail.test(userEmail) && userPassword.length >= 3) {
+
+        let userLogin = {
+            "id": 0,
+            "userName": "",
+            "eMail": userEmail,
+            "password": userPassword,
+            "isAdmin": false,
+            "isActive": true,
+            "isLogIn": true
+        }
+
+        ajaxCall("PUT", usersAPI + '/loginUser', JSON.stringify(userLogin), successLogin, error);
+    }
+    else {
+        Swal.fire({
+            title: "Invalide email or password",
+            text: "Please check email in the correct format & password is more than 2 digits."
+        });
+    }
+
+    return false;
+}
+
+function successLogin(userDetails) {
+
+    localStorage.setItem("loginUserDetails", JSON.stringify(userDetails));
+    console.log(userDetails);
+    checkForLoginUser();
+
+    showBooks();
+
+    closeLoginForm();
+}
+
+function error(errorMassage) { console.log(errorMassage); Swal.fire("Incorrect email or password"); }
+
+
+// signup new user
+
+function signupNewUser() {
+
+    var regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+    var userEmail = $('#userEmail').val();
+    var userPassword = $('#userPassword').val();
+    var userName = $('#userName').val();
+
+    if (userName == "") { Swal.fire("Please enter a user name"); return; }
+
+    // check email and password in the correct format
+    if (regexEmail.test(userEmail) && userPassword.length >= 3) {
+
+        let newUser = {
+            "id": 0,
+            "userName": userName,
+            "eMail": userEmail,
+            "password": userPassword,
+            "isAdmin": false,
+            "isActive": true,
+            "isLogIn": true
+        }
+
+        ajaxCall("POST", usersAPI + "/signUpNewUser", JSON.stringify(newUser), successLogin, errorSignup)
+    }
+    else {
+        Swal.fire({
+            title: "Invalide email or password",
+            text: "Please check email in the correct format & password is more than 2 digits."
+        });
+    }
+
+    return false;
+}
+
+function errorSignup(errorMassage) { console.log(errorMassage); }
+//--------------
 // logout user
 let resonToLogout;
-
 function logoutUser(reson) {
     resonToLogout = reson;
     let userIdToLogout = JSON.parse(localStorage.getItem("loginUserDetails")).userId
@@ -376,9 +508,7 @@ function sendNotificationToSeller(sellerId) {
     }
 }
 // set the requests
-$(document).ready(function () {
-    showAllRequests();
-})
+
 
 // Function to update the message count
 function updateMessageCount(count) {
