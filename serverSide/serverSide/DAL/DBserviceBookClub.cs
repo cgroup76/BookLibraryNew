@@ -299,10 +299,11 @@ namespace serverSide.DAL
                 while (dataReader.Read())
                 {
                     dynamic BookClub = new ExpandoObject();
-                    BookClub.ClubId = Convert.toInt32 (dataReader["id"]);
+                    BookClub.ClubId = Convert.ToInt32(dataReader["id"]);
                     BookClub.ClubName = Convert.ToString(dataReader["bookName"]);
                     BookClub.ClubImage = Convert.ToString(dataReader["bookImage"]);
-                    BookClub.ClubMembers=Convert.toInt32(dataReader["clubMembers"]);
+                    BookClub.ClubMembers = Convert.ToInt32(dataReader["clubMembers"]);
+
 
                     Clubs.Add(BookClub);
 
@@ -462,6 +463,7 @@ namespace serverSide.DAL
                     dynamic post = new ExpandoObject();
                     post.PostId = Convert.ToInt32(dataReader["id"]);
                     post.ClubId = Convert.ToInt32(dataReader["clubId"]);
+                    post.UserId = Convert.ToInt32(dataReader["userId"]);
                     post.UserName = Convert.ToString(dataReader["userName"]);
                     post.Description = Convert.ToString(dataReader["description"]);
                     post.Image= Convert.ToString(dataReader["image"]);
