@@ -106,7 +106,6 @@ button {
     }
 
 
-/**    **/
 
 #games {
     position: fixed;
@@ -200,7 +199,7 @@ button {
 
 .card {
 
-    height: 150px; /* Increase card size */
+    height: 150px; 
     background-color: #ff0083;
     border-radius: 8px;
     display: flex;
@@ -210,14 +209,14 @@ button {
     color: white;
     cursor: pointer;
     position: relative;
-    transform-style: preserve-3d; /* Ensure 3D transforms work */
-    transform: rotateY(0deg); /* Start with the back side visible */
+    transform-style: preserve-3d; 
+    transform: rotateY(0deg); 
     transition: transform 0.5s;
     margin: 1%;
 }
 
     .card.flip {
-        transform: rotateY(180deg); /* Show the front side when flipped */
+        transform: rotateY(180deg); 
     }
 
 .card-back {
@@ -242,12 +241,12 @@ button {
     justify-content: center;
     align-items: center;
     font-size: 24px;
-    color: white; /* Ensure text is visible */
+    color: white; 
     border-radius: 8px;
-    background-color: #ff0083; /* Default background color */
+    background-color: #ff0083; 
     background-size: cover;
     background-position: center;
-    transform: rotateY(180deg); /* Hide the front side when card is not flipped */
+    transform: rotateY(180deg); 
 }
 
 .stats {
@@ -255,8 +254,8 @@ button {
 }
 
 .card.correct {
-    background-color: #ff0083; /* ��� ��� ���� �������� ������� */
-    pointer-events: none; /* ���� ����� ����� �� ������ */
+    background-color: #ff0083; 
+    pointer-events: none; 
 }
 
 #start-game-btn {
@@ -294,23 +293,21 @@ button {
 }
 /*hangMan*/
 .failedGuess b {
-    display: inline; /* Ensure guesses are shown inline */
-    margin-right: 5px; /* adds space between guesses */
+    display: inline; 
+    margin-right: 5px; 
 }
 /***********************------------------------------------------------------------*/
 .word-display {
-    list-style-type: none; /* Remove default list styling */
+    list-style-type: none; 
     padding: 0;
-    /* Remove default padding */
     margin: 0;
-     /* Remove default margin */
-    text-align: center; /* Center-align the text */
+    text-align: center; 
 }
 
     .word-display .letter {
-        display: inline; /* Display letters inline */
-        font-size: 24px; /* Adjust font size as needed */
-        margin: 5px; /* Add spacing between letters */
+        display: inline; 
+        font-size: 24px; 
+        margin: 5px; 
     }
 
 
@@ -340,15 +337,14 @@ button {
     background-color: #ff4081;
     color: white;
     cursor: pointer;
-    flex: 1 1 auto; /* Allow buttons to grow/shrink */
-    max-width: 50px; /* Max width for each button */
+    flex: 1 1 auto;
+    max-width: 50px; 
 }
 
     #button-container button:hover {
         background-color: #e00067;
     }
 
-/* Media query for smaller screens */
 @media (max-width: 600px) {
     #button-container button {
         font-size: 14px;

@@ -1,5 +1,5 @@
 // JavaScript source code
-
+//for the homepage quiz
 
 const authorsAPI = "https://localhost:7225/api/Authors";
 const gameAPI = "https://localhost:7225/api/Score";
