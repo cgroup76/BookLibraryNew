@@ -979,7 +979,8 @@
         }
 
         function loadPosts(clubId) {
-            ajaxCall("GET", clubBooksAPI + `/getPostPerClub?clubId=${clubId}`, null, successToLoadPost, errorToshowclubMembers)
+            let currenUserId = JSON.parse(localStorage.getItem("loginUserDetails")).userId
+            ajaxCall("GET", clubBooksAPI + `/getPostPerClub?clubId=${clubId}&userId=${currenUserId}`, null, successToLoadPost, errorToshowclubMembers)
         }
 
         // show posts

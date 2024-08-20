@@ -1,6 +1,6 @@
 // JavaScript source code
 //url images
-let hmPicture0 = `<svg xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
+let hmPicture0 = `<svg class="hang-photo" xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
             <g id = "Group_688" data-name="Group 688" transform = "translate(-219 -183)" >
             <rect id="Rectangle_2974" data-name="Rectangle 2974" width="5" height="61.733" transform="translate(310.627 183.247) rotate(45)"/>
             <rect id="Rectangle_2966" data-name="Rectangle 2966" width="5" height="298.232" rx="2.5" transform="translate(517.232 469) rotate(90)"/>
@@ -9,7 +9,7 @@ let hmPicture0 = `<svg xmlns="http://www.w3.org/2000/svg" width="298.232" height
             <rect id="Rectangle_2989" data-name="Rectangle 2989" width="5" height="49" rx="2.5" transform="translate(449 184)"/>
             </g >
             </svg > `
-let hmPicture1 = `<svg xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
+let hmPicture1 = `<svg class="hang-photo" xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
             <g id="Group_691" data-name="Group 691" transform="translate(-219 -183)">
                 <rect id="Rectangle_2974" data-name="Rectangle 2974" width="5" height="61.733" transform="translate(310.627 183.247) rotate(45)" />
                 <rect id="Rectangle_2966" data-name="Rectangle 2966" width="5" height="298.232" rx="2.5" transform="translate(517.232 469) rotate(90)" />
@@ -22,7 +22,7 @@ let hmPicture1 = `<svg xmlns="http://www.w3.org/2000/svg" width="298.232" height
                 <rect id="Rectangle_2989" data-name="Rectangle 2989" width="5" height="49" rx="2.5" transform="translate(449 184)" />
             </g>
         </svg>`
-let hmPicture2 = `<svg xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
+let hmPicture2 = `<svg class="hang-photo" xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
   <g id="Group_692" data-name="Group 692" transform="translate(-219 -183)">
     <rect id="Rectangle_2974" data-name="Rectangle 2974" width="5" height="61.733" transform="translate(310.627 183.247) rotate(45)"/>
     <rect id="Rectangle_2966" data-name="Rectangle 2966" width="5" height="298.232" rx="2.5" transform="translate(517.232 469) rotate(90)"/>
@@ -37,7 +37,7 @@ let hmPicture2 = `<svg xmlns="http://www.w3.org/2000/svg" width="298.232" height
   </g>
 </svg>
 `
-let hmPicture3 = `<svg xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
+let hmPicture3 = `<svg class="hang-photo" xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
   <g id="Group_694" data-name="Group 694" transform="translate(-219 -183)">
     <rect id="Rectangle_2970" data-name="Rectangle 2970" width="5" height="56" rx="2.5" transform="translate(448.965 281.247) rotate(45)"/>
     <rect id="Rectangle_2974" data-name="Rectangle 2974" width="5" height="61.733" transform="translate(310.627 183.247) rotate(45)"/>
@@ -53,7 +53,7 @@ let hmPicture3 = `<svg xmlns="http://www.w3.org/2000/svg" width="298.232" height
   </g>
 </svg>
 `
-let hmPicture4 = `<svg xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
+let hmPicture4 = `<svg class="hang-photo" xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
   <g id="Group_699" data-name="Group 699" transform="translate(-219 -183)">
     <rect id="Rectangle_2970" data-name="Rectangle 2970" width="5" height="56" rx="2.5" transform="translate(448.965 281.247) rotate(45)"/>
     <rect id="Rectangle_2971" data-name="Rectangle 2971" width="5" height="56" rx="2.5" transform="translate(450.5 284.782) rotate(-45)"/>
@@ -70,7 +70,7 @@ let hmPicture4 = `<svg xmlns="http://www.w3.org/2000/svg" width="298.232" height
   </g>
 </svg>
 `
-let hmPicture5 = `<svg xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
+let hmPicture5 = `<svg class="hang-photo" xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
   <g id="Group_698" data-name="Group 698" transform="translate(-16059.232 -14400)">
     <rect id="Rectangle_2987" data-name="Rectangle 2987" width="5" height="289" rx="2.5" transform="translate(16107.232 14400)"/>
     <g id="Group_697" data-name="Group 697">
@@ -93,7 +93,7 @@ let hmPicture5 = `<svg xmlns="http://www.w3.org/2000/svg" width="298.232" height
 </svg>
 `
 let hmPicture6 =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
+    `<svg class="hang-photo" xmlns="http://www.w3.org/2000/svg" width="298.232" height="291" viewBox="0 0 298.232 291">
                 <g id="Group_700" data-name="Group 700" transform="translate(-16059.232 -14400)">
                     <rect id="Rectangle_2987" data-name="Rectangle 2987" width="5" height="289" rx="2.5" transform="translate(16107.232 14400)" />
                     <g id="Group_697" data-name="Group 697">
