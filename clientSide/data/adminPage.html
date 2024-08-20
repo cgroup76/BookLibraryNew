@@ -16,6 +16,7 @@
 
     <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!--signalR-->
     <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@7.0.0/dist/browser/signalr.min.js"></script>
 
 </head>
@@ -145,7 +146,7 @@
         var allAuthor = [];
 
         $(document).ready(function () {
-            $('.logout').click(logoutUser);
+         /*   $('.logout').click(logoutUser);*/
             $('.closeTable').click(closeTable);
             $("#bookTableContainer").hide();
             $("#usersTableContainer").hide();
@@ -167,25 +168,6 @@
             });
         }
 
-        function logoutUser() {
-            let user = JSON.parse(localStorage.getItem("loginUserDetails"));
-            if (user) {
-                let userIdToLogout = user.userId;
-                ajaxCall("PUT", `${usersAPI}/logoutUser`, JSON.stringify(userIdToLogout), successLogout, errorLogout);
-            }
-        }
-
-        function successLogout(status) {
-            if (status) {
-                localStorage.clear();
-                window.location.href = "HTMLPage1.html";
-            }
-        }
-
-        function errorLogout(errorMessage) {
-            console.log(errorMessage);
-            Swal.fire('Error', 'Failed to logout. Please try again.', 'error');
-        }
 
         function showBooks() {
 
