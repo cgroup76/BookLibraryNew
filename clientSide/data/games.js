@@ -271,12 +271,16 @@ function pickRandomWord(array) {
 // create keyboard
 function createAlphabetButtons() {
     const row1 = document.getElementById('row-1');
-    const row2 = document.getElementById('row-2');
+    //const row2 = document.getElementById('row-2');
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     for (let i = 0; i < alphabet.length; i++) {
         let letter = alphabet[i];
+        let divBtn = document.createElement('div');
+        divBtn.classList.add('col-lg-1');
+        divBtn.classList.add('col-2');
         let button = document.createElement('button');
+        divBtn.appendChild(button);
         button.innerText = letter;
         button.id = 'button-' + letter;
 
@@ -288,13 +292,14 @@ function createAlphabetButtons() {
             this.style.cursor = 'not-allowed';
 
         });
+        row1.appendChild(divBtn); // First 13 letters go to row 1
 
-        // Append button to the appropriate row
-        if (i < 13) {
-            row1.appendChild(button); // First 13 letters go to row 1
-        } else {
-            row2.appendChild(button); // Last 13 letters go to row 2
-        }
+        //// Append button to the appropriate row
+        //if (i < 13) {
+        //    row1.appendChild(button); // First 13 letters go to row 1
+        //} else {
+        //    row2.appendChild(button); // Last 13 letters go to row 2
+        //}
     }
 }
 
@@ -427,31 +432,6 @@ let questionNumInQuiz = 0;
 let topGameResults = [];
 
 
-function ajaxCall(method, api, data, successCB, errorCB) {
-    $.ajax({
-        type: method,
-        url: api,
-        data: JSON.stringify(data),
-        cache: false,
-        contentType: "application/json",
-        dataType: "json",
-        success: successCB,
-        error: errorCB
-    });
-}
-function ajaxCallSync(method, api, data, successCB, errorCB) {
-    $.ajax({
-        type: method,
-        url: api,
-        data: data,
-        cache: false,
-        async: false,
-        contentType: "application/json",
-        dataType: "json",
-        success: successCB,
-        error: errorCB
-    });
-}
 function shuffle(array) {
     let index = array.length - 1;
 
