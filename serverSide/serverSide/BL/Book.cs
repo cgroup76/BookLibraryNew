@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System;
 
 namespace serverSide.BL
 {
@@ -36,8 +37,7 @@ namespace serverSide.BL
             this.isEbook = isEbook;
             this.isActive = isActive;
             this.isAvailable = isAvailable;
-            this.price = Math.Round(randomPrice.NextInt64(50, 301) + randomPrice.NextDouble(), 2);  // generate a random decimal price between 50 to 300 
-            this.category = category;
+            this.price = Math.Round(randomPrice.Next(50, 301) + randomPrice.NextDouble(), 2);  // generate a random decimal price between 50 to 300          
             this.smallThumbnail = smallThumbnail;
             this.thumbnail = thumbnail;
             this.numOfPages = numOfPages;
@@ -49,6 +49,7 @@ namespace serverSide.BL
             this.numOfReviews = numOfReviews;
             this.rating = rating;
             this.textSnippet = textSnippet;
+            this.category = category;
         }
 
         public int Id { get => id; set => id = value; }
@@ -57,7 +58,7 @@ namespace serverSide.BL
         public int IsEbook { get => isEbook; set => isEbook = value; }
         public int IsActive { get => isActive; set => isActive = value; }
         public int IsAvailable { get => isAvailable; set => isAvailable = value; }
-        public double Price { get => price; set => price = value; }
+        public double Price { get => price; }
         public string Category { get => category; set => category = value; }
         public string SmallThumbnail { get => smallThumbnail; set => smallThumbnail = value; }
         public string Thumbnail { get => thumbnail; set => thumbnail = value; }
