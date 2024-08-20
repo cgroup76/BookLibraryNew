@@ -11,14 +11,20 @@ function checkForLoginUser() {
         $('.myBooks').show();
         $('.requestBox').show();
         $('.adminPage').hide();
+        $('.bookClubPage').show();
         //check if the login user is admin and open the access to admin page
         if (loginUser.userName == "admin") {
             $('.adminPage').show();
             $('.userNameBox').hide();
+            $('.bookClubPage').hide();
+            $('.userNameBox').hide();
+            $('.myBooks').hide();
+            $('.requestBox').hide(); 
         }
 
     }
     else {
+        $('.bookClubPage').hide();
         $('.userNameBox').hide();
         $('.logoutBox').hide();
         $('.loginBox').show();
