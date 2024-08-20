@@ -25,7 +25,7 @@ namespace serverSide.Controllers
 
         // POST api/<ScoreController>
         [HttpPost]
-        public bool Post(Score newScore)
+        public bool Post([FromBody]Score newScore)
         {
             return Score.insertNewScore(newScore);
         }

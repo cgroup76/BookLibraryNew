@@ -130,7 +130,7 @@
                 <div class="cardMain mb-4 game-card">
                     <h6>HangMan</h6>
                     <div class="card-body text-center">
-                        <button id="HangMan">Play</button>
+                        <button class="playBtn" id="HangMan">Play</button>
                     </div>
                 </div>
             </div>
@@ -138,7 +138,7 @@
                 <div class="cardMain mb-4 game-card">
                     <h6>Memory Game</h6>
                     <div class="card-body text-center">
-                        <button id="MemoryGame">Play</button>
+                        <button  class="playBtn" id="MemoryGame">Play</button>
                     </div>
                 </div>
             </div>
@@ -146,7 +146,7 @@
                 <div class="cardMain mb-4 game-card">
                     <h6>Quiz</h6>
                     <div class="card-body text-center">
-                        <button id="BookQuiz">Play</button>
+                        <button class="playBtn" id="BookQuiz">Play</button>
                     </div>
                 </div>
             </div>
@@ -222,105 +222,7 @@
     <div id="overlay"></div>
 
     <script src="games.js"></script>
-    <script>
-        const gameAPI = "https://localhost:7225/api/Score";
-        const booksAPI = "https://localhost:7225/api/Books";
-        const authorsAPI = "https://localhost:7225/api/Authors";
-        let gameName;
-        let allBooks = [];
-        let wordList = [];
-        let allAuthors = [];
 
-        $(document).ready(function () {
-
-            getBooks();
-            loadAuthors();
-            $('button').click(openGame)
-            $('.closeGameButton').click(closeGame);
-            $(".btn-next-back").hide();
-            $(".btn-back").hide();
-            $(".btn-back").click(backQuestion);
-            $(".btn-next").click(nextQuestion);
-            $(".clear-ans-btn").click(clearAnswersCheckBox);
-            $(".start-quiz").click(startQuiz)
-        });
-
-        function loadAuthors() {
-            if (allAuthors.length == 0) {
-                ajaxCall("GET", authorsAPI, null, SuccessLoadAuthors, errorLoadAuthors);
-            }
-        }
-
-
-        function SuccessLoadAuthors(authors) {
-            allAuthors = authors;
-        }
-
-
-
-        function errorLoadAuthors(error) {
-            console.log('Error loading authors:', error);
-        }
-        function getBooks() {
-            if (allBooks.length == 0) {
-                ajaxCall("GET", booksAPI, null, getAllBooks, errorToLoadBooks);
-            }
-        }
-
-        function getAllBooks(books) {
-            allBooks = books;
-            for (let i = 0; i < books.length; i++) {
-                wordList.push(books[i].Title);
-            }
-        }
-
-        function errorToLoadBooks() {
-            console.error("The books could not be loaded.");
-        }
-
-        function closeGame() {
-            $('#games').removeClass('active');
-            $('#overlay').removeClass('active');
-            clearHangMan();
-            closeQuiz();
-        }
-        function openGame() {
-            gameName = $(this).attr('id');
-            $('#games').addClass('active');
-            $('#overlay').addClass('active');
-
-            console.log(gameName);
-            switch (gameName) {
-                case 'HangMan':
-                    {
-                        $('#container-quiz').hide()
-                        $('#container-Memorybody').hide()
-                        $('#container-hangMan').show()
-                        startHangManGame();
-                    }
-                    break;
-                case 'MemoryGame':
-                    {
-                        $('#container-quiz').hide()
-                        $('#container-Memorybody').show()
-                        $('#container-hangMan').hide()
-                        startMemoryGame();
-
-                    }
-                    break;
-                case 'BookQuiz': {
-                    $('#container-quiz').show()
-                    $('#container-Memorybody').hide()
-                    $('#container-hangMan').hide()
-                    createQuiz();
-                }
-                    break;
-            }
-
-        }
-
-
-    </script>
 </body>
 
 </html>
