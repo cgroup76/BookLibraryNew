@@ -32,12 +32,12 @@ namespace serverSide.Controllers
 
         // POST api/<BookClubController>
         [HttpPost("creatClub")]
-        public IActionResult CreateClub([FromQuery] string clubName, [FromQuery] int userId)
+        public IActionResult CreateClub(string clubName, int userId)
         {
-           int status= BookClub.createNewClub( clubName, userId);
+           int status= BookClub.createNewClub(clubName, userId);
             if (status == 1) { return Ok(true); }
 
-            else if (status == 0) { return NotFound(false); }
+            else if (status <= 0) { return NotFound(false); }
 
             return Unauthorized("user session has ended");
         }  
