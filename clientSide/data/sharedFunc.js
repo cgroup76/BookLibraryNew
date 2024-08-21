@@ -445,7 +445,7 @@ function errorToHandle() {
 //connect to hub chat for live message
 
 let connection = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:7225/chatHub")
+    .withUrl("https://livemessages20240821010349.azurewebsites.net/chatHub")
     .build();
 
 connection.on("ReceiveMessage", function (user, message) {
