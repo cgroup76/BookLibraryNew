@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Store</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!--<link rel="stylesheet" href="styles.css">-->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
             integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
             crossorigin="anonymous"></script>
@@ -17,453 +14,10 @@
     <!--imoji-->
     <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.2/dist/emoji-button.min.js"></script>
 
-    <style>
-        .pinkB {
-            background-color: #ff0083;
-        }
-
-        .pink {
-            color: #ff0083;
-        }
-
-        .add-image-btn {
-            background-color: #ff0083;
-            margin-bottom: 10px;
-        }
-
-        .card-body, club-card {
-            font-size: 15px;
-            color: white;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .uploaded-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border: 1px solid #ddd;
-            margin-top: 10px;
-        }
-
-        .loading-spinner {
-            display: none;
-            margin-top: 10px;
-        }
-
-        #result-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border: 1px solid #ddd;
-            margin-top: 10px;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-
-
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        #form-modal {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: #2c2c2c;
-            color: #fff;
-        }
-
-        .club-card {
-            height: 350px;
-            width: 250px;
-            align-items: center;
-            background-color: #2c2c2c;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        #club-info-container {
-            position: fixed;
-            background-color: #2c2c2c;
-            color: black;
-            text-align: center;
-            height: 550px;
-            width: 500px;
-            max-height: 80%;
-            max-width: 50%;
-            top: 55%;
-            left: 50%;
-            padding: 1%;
-            transform: translate(-50%, -50%);
-            transition: 200ms ease-in-out;
-            border: 1px solid #ff0083;
-            border-radius: 5px;
-            display: none;
-            z-index: 2;
-            overflow: auto;
-        }
-
-        .club-info {
-            background-color: #2c2c2c;
-            color: white;
-        }
-
-        .add-image-btn {
-            background-color: #ff0083;
-            margin-bottom: 10px;
-        }
-
-        .card-body, book-card {
-            font-size: 15px;
-            color: black;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .uploaded-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border: 1px solid #ddd;
-            margin-top: 10px;
-        }
-
-        .loading-spinner {
-            display: none;
-            margin-top: 10px;
-        }
-
-        #result-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border: 1px solid #ddd;
-            margin-top: 10px;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-
-
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        #form-modal {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: rgba(0, 0, 0, .125);
-            color: #fff;
-        }
-
-        .form-group {
-            align-content: center;
-        }
-        /*        .modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1001;
-        }*/
-
-        /*       .modal-content {
-            background-color: #2c2c2c;
-            color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            width: 50%;
-        }*/
-        .modal-content {
-            width: 50%;
-            top: 25%;
-            right: 25%;
-            left: 25%;
-            color: black;
-            display: flex;
-            background-color: #2c2c2c;
-            color: #fff;
-            background-clip: border-box;
-            border: 1px solid rgba(0, 0, 0, .125);
-            border-radius: .25rem;
-        }
-
-        #club-info-container.active {
-            display: block;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .create-post {
-            width: 400px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            padding: 16px;
-            font-family: Arial, sans-serif;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 12px;
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .user-name {
-            font-weight: bold;
-        }
-
-        .post-privacy {
-            color: gray;
-            font-size: 12px;
-            text-align: left;
-        }
-
-        textarea {
-            width: 100%;
-            height: 80px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 8px;
-            font-size: 14px;
-            resize: none;
-        }
-
-        .actions {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-        }
-
-        .add-post-options {
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: gray;
-            cursor: pointer;
-        }
-
-            .add-post-options:hover {
-                color: #007bff;
-            }
-
-        .post-btn {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-            .post-btn:disabled {
-                background-color: #aaa;
-            }
-
-
-        /* Emoji Picker styles */
-        .emoji-picker {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            position: absolute;
-            width: 300px;
-            max-height: 200px;
-            overflow-y: auto;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 100;
-        }
-
-        .emoji-grid {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .emoji {
-            font-size: 24px;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-            .emoji:hover {
-                background-color: #f0f0f0;
-                border-radius: 4px;
-            }
-
-        /* Hidden by default */
-        .hidden {
-            display: none;
-        }
-
-        .posts-container {
-            width: 400px;
-            margin-top: 20px;
-        }
-
-        .post {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            padding: 16px;
-            font-family: Arial, sans-serif;
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .post-profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 12px;
-        }
-
-        .post-user-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .post-user-name {
-            font-weight: bold;
-        }
-
-        .post-timestamp {
-            color: gray;
-            font-size: 12px;
-            text-align: left;
-        }
-
-        .post-content {
-            margin-top: 12px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        #overlay {
-            position: fixed;
-            opacity: 0;
-            transition: 200ms ease-in-out;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0,0,0,0.5);
-            pointer-events: none;
-            z-index: 1;
-        }
-
-            #overlay.active {
-                opacity: 2;
-                pointer-events: all;
-            }
-
-        .add-post-image, .post-pic {
-            height: 150px;
-            padding: 2% 0;
-        }
-
-        .post-likes {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .like-btn {
-            border: none;
-            background: none;
-            padding: 0;
-            cursor: pointer;
-        }
-
-            .like-btn:focus {
-                outline: none; /* Ensure there's no outline on focus */
-            }
-
-            .like-btn i {
-                font-weight: 100;
-            }
-
-            .like-btn.liked i {
-                font-weight: 900;
-                color: #ff0083;
-            }
-
-        /* Loading Spinner Style */
-        #loadingSpinner {
-            display: none;
-            border: 8px solid #f3f3f3; /* Light grey */
-            border-top: 8px solid #3498db; /* Blue */
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 2s linear infinite;
-            position: relative;
-            top: 50%;
-            left: 50%;
-            margin-top: -30px;
-            margin-left: -30px;
-            z-index: 10
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="booksClub.css">
 
 </head>
 <body>
@@ -513,35 +67,32 @@
 
     <section class="hero text-center py-5">
         <div class="container">
-            <h2 class="display-4">My Clubs</h2>
+            <h2 class="display-4">Book Clubs</h2>
             <nav class="navbar navbar-dark bg-dark justify-content-between search-books-bar">
                 <span class="left-pan">
                     <a class="navbar-brand pink">Search Clubs</a>
-                    <svg class="speech-to-text" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic" viewBox="0 0 16 16">
-                        <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5" />
-                        <path d="M10 8a2 2 0 1 1-4 0V3a2 2 0 1 1 4 0zM8 0a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V3a3 3 0 0 0-3-3" />
-                    </svg>
+
                 </span>
                 <form class="form-inline">
                     <input class="form-control mr-sm-2 search-string" list="clubSearch" type="search" placeholder="Search By Book Title" aria-label="Search">
                     <datalist id="clubSearch"></datalist>
                     <button id="search-club-btn" class="btn btn-outline-dark my-2 my-sm-0 pinkB " type="button"> Search</button>
+                    <button id="clear-search-club-btn" class="btn btn-outline-dark my-2 my-sm-0 pinkB " type="button"> Clear</button>
                 </form>
                 <div class="nav-item dropdown requestBox">
-                    <button class="btn btn-outline-dark my-2 my-sm-0 pinkB" onclick="createNewClub()" type="button">
+                    <button class="btn btn-outline-dark my-2 my-sm-0 pinkB create-new-club-btn" onclick="createNewClub()" type="button">
                         Create new book club
                     </button>
 
-                    <!-- Form Modal -->
+
                     <div id="form-modal" class="modal">
                         <div class="modal-content">
                             <span class="close-btn" onclick="closeForm()">&times;</span>
-                            <h2>Create New Book Club</h2>
+                            <h2 class="pink">Create New Book Club</h2>
                             <form id="create-club-form">
                                 <div class="form-group">
-                                    <label for="club-title">Book Title:</label>
+                                    <label for="club-title" class="white">Select Book To Open A Club For:</label>
                                     <select id="club-title" class="form-control">
-                                        <!-- Options will be populated dynamically -->
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-light pinkB">Create Club</button>
@@ -564,28 +115,39 @@
     <div id="overlay" class="overlay"></div>
 
     <div id="club-info-container">
-        <div class="club-info-header">
-            <button data-close-button class="close-button closeBookInfoButton" onclick="closeclubInfo()">&times;</button>
-            <button type="button" class="btn btn-light pinkB" id="join-club" onclick="joinClub()">Join club</button>
+        <div class="club-info-header container">
+            <div class="row">
+                <button data-close-button class="close-button closeBookInfoButton" onclick="closeclubInfo()">&times;</button>
+            </div>
             <br />
-            <div class='card-body'>
-                <img class="club-image-info" />
-                <h1 class="club-info-title"></h1>
-                <div class="club-members"></div>
-              
-                <div class='image-preview'></div>
+            <div class='card-body row'>
+                <div class="col-12">
+                    <img class="club-image-info" />
+                </div>
+                <div class="col-12">
+                    <br />
+                    <h3 class="club-info-title white"></h3>
+                    <br />
+                    <button type="button" class="btn btn-light pinkB" id="join-club" onclick="joinClub()">Join club</button>
+                    <br />
+                </div>
+                <div class="col-12">
+                    <br />
+                    <h6 class="pink">All Club's Members:</h6>
+                </div>
+                <br />
+                <div class="container mt-5">
+                    <div class="position-relative">
+                        <button class="scroll-button left" onclick="scrollLeft()">&#10094;</button>
 
-                <div class="add-post-to-club">
-                    <input type="text" class="text-input form-control" placeholder="Enter description here...">
-                    <img class="result-img img-fluid" style="display:none;" alt="Generated Image">
-                    <div class="comment">
-                        <label for="comment" class="pink">Tell us more:</label><br>
+                        <div class="scroll-container club-members">
+                        </div>
 
-
+                        <button class="scroll-button right" onclick="scrollRight()">&#10095;</button>
                     </div>
                 </div>
 
-                <div class="create-post">
+                <div class="create-post col-12">
                     <div class="header">
                         <svg class='profile-pic' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z" /></svg>
                         <div class="user-info">
@@ -602,7 +164,7 @@
                     <div class="actions">
                         <button class="add-post-options emoji-btn"><i class="fas fa-smile"></i></button>
                         <input type='file' class='form-control-file image-input' id="uploadImage" style='display:none;'>
-                        <button class="add-post-options add-ai-btn generate-btn">
+                        <button class="add-post-options add-ai-btn">
                             <i class="fas fa-microchip"></i>
                         </button>
                         <button class="add-post-options add-image-btn"><i class="fas fa-image"></i></button>
@@ -624,9 +186,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="text-to-image-div col-12 d-none">
+                        <input type="text" class="text-input-to-image form-control" placeholder="Enter description here...">
+                        <button type="button" class="generate-btn">Generate Image</button>
+                    </div>
                     <button class="btn btn-outline-dark pinkB post-btn">Post</button>
                 </div>
-                <div class="posts-container"></div>
+            </div>
+            <div class="container">
+                <div class="posts-container row"></div>
             </div>
         </div>
     </div>
@@ -642,600 +210,7 @@
         </div>
     </footer>
 
-    <script>
-
-        $(document).ready(function () {
-
-      /*      checkForLoginUser();*/
-
-            loadBooks();
-
-            getClubs();
-
-            $('#search-club-btn').click(searchClub);
-
-            $('.post-btn').click(sendPost);
-
-            $('.add-image-btn').click(addImageToPost);
-
-        });
-
-        var booksAPI = "https://localhost:7225/api/Books";
-        var clubBooksAPI = "https://localhost:7225/api/BookClub";
-        var uploadFilesAPI = 'https://localhost:7225/api/upload';
-        var usersAPI = "https://localhost:7225/api/IUsers";
-        var imageFolder = "https://localhost:7225/Images"; 
-        var allBooks = [];
-        var allClubs = [];
-        let booksDict = [];
-        let clubsDict = [];
-        let currentClub;
-        let imageLink;
-        let currentLikeBtn;
-        let imageCounter = 0;
-
-
-        function searchClub() {
-            let searchstring = $('.search-string').val();
-            console.log(searchstring);
-            let searchClub = [];
-            allClubs.forEach((club) => {
-                if (club.ClubName == searchstring) {
-                    searchClub.push(club);
-                }
-            })
-            console.log(searchClub);
-            const clubsContainer = document.getElementById("container-clubs");
-            let clubsHtml = '';
-            if (!clubsContainer) {
-                console.error("Container for clubs not found.");
-                return;
-            }
-
-            searchClub.forEach(club => {
-                clubsHtml += `
-                                <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
-                                    <div class='col-md-3 club-info'>
-                                        <div class='card mb-4 club-card'>
-                                                <h6 class='card-title'>${club.ClubName}</h6>
-                                                <img src='${club.ClubImage}'>
-                                                <br/>
-                                                <button type="submit" class="btn btn-light pinkB">Add post</button>
-                                        </div>
-                                    </div></a>`
-                    ;
-            });
-            clubsContainer.innerHTML = clubsHtml;
-        }
-        // Function to initialize clubsDict
-        function activateSearchBooksBar() {
-            allClubs.forEach((club) => {
-                let text = club.Title;
-                clubsDict[JSON.stringify(club)] = text;
-            });
-        }
-
-        // create a new club
-
-        function createNewClub() {
-            console.log(allBooks);
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('form-modal').style.display = 'block';
-
-            const clubTitleSelect = document.getElementById('club-title');//make dropdown with book titles
-            clubTitleSelect.innerHTML = '';//clear previous select
-            booksDict.forEach(bookTitle => {
-                const option = document.createElement('option');
-                option.value = bookTitle;
-                option.textContent = bookTitle;
-                clubTitleSelect.appendChild(option);
-            });
-            document.getElementById('create-club-form').onsubmit =
-                async function (event) {
-                    event.preventDefault(); //prevent from the browser to do the default action, like in this case to load the browser again
-                    let selectedTitle = clubTitleSelect.value;
-
-                    var userId = JSON.parse(localStorage.getItem("loginUserDetails"))
-
-                    if (userId != null) {
-
-                        userId = userId.userId; // set the user id from the json
-                    }
-
-                    console.log(userId);
-                    await ajaxCall("POST", clubBooksAPI + `/creatClub?clubName=${selectedTitle}&userId=${userId}`, JSON.stringify({ ClubName: selectedTitle, userId: userId }), successCreateBookClub, errorCreateBookClub);
-                    closeForm();
-                    ajaxCall("GET", clubBooksAPI + "/getAllClubs", null, showAllClubs, errorR);
-
-
-                }
-        }
-        function closeForm() {
-            console.log("Closing form");
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('form-modal').style.display = 'none';
-        }
-
-        function successCreateBookClub() {
-            console.log("success Create Book Club");
-        }
-        function errorCreateBookClub(err) {
-            console.log(err)
-        }
-        function errorR(err) {
-            console.log(err);
-        }
-
-        function getClubs() {
-            if (allClubs.length == 0) {
-                ajaxCall("GET", clubBooksAPI + "/getAllClubs", null, showAllClubs, errorR);
-
-            }
-            else {
-                showAllClubs(allClubs);
-            }
-        }
-        function successjoinClub() {
-            Swal.fire("success join club");
-            showclubInfo(currentClub.ClubId);
-        }
-
-        // join club
-
-        function joinClub() {
-
-            var userId = JSON.parse(localStorage.getItem("loginUserDetails"))
-
-            if (userId != null) {
-
-                userId = userId.userId; // set the user id from the json
-                ajaxCall("POST", clubBooksAPI + `/joinClub?clubId=${currentClub.ClubId}&userId=${userId}`, null, successjoinClub, errorR);
-            }
-
-        }
-        // show all clubs
-
-        function showAllClubs(response) {
-            allClubs = response;
-            const clubsContainer = document.getElementById("container-clubs");
-            let clubsHtml = '';
-
-            if (!clubsContainer) {
-                console.error("Container for clubs not found.");
-                return;
-            }
-
-            allClubs.forEach(club => {
-                clubsHtml += `
-                                <a id='club-info' onclick=showclubInfo(${club.ClubId}) >
-                                    <div class='col-md-3 club-info'>
-                                        <div class='card mb-4 club-card'>
-                                                <h6 class='card-title'>${club.ClubName}</h6>
-                                                <img src='${club.ClubImage}'>
-                                                <br/>
-                                                <p>Members in club:</p>
-                                                <span>${club.ClubMembers}</span>
-                                        </div>
-                                    </div></a>`
-                    ;
-            });
-            clubsContainer.innerHTML = clubsHtml;
-            setupGenerateButtons(); 
-
-            var clubNameSearchBar = "";
-            allClubs.forEach((club) => {
-                clubNameSearchBar += `<option value='${club.ClubName}'>`
-            })
-            $("#clubSearch").html(clubNameSearchBar);
-        }
-
-        function ajaxCall(method, url, data, successCallback, errorCallback) {
-            $.ajax({
-                type: method,
-                url: url,
-                data: data,
-                processData: false,  // Important for file uploads
-                contentType: false,  // Important for file uploads
-                success: successCallback,
-                error: errorCallback
-            });
-        }
-
-        function loadBooks() {
-          
-            if (allBooks.length == 0) {
-                ajaxCall("GET", booksAPI, null, showAllBooks, errorToLoadBooks);
-            }
-            else { showAllBooks(allBooks); }
-        }
-
-        function showAllBooks(response) {
-            allBooks = response;
-          
-            activateSearchBooksBar();
-            populateDropdown(booksDict);
-        }
-
-        function errorToLoadBooks() {
-            console.log("Error loading books");
-        }
-
-        function activateSearchBooksBar() {
-            allBooks.forEach((book) => {
-                let text = book.Title;
-                booksDict.push(text);
-            });
-            console.log(booksDict);
-        }
-
-        function populateDropdown(items) {
-            var dropdownMenu = document.getElementById('create');
-            dropdownMenu.innerHTML = '';
-            items.forEach(item => {
-                var listItem = document.createElement('a');
-                listItem.className = 'dropdown-item';
-                listItem.href = '#';
-                listItem.textContent = item;
-
-                listItem.addEventListener('click', function () {
-                    document.querySelector('.text-input').value = item;  // Make sure this element exists
-                });
-
-                dropdownMenu.appendChild(listItem);
-            });
-        }
-
-        // Text to Image
-        async function queryTEXTtoIMG(text) {
-            const response = await fetch(
-                "https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4",
-                {
-                    headers: { Authorization: "Bearer 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" },
-                    method: "POST",
-                    body: JSON.stringify({ inputs: text }),
-                }
-            );
-            if (!response.ok) {
-                throw new Error("Image generation failed. Please try again.");
-            }
-            return response.blob();
-        }
-        
-        async function TextToImage(cardBody) {
-            const textInput = cardBody.querySelector(".text-input").value.trim(); // עדכון לקרוא את שדה התיאור מהכרטיס
-
-            console.log("Text input value:", textInput); // Debugging line
-
-            if (!textInput) {
-                alert("Please enter a description.");
-                return;
-            }
-
-            try {
-                // Show the loading spinner
-                loadingSpinner.style.display = "block";
-
-                const imageBlob = await queryTEXTtoIMG(textInput);
-
-                // Hide the loading spinner once the image is generated
-                loadingSpinner.style.display = "none";
-
-                const imageUrl = URL.createObjectURL(imageBlob);
-
-                const formData = new FormData();
-                formData.append('file', imageBlob, `generated-image${imageCounter++}.png`);
-            
-                $.ajax({
-                    type: "POST",
-                    url: uploadFilesAPI + "/upload",
-                    contentType: false,
-                    processData: false,
-                    async: false,
-                    data: formData,
-                    success: showImage,
-                    error: errorR
-                });
-
-            } catch (error) {
-                // Hide the loading spinner once the image is generated
-                loadingSpinner.style.display = "none";
-
-                alert(error.message);
-
-            }
-        }
-
-        // השתמש בפונקציה הזו כדי להוסיף מאזינים לכפתורים
-        function setupGenerateButtons() {
-            document.querySelectorAll('.generate-btn').forEach(button => {
-                button.addEventListener('click', function () {
-                    const cardBody = this.closest('.card-body');
-                    TextToImage(cardBody); // קרא לפונקציה עם כרטיס ספציפי
-                });
-            });
-        }
-        //function that show club extra information
-        function closeclubInfo() {
-            $('#club-info-container').removeClass('active');
-            $('#overlay').removeClass('active');
-
-            document.querySelector('textarea').value = "";
-        }
-
-        // open club info 
-
-        function showclubInfo(clubId) {
-            let currentUser = JSON.parse(localStorage.getItem("loginUserDetails")).userName;
-            const postsContainer = document.querySelector('.posts-container');
-            postsContainer.innerHTML = "";
-            $('.add-post-image').hide();
-
-            $("#join-club").show();
-
-            ajaxCall("GET", clubBooksAPI + `/getAllClubMembers?clubId=${clubId}`, null, seccessToshowclubMembers, errorToshowclubMembers)
-
-            loadPosts(clubId);
-
-            allClubs.forEach((club) => {
-                if (club.ClubId == clubId) {
-                    currentClub = club;
-                }
-            })
-
-            console.log(currentClub);
-            $('#club-info-container').addClass('active');
-            $('#overlay').addClass('active');
-            $('.club-info-title').html(currentClub.ClubName);
-            $('.user-name').html(currentUser);
-            $('.club-image-info').attr("src", currentClub.ClubImage);
-
-        }
-
-        function loadPosts(clubId) {
-            let currenUserId = JSON.parse(localStorage.getItem("loginUserDetails")).userId
-            ajaxCall("GET", clubBooksAPI + `/getPostPerClub?clubId=${clubId}&userId=${currenUserId}`, null, successToLoadPost, errorToshowclubMembers)
-        }
-
-        // show posts
-
-        function successToLoadPost(posts) {
-            const postsContainer = document.querySelector('.posts-container');
-            postsContainer.innerHTML = "";
-
-            posts.forEach((post) => {
-                // Create elements for the post
-                const postDiv = document.createElement('div');
-                postDiv.classList.add('post');
-
-                const postHeader = document.createElement('div');
-                postHeader.classList.add('post-header');
-
-                const postProfilePic = document.createElement('img');
-                postProfilePic.src = "";
-                postProfilePic.alt = 'Profile Picture';
-                postProfilePic.classList.add('post-profile-pic');
-
-                const postUserInfo = document.createElement('div');
-                postUserInfo.classList.add('post-user-info');
-
-                const postUserName = document.createElement('span');
-                postUserName.classList.add('post-user-name');
-                postUserName.textContent = post.UserName;
-
-                const postTimestamp = document.createElement('span');
-                postTimestamp.classList.add('post-timestamp');
-                postTimestamp.textContent = (post.PostDate).split(" ")[0]; // Adds current timestamp
-
-                postUserInfo.appendChild(postUserName);
-                postUserInfo.appendChild(postTimestamp);
-
-                postHeader.appendChild(postProfilePic);
-                postHeader.appendChild(postUserInfo);
-
-                const postContentDiv = document.createElement('div');
-                postContentDiv.classList.add('post-content');
-                postContentDiv.textContent = post.Description;
-
-                const likeButton = document.createElement('button');
-                likeButton.classList.add('like-btn');
-                likeButton.innerHTML = '<i class="fas fa-heart"></i> ';
-
-                const likeNum = document.createElement('span');
-                likeNum.classList.add('num-of-likes');
-                likeNum.innerHTML = post.Likes;
-
-                const postLikesDiv = document.createElement('div');
-                postLikesDiv.classList.add('post-likes');
-                postLikesDiv.appendChild(likeNum)
-                postLikesDiv.appendChild(likeButton)
-
-                const postPic = document.createElement('img');
-                postPic.src = post.Image;
-                postPic.alt = 'post picture';
-                postPic.classList.add('post-pic');
-
-                // Add on click for the like button
-                likeButton.onclick = function () {
-                    postLike(post.UserId, post.PostId, this, this.parentElement);
-                };
-
-                // Append all elements to the post div
-                postDiv.appendChild(postHeader);
-                postDiv.appendChild(postPic);
-                postDiv.appendChild(postContentDiv);
-                postDiv.appendChild(postLikesDiv);
-
-                // Append the post to the posts container
-                postsContainer.prepend(postDiv); // Adds the post at the top of the container
-            })
-        }
-
-        function errorToshowclubMembers(err) {
-            console.log(err);
-        }
-        function seccessToshowclubMembers(members) {
-            let currentUserId = JSON.parse(localStorage.getItem("loginUserDetails")).userId
-            let html = "";
-            let status = false;
-
-            members.forEach((member) => {
-                html += `<p>${member.userName}</p>`
-
-                if (currentUserId == member.userId) {
-                    $("#join-club").hide();
-                    status = true;
-                }
-            })
-
-            if (status) { $(".add-post-to-club").show(); }
-            else { $(".add-post-to-club").hide(); }
-
-            $(".club-members").html(html);
-        }
-        function postReviewClub() {
-            if (document.querySelector('input[name="rating"]:checked') == null) { }
-            else {
-                bookRating = document.querySelector('input[name="rating"]:checked').value;
-            }
-            var comment = document.getElementById("comment").value;
-            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
-
-
-            ajaxCall("PUT", booksAPI + `/RateBook?bookID=${bookIdToRate}&newRating=${bookRating}&userID=${userId}&review=${comment}`, null, successRating, errorRating);
-
-            return false;
-        }
-
-        ///
-        function showMyBooks() { };
-        function closeBookInfo() { };
-        ///
-
-        function updateCharacterCount() {
-            const textInput = document.getElementById('comment');
-            const charCount = document.getElementById('charCount');
-            const currentLength = textInput.value.length;
-
-            charCount.textContent = `${currentLength}/255 characters`;
-        }
-
-
-        // emoji
-
-        const emojiBtn = document.querySelector('.emoji-btn');
-        const emojiPicker = document.querySelector('.emoji-picker');
-        const emojis = document.querySelectorAll('.emoji');
-        const textarea = document.querySelector('textarea');
-
-        // Toggle emoji picker visibility
-        emojiBtn.addEventListener('click', () => {
-            emojiPicker.classList.toggle('hidden');
-        });
-
-        // Add selected emoji to the textarea
-        emojis.forEach(emoji => {
-            emoji.addEventListener('click', () => {
-                textarea.value += emoji.textContent;
-                updateCharacterCount();
-                textarea.focus(); // Keep focus on the textarea after inserting emoji
-            });
-        });
-
-        // Close the emoji picker when clicking outside of it
-        document.addEventListener('click', (event) => {
-            if (!emojiBtn.contains(event.target) && !emojiPicker.contains(event.target)) {
-                emojiPicker.classList.add('hidden');
-            }
-        });
-
-        // send post
-        function sendPost() {
-
-            let text = document.querySelector('textarea').value;
-            let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
-            let image = imageLink;
-
-            ajaxCall("POST", clubBooksAPI + `/addNewPost?clubId=${currentClub.ClubId}&userId=${userId}&description=${text}&image=${image}`, null, successToPost, errorToPost);
-        }
-        function successToPost() {
-            Swal.fire("Post Was Published!");
-            loadPosts(currentClub.ClubId);
-        }
-        function errorToPost(error) {
-            if (error.status == 401) {
-
-                logoutUser('endSession');
-            }
-            else {
-                Swal.fire('Error', "Could not submit your post - please try again later", 'error');
-            }
-        }
-
-        // add like to post
-        let currentLikeDiv;
-
-        function postLike(userId, postId, likeBtn, likeDiv) {
-            currentLikeBtn = likeBtn;
-            currentLikeDiv = likeDiv;
-            ajaxCall("PUT", clubBooksAPI + `/addLikeToPost?postId=${postId}&userId=${userId}`, null, successToLike, errorLike)
-        }
-        function successToLike() {
-
-            // add 1 more like to the post
-            let oldLikeNum = Number(currentLikeDiv.querySelector('span').innerHTML); 
-
-            currentLikeDiv.querySelector('span').innerHTML = oldLikeNum + 1;
-
-            currentLikeBtn.classList.add("liked");
-            currentLikeBtn.disabled = true;
-        }
-        function errorLike(error) {
-            if (error.status == 401) {
-
-                logoutUser('endSession');
-            }
-            else {
-                Swal.fire('Error', "Could not submit your like - please try again later", 'error');
-            }
-        }
-        function addImageToPost() {
-
-            const fileInput = document.querySelector('.image-input');
-
-            fileInput.click();
-
-            fileInput.addEventListener('change', function () {
-                const Data = new FormData();
-                const files = $("#uploadImage").get(0).files;
-
-                // Add the uploaded file to the form data collection
-                if (files.length > 0) {
-                    for (let f = 0; f < files.length; f++) {
-                       Data.append("files", files[f]);
-                    }
-                    // Ajax upload  
-                    $.ajax({
-                        type: "POST",
-                        url: uploadFilesAPI,
-                        contentType: false,
-                        processData: false,
-                        async: false,
-                        data: Data,
-                        success: showImage,
-                        error: errorR
-                    });
-                }      
-            });
-        }
-
-        function showImage(data) {
-
-            imageLink = imageFolder + "/" + data;
-            console.log(imageLink)
-            $('.add-post-image').show();
-            $(".add-post-image").attr("src", imageLink);
-        }
-    </script>
+    <script src="club.js"></script>
 
     <script src="sharedFunc.js"></script>
 </body>

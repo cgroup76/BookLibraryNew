@@ -12,14 +12,6 @@ namespace serverSide.Controllers
     public class IUsersController : ControllerBase
     {
 
-        private readonly IHubContext<ChatHub> _hubContext;
-
-        public IUsersController(IHubContext<ChatHub> hubContext)
-        {
-            _hubContext = hubContext;
-        }
-
-
         // GET: api/<IUsersController>
         [HttpGet]
         public List<dynamic> Get(int userId)
@@ -67,12 +59,16 @@ namespace serverSide.Controllers
 
             if (newUserId != 0)
             {
-                dynamic userDetails = new ExpandoObject();
+                if (newUserId==-1) { return Ok(newUserId); }
+                else
+                {
+                    dynamic userDetails = new ExpandoObject();
 
-                userDetails.userId = newUserId;
-                userDetails.userName = newUser.UserName;
+                    userDetails.userId = newUserId;
+                    userDetails.userName = newUser.UserName;
 
-                return Ok(userDetails);
+                    return Ok(userDetails);
+                }
             }
             return BadRequest();
         }
@@ -81,6 +77,19 @@ namespace serverSide.Controllers
         public IActionResult Post(int userId, int bookId)
         {
             int status = IUser.addNewBook(userId, bookId);
+
+            if (status == 1) { return Ok(true); }
+
+            else if (status == 0) { return NotFound(false); }
+
+            return Unauthorized("user session has ended");
+        }
+
+        // POST insert new request
+        [HttpPost("insertNewRequest")]
+        public IActionResult POST(int sellerId, int buyerId, int bookId)
+        {
+            int status = IUser.insertNewRequest(sellerId, buyerId, bookId);
 
             if (status == 1) { return Ok(true); }
 
@@ -121,25 +130,6 @@ namespace serverSide.Controllers
         
      
 
-        // POST insert new request
-        [HttpPost("insertNewRequest")]
-        public IActionResult POST(int sellerId, int buyerId, int bookId)
-        {
-            int status = IUser.insertNewRequest(sellerId, buyerId, bookId);
-            
-            if(status == 1) { return Ok(true); }
-
-            else if (status == 0) { return NotFound(false); }
-
-            return Unauthorized("user session has ended");
-        }
-        // DELETE api/<IUsersController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-
-        {
-        }
-
         // PUT sale and buy books
         [HttpPut("requestHandling")]
         public IActionResult Put( int sellerId, int buyerId, int bookId, string requeststatus)
@@ -165,14 +155,11 @@ namespace serverSide.Controllers
             else { return NotFound(); }
         }
 
-        // PUT: api/<IUsersController>/sendMessage
-        [HttpPut("sendMessage")]
-      
-        public async Task<IActionResult> SendMessage( string message)
+        // DELETE api/<IUsersController>/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+
         {
-            // send message to specific user
-            await _hubContext.Clients.All.SendAsync("ReceiveMessage", message);
-            return Ok();
         }
 
     }

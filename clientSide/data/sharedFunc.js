@@ -2,6 +2,7 @@
 
 
 var usersAPI = "https://localhost:7225/api/IUsers";
+//var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
 
 
 $(document).ready(function () {
@@ -86,9 +87,10 @@ function ajaxCallSync(method, api, data, successCB, errorCB) {
 }
 //-----------------------
 //log in //
-// login or signup form
 
 function showLoginForm() {
+    $('.h5-LogIn').show();
+    $('.h5-SignUp').hide();
     $('#logInForm').addClass('active');
     $('#overlay').addClass('active');
     $('.loginQuestion').hide();
@@ -102,6 +104,8 @@ function closeLoginForm() {
     $('#overlay').removeClass('active');
 }
 function showSignupForm() {
+    $('.h5-LogIn').hide();
+    $('.h5-SignUp').show();
     $('.userNameDiv').show();
     $('#signupButton').show();
     $('.loginQuestion').show();
@@ -144,16 +148,20 @@ function loginUser() {
 }
 
 function successLogin(userDetails) {
+    if (userDetails == -1) {
+        Swal.fire("you already registered");
+    }
+    else {
+        localStorage.setItem("loginUserDetails", JSON.stringify(userDetails));
 
-    localStorage.setItem("loginUserDetails", JSON.stringify(userDetails));
-  
-    checkForLoginUser();
+        checkForLoginUser();
 
-    showAllRequests();
+        showAllRequests();
 
-    showBooks();
+        showBooks();
 
-    closeLoginForm();
+        closeLoginForm();
+    }
 }
 
 function error(errorMassage) { console.log(errorMassage); Swal.fire("Incorrect email or password"); }
@@ -252,10 +260,10 @@ function checkUserLogoutReason() {
         localStorage.removeItem('logoutReason');
     }
 }
-
+//-----------------------
 //requests
 
-//send request
+//send request to buy a book that belong to another user
 function sendRequest(buyerId, sellerId, bookId, sellerName) {
 
     var buyer = JSON.parse(localStorage.getItem("loginUserDetails"))
@@ -282,7 +290,6 @@ function sendRequest(buyerId, sellerId, bookId, sellerName) {
                 ajaxCall("POST", usersAPI + "/insertNewRequest?sellerId=" + sellerId + "&buyerId=" + buyerId + "&bookId=" + bookId, null, successToSendRequest(sellerId), errorToSendRequest);
 
             } else if (
-                /* Read more about handling dismissals below */
                 result.dismiss === Swal.DismissReason.cancel
             ) {
                 swalWithBootstrapButtons.fire({
@@ -331,6 +338,7 @@ function showAllRequests() {
     showRequests();
     requestCount = 0;
 }
+//show request to buy a book from another user/ requests that sent to you from another users
 function showRequests() {
     let userId = JSON.parse(localStorage.getItem("loginUserDetails"));
 
@@ -357,13 +365,14 @@ function showMyRequests(listOfRequest) {
     else {
         let sellerId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
         listOfRequest.forEach((request) => {
+            let bookName = (request.bookName).replace(/[^\w\s]/gi, '')
             htmlGot += `
                                                 <div class="dropdown-item">
                                                     <strong>Book:</strong> ${request.bookName} <br>
                                                     <strong>Want to buy:</strong> ${request.buyerName} <br>
                                                     <strong>Status:</strong> ${request.status} <br>
-                                                    <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}','${request.bookName}')">Approve</button>
-                                                    <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}','${request.bookName}')">Reject</button>
+                                                    <button class="btn btn-success" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${approved}','${bookName}')">Approve</button>
+                                                    <button class="btn btn-danger" onclick="handleRequest('${request.buyerId}','${sellerId}','${request.bookId}','${denied}', '${bookName}')">Reject</button>
                                                 </div>`;
         });
     }
@@ -403,9 +412,10 @@ function errorShowRequest(error) {
 }
 
 
-function handleRequest(buyerId, sellerId, bookId, requestStatus, bookName) {
+//approve/ deniened requests
+function handleRequest(buyerId,sellerId,bookId,requestStatus,bookName) {
     console.log(buyerId, sellerId, bookId, requestStatus);
-    ajaxCall("PUT", `${usersAPI}/requestHandling?sellerId=${sellerId}&buyerId=${buyerId}&bookId=${bookId}&requeststatus=${requestStatus}`, null,
+    ajaxCall("PUT",`${usersAPI}/requestHandling?sellerId=${sellerId}&buyerId=${buyerId}&bookId=${bookId}&requeststatus=${requestStatus}`, null,
         function (response) { successToHandle(requestStatus, buyerId, bookName); },
         errorToHandle
     );
@@ -509,7 +519,6 @@ function sendNotificationToSeller(sellerId) {
         console.error("Connection is not established.");
     }
 }
-// set the requests
 
 
 // Function to update the message count
@@ -526,9 +535,7 @@ function updateMessageCount(count) {
 const clientId = "330257384068-acpk14o95tj991u9u5l9vngpmll1c38g.apps.googleusercontent.com"; // Your Client ID
 const redirectUri = "http://localhost:65055/HTMLPage1.html"; // Replace with your actual redirect URI
 
-/*
-* Create form to request access token from Google's OAuth 2.0 server.
-*/
+
 function oauthSignIn() {
     // Google's OAuth 2.0 endpoint for requesting an access token
     var oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth';

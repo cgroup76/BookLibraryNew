@@ -72,14 +72,14 @@ namespace serverSide.BL
         public double Rating { get => rating; set => rating = value; }
         public string TextSnippet { get => textSnippet; set => textSnippet = value; }
 
-        // Add new book to the database 
+     
         public bool AddNewBook(Book book)
         {
             DBservicesBooks dBserviecesBooks = new DBservicesBooks();
 
             return 1 == dBserviecesBooks.AddNewBook(book);
         }
-        //show all Books
+       
         public static List<object> showBooks()
         {
             DBservicesBooks dBserviecesBooks = new DBservicesBooks();

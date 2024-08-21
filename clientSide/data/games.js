@@ -55,6 +55,8 @@ let allAuthors = [];
         console.error("The books could not be loaded.");
         }
 
+
+ //close game
 function closeGame()
 {
     $('#games').removeClass('active');
@@ -62,7 +64,9 @@ function closeGame()
     clearHangMan();
     closeQuiz();
  
-  }
+}
+//open game
+
     function openGame() {
     gameName = $(this).attr('id');
     $('#games').addClass('active');
@@ -170,7 +174,7 @@ function createCardElement(card) {
     return cardElement;
 }
 
-
+//flip the cards
 function flipCard() {
     if (lockBoard || this.classList.contains('flip') || (firstCard && secondCard)) return;
 
@@ -188,6 +192,8 @@ function flipCard() {
     checkForMatch();
 }
 
+
+//check if the 2 cards are a match
 function checkForMatch() {
     if (!firstCard || !secondCard)
     {
@@ -196,22 +202,18 @@ function checkForMatch() {
         return;
     }
 
-    console.log('Checking match for:', firstCard.dataset.name, secondCard.dataset.name);
 
     const isMatch = firstCard.dataset.AuthorName === secondCard.dataset.AuthorName;
     const isCardAndAuthor = firstCard.dataset.type !== secondCard.dataset.type;
-    console.log(isCardAndAuthor, firstCard.dataset.type, secondCard.dataset.type)
     if (isMatch && isCardAndAuthor)
     {
         disableCards();
         if (firstCard)
         {
-            console.log('Adding correct class to first card');
             firstCard.classList.add('correct');
         }
         if (secondCard)
         {
-            console.log('Adding correct class to second card');
             secondCard.classList.add('correct');
         }
         // Display message for correct match
@@ -260,7 +262,7 @@ function checkForMatch() {
     }
 }
 
-
+//what to do in case there is a match
 function disableCards() {
     if (firstCard && secondCard) {
         firstCard.removeEventListener('click', flipCard);
@@ -269,6 +271,7 @@ function disableCards() {
         resetBoard();
     }
 }
+//what to do in case there isn't a match
 
 function unflipCards() {
     if (firstCard && secondCard) {
@@ -283,10 +286,12 @@ function unflipCards() {
     }
 }
 
+//reset board game
 function resetBoard() {
     [firstCard, secondCard, lockBoard] = [null, null, false];
 }
 
+//start timer for the game 
 function startTimer() {
     time = 0;
     document.getElementById('time').textContent = time;
@@ -296,6 +301,7 @@ function startTimer() {
     }, 1000);
 }
 
+//reset game
 
 function resetGame() {
     const gameBoard = document.getElementById('game-board');
@@ -315,6 +321,8 @@ let correctGuess = [];
 const maxIncorrectGuesses = 7;
 const attemptHangMan = 0;
 
+
+//switch photos per mistakes answers 
 function showIncorrectPhotos() {
     const container = document.getElementById('image-container');
     switch (incorrectGuess.length) {
@@ -342,6 +350,7 @@ function showIncorrectPhotos() {
     }
 }
 
+//clear game
 function clearHangMan() {
     correctGuess = [];
     incorrectGuess = [];
@@ -360,6 +369,7 @@ function startHangManGame() {
     displayWord();
 }
 
+//pick every game random word from array titles
 function pickRandomWord(array) {
     let randomIndex = Math.floor(Math.random() * array.length);
     console.log(array[randomIndex]);
@@ -369,7 +379,6 @@ function pickRandomWord(array) {
 // create keyboard
 function createAlphabetButtons() {
     const row1 = document.getElementById('row-1');
-    //const row2 = document.getElementById('row-2');
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     for (let i = 0; i < alphabet.length; i++) {
@@ -392,12 +401,7 @@ function createAlphabetButtons() {
         });
         row1.appendChild(divBtn); // First 13 letters go to row 1
 
-        //// Append button to the appropriate row
-        //if (i < 13) {
-        //    row1.appendChild(button); // First 13 letters go to row 1
-        //} else {
-        //    row2.appendChild(button); // Last 13 letters go to row 2
-        //}
+       
     }
 }
 
@@ -408,6 +412,7 @@ function displayWord() {
     const wordDisplay = document.querySelector('.word-display');
     wordDisplay.innerHTML = '';
 
+    //what to do in special letters
     for (let i = 0; i < choosenWord.length; i++) {
         let span = document.createElement('span');
         span.className = 'letter';
@@ -416,6 +421,9 @@ function displayWord() {
         }
         else if (choosenWord[i] == ',') {
             span.innerText = ',';
+        }
+        else if (choosenWord[i] == "'") {
+            span.innerText = "'";
         }
         else if (choosenWord[i] == ':') {
             span.innerText = ':';
@@ -439,25 +447,25 @@ function displayWord() {
             span.innerText = 2;
         }
         else if (choosenWord[i] == 3) {
-            span.innerText = 2;
+            span.innerText = 3;
         }
         else if (choosenWord[i] == 4) {
-            span.innerText = 2;
+            span.innerText = 4
         }
         else if (choosenWord[i] == 5) {
-            span.innerText = 2;
+            span.innerText = 5;
         }
         else if (choosenWord[i] == 6) {
-            span.innerText = 2;
+            span.innerText = 6;
         }
         else if (choosenWord[i] == 7) {
-            span.innerText = 2;
+            span.innerText = 7;
         }
         else if (choosenWord[i] == 8) {
-            span.innerText = 2;
+            span.innerText = 8;
         }
         else if (choosenWord[i] == 9) {
-            span.innerText = 2;
+            span.innerText = 9;
         }
 
         else {
@@ -467,7 +475,7 @@ function displayWord() {
     }
 }
 
-//chhose what to do in winning\ looseing situation
+//choose what to do in winning\ looseing situation
 function handleGuess(letter) {
    
     const incorrectGuessDisplay = document.querySelector('.failedGuess b');
@@ -493,7 +501,7 @@ function handleGuess(letter) {
 //check if the user win
 function checkWin() {
     let allGuessed = choosenWord.split('').every(letter => {
-        return letter == ' ' || letter == ',' || letter == ':' || letter == '#' || letter == '!' || letter == ')' || letter == '(' || letter == '1' || letter == '2' || letter == '3' || letter == '4' || letter == '5' || letter == '6' || letter == '7' || letter == '8' || letter == '9' || correctGuess.includes(letter);
+        return letter == ' ' || letter == ',' || letter == "'" || letter == ':' || letter == '#' || letter == '!' || letter == ')' || letter == '(' || letter == '1' || letter == '2' || letter == '3' || letter == '4' || letter == '5' || letter == '6' || letter == '7' || letter == '8' || letter == '9' || correctGuess.includes(letter);
     });
     if (allGuessed) {
         getScore(incorrectGuess);
@@ -506,7 +514,8 @@ function checkWin() {
 
 function checkLoss() {
     if (incorrectGuess.length >= maxIncorrectGuesses) {
-        Swal.fire('Game Over', `The correct word was: ${ choosenWord }`);
+        Swal.fire('Game Over', `The correct word was: ${choosenWord}`);
+        getTop5GameReasults("HangMan");
     }
 }
 
@@ -524,7 +533,7 @@ function getScore(incorrectGuess) {
             "scoreNum": finalScore,
             "time": ""
         }
-        
+     
         postGameReasults(gameResult);
         getTop5GameReasults("HangMan");
     }
@@ -557,7 +566,7 @@ let QuizCorrectAnswers = [];
 let questionNumInQuiz = 0;
 let topGameResults = [];
 
-
+//shuffle answers
 function shuffle(array) {
     let index = array.length - 1;
 
@@ -574,7 +583,7 @@ function shuffle(array) {
     return array;
 }
 
-
+//create answers
 function generateAnswers(correctBook, questionInfo) {
     let Answers = [];
     Answers.push(correctBook[questionInfo]);
@@ -591,6 +600,7 @@ function generateAnswers(correctBook, questionInfo) {
     return Answers;
 }
 
+//create quiz 
 function createQuiz() {
     while (numOFQuestion++ < NUMOFQ) {
         let questionHTML = "";
@@ -652,8 +662,8 @@ function createQuiz() {
 
 var intervalId; // to stop the intervals
 
+//close quiz
 function closeQuiz() {
-    console.log("hey");
     clearInterval(intervalId); // stop th interval
     $(".question").remove();
     $("#quiz-container").removeClass('active');
@@ -780,6 +790,8 @@ function clearAnswersCheckBox() {
     })
 
 }
+
+//check and post results per game
 function checkQuizResults() {
     let index = 0;
     let numOfCorrectAns = 0;
@@ -811,6 +823,8 @@ function checkQuizResults() {
     postGameReasults(gameResult);
     return numOfCorrectAns;
 }
+
+//show top 5 game resaults
 function getTop5GameReasults(gameName) {
     ajaxCallSync("GET", gameAPI + `?gameName=${gameName}`, null, successTop5, errorTop5);
 }
