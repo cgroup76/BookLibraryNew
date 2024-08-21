@@ -547,7 +547,7 @@ function updateMessageCount(count) {
 
 // login with google 
 const clientId = "330257384068-acpk14o95tj991u9u5l9vngpmll1c38g.apps.googleusercontent.com"; // Your Client ID
-const redirectUri = "http://localhost:65055/index.html"; // Replace with your actual redirect URI
+const redirectUri = "https://proj.ruppin.ac.il/cgroup76/test2/tar6/index.html"; // Replace with your actual redirect URI
 
 
 function oauthSignIn() {
