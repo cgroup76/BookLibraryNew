@@ -1,8 +1,8 @@
 // JavaScript source code
 
 
-var usersAPI = "https://localhost:7225/api/IUsers";
-//var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
+//var usersAPI = "https://localhost:7225/api/IUsers";
+var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
 let requestedBookToBuy = [];
 
 $(document).ready(function () {
@@ -234,7 +234,7 @@ function successLogout(status) {
             background: "#fff url(/images/trees.png)",
             backdrop: `
                                 rgba(0,0,123,0.4)
-                                url("/alligator.png")
+                                url("alligator.png")
                                 center top
                                 no-repeat
                                 `
@@ -547,7 +547,7 @@ function updateMessageCount(count) {
 
 // login with google 
 const clientId = "330257384068-acpk14o95tj991u9u5l9vngpmll1c38g.apps.googleusercontent.com"; // Your Client ID
-const redirectUri = "http://localhost:65055/index.html"; // Replace with your actual redirect URI
+const redirectUri = "https://proj.ruppin.ac.il/cgroup76/test2/tar6/index.html"; // Replace with your actual redirect URI
 
 
 function oauthSignIn() {
