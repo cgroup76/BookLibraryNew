@@ -5,25 +5,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(); 
 
-builder.Services.AddSignalR();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        policy =>
-        {
-
-            policy.WithOrigins("http://localhost:65055","http://localhost:62447", "https://proj.ruppin.ac.il/cgroup76/test2/tar1", "https://proj.ruppin.ac.il/cgroup76/test2/tar6", "http://localhost:52217")
-
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
-        });
-});
 
 var app = builder.Build();
 
@@ -35,7 +20,10 @@ if (true)
     app.UseSwaggerUI();
 }
 
+
 app.UseHttpsRedirection();
+
+app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
 app.UseStaticFiles(new StaticFileOptions()
 {
@@ -53,6 +41,5 @@ app.UseStaticFiles(); // Enable serving static files
 
 app.MapControllers();
 
-app.MapHub<ChatHub>("/chatHub");
 
 app.Run();
