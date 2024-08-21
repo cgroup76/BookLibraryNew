@@ -3,7 +3,7 @@
 
 var usersAPI = "https://localhost:7225/api/IUsers";
 //var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
-
+let requestedBookToBuy = [];
 
 $(document).ready(function () {
     checkUserLogoutReason();
@@ -270,6 +270,14 @@ function sendRequest(buyerId, sellerId, bookId, sellerName) {
 
     if (buyer != null) { // check for login user
 
+        if (requestedBookToBuy.includes(bookId)) {
+            swal.fire({
+                title: "You already sent a request for this book",
+                icon: "warning"
+            });
+            return;
+        }
+
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
                 confirmButton: "btn btn-success",
@@ -307,10 +315,6 @@ function successToSendRequest(sellerId,bookId) {
         title: "The request has been sent",
         showConfirmButton: false,
         timer: 1500
-    });
-    // disable the send request of the book
-    document.querySelectorAll(`.btn-request-${bookId}`).forEach((button) => {
-        button.disabled = true;
     });
     sendNotificationToSeller(sellerId)
     showAllRequests();
@@ -389,6 +393,12 @@ function ShowRequestToBuy() {
 }
 
 function ShowMyRequestToBuy(listOfRequest) {
+    requestedBookToBuy = [];
+
+    listOfRequest.forEach((req) => {
+        requestedBookToBuy.push(req.bookId);
+    })
+
     requestCount += listOfRequest.length;
 
     let requestBox = document.querySelector('.requestBox .dropdown-menu .send');
