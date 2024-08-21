@@ -12,13 +12,6 @@ namespace serverSide.Controllers
     public class IUsersController : ControllerBase
     {
 
-        private readonly IHubContext<ChatHub> _hubContext;
-
-        public IUsersController(IHubContext<ChatHub> hubContext)
-        {
-            _hubContext = hubContext;
-        }
-
 
         // GET: api/<IUsersController>
         [HttpGet]
@@ -162,17 +155,6 @@ namespace serverSide.Controllers
 
             else { return NotFound(); }
         }
-
-        // PUT: api/<IUsersController>/sendMessage
-        [HttpPut("sendMessage")]
-      
-        public async Task<IActionResult> SendMessage( string message)
-        {
-            // send message to specific user
-            await _hubContext.Clients.All.SendAsync("ReceiveMessage", message);
-            return Ok();
-        }
-
 
         // DELETE api/<IUsersController>/5
         [HttpDelete("{id}")]
