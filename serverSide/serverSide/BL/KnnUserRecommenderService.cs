@@ -27,7 +27,7 @@ public class KnnUserRecommenderService
         {
             if (user.Key == currentUserId) continue;
 
-            double distance = CalculateCosineSimilarity(currentUserVector, user.Value);
+            double distance = CalculateEucledianDistance(currentUserVector, user.Value);
             distances.Add(new Tuple<int, double>(user.Key, distance));
         }
 
@@ -135,7 +135,7 @@ public class KnnUserRecommenderService
     }
 
 
-    private double CalculateCosineSimilarity(double[] user1Vector, double[] user2Vector)
+    private double CalculateEucledianDistance(double[] user1Vector, double[] user2Vector)
     {
         double distance = 0;
 
