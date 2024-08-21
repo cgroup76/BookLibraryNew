@@ -3,7 +3,7 @@
 
 var usersAPI = "https://localhost:7225/api/IUsers";
 //var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
-
+let requestedBookToBuy = [];
 
 $(document).ready(function () {
     checkUserLogoutReason();
@@ -220,7 +220,7 @@ function successLogout(status) {
     if (status && resonToLogout == 'endSession') {
         localStorage.setItem('logoutReason', 'endSession');
         localStorage.removeItem('loginUserDetails');
-        window.location.href = "HTMLPage1.html";
+        window.location.href = "index.html";
     }
 
     else if (status) {
@@ -242,7 +242,7 @@ function successLogout(status) {
             if (result.isConfirmed) {
                 localStorage.clear();
                 checkForLoginUser();
-                window.location.href = "HTMLPage1.html";
+                window.location.href = "index.html";
             }
         })
 
@@ -270,6 +270,14 @@ function sendRequest(buyerId, sellerId, bookId, sellerName) {
 
     if (buyer != null) { // check for login user
 
+        if (requestedBookToBuy.includes(bookId)) {
+            swal.fire({
+                title: "You already sent a request for this book",
+                icon: "warning"
+            });
+            return;
+        }
+
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
                 confirmButton: "btn btn-success",
@@ -287,7 +295,7 @@ function sendRequest(buyerId, sellerId, bookId, sellerName) {
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                ajaxCall("POST", usersAPI + "/insertNewRequest?sellerId=" + sellerId + "&buyerId=" + buyerId + "&bookId=" + bookId, null, successToSendRequest(sellerId), errorToSendRequest);
+                ajaxCall("POST", usersAPI + "/insertNewRequest?sellerId=" + sellerId + "&buyerId=" + buyerId + "&bookId=" + bookId, null, successToSendRequest(sellerId,bookId), errorToSendRequest);
 
             } else if (
                 result.dismiss === Swal.DismissReason.cancel
@@ -301,7 +309,7 @@ function sendRequest(buyerId, sellerId, bookId, sellerName) {
     }
 
 }
-function successToSendRequest(sellerId) {
+function successToSendRequest(sellerId,bookId) {
     Swal.fire({
         icon: "success",
         title: "The request has been sent",
@@ -385,6 +393,12 @@ function ShowRequestToBuy() {
 }
 
 function ShowMyRequestToBuy(listOfRequest) {
+    requestedBookToBuy = [];
+
+    listOfRequest.forEach((req) => {
+        requestedBookToBuy.push(req.bookId);
+    })
+
     requestCount += listOfRequest.length;
 
     let requestBox = document.querySelector('.requestBox .dropdown-menu .send');
@@ -533,7 +547,7 @@ function updateMessageCount(count) {
 
 // login with google 
 const clientId = "330257384068-acpk14o95tj991u9u5l9vngpmll1c38g.apps.googleusercontent.com"; // Your Client ID
-const redirectUri = "http://localhost:65055/HTMLPage1.html"; // Replace with your actual redirect URI
+const redirectUri = "http://localhost:65055/index.html"; // Replace with your actual redirect URI
 
 
 function oauthSignIn() {

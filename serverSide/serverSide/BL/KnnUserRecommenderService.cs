@@ -76,9 +76,6 @@ public class KnnUserRecommenderService
             int userId = userGroup.Key;
             var userPurchases = userGroup.ToList();
 
-            // Feature 1: Average rating
-            double averageRating = userPurchases.Average(p => p.Rating);
-
             // Initialize vectors for genres, authors, and titles
             double[] genreVector = new double[uniqueGenres.Count];
             double[] authorVector = new double[uniqueAuthors.Count];
@@ -126,7 +123,6 @@ public class KnnUserRecommenderService
 
             // Combine all features into a single feature vector
             double[] featureVector = new double[1 + genreVector.Length + authorVector.Length + titleVector.Length];
-            featureVector[0] = averageRating;
             Array.Copy(genreVector, 0, featureVector, 1, genreVector.Length);
             Array.Copy(authorVector, 0, featureVector, 1 + genreVector.Length, authorVector.Length);
             Array.Copy(titleVector, 0, featureVector, 1 + genreVector.Length + authorVector.Length, titleVector.Length);
