@@ -220,7 +220,7 @@ function successLogout(status) {
     if (status && resonToLogout == 'endSession') {
         localStorage.setItem('logoutReason', 'endSession');
         localStorage.removeItem('loginUserDetails');
-        window.location.href = "HTMLPage1.html";
+        window.location.href = "index.html";
     }
 
     else if (status) {
@@ -242,7 +242,7 @@ function successLogout(status) {
             if (result.isConfirmed) {
                 localStorage.clear();
                 checkForLoginUser();
-                window.location.href = "HTMLPage1.html";
+                window.location.href = "index.html";
             }
         })
 
@@ -287,7 +287,7 @@ function sendRequest(buyerId, sellerId, bookId, sellerName) {
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                ajaxCall("POST", usersAPI + "/insertNewRequest?sellerId=" + sellerId + "&buyerId=" + buyerId + "&bookId=" + bookId, null, successToSendRequest(sellerId), errorToSendRequest);
+                ajaxCall("POST", usersAPI + "/insertNewRequest?sellerId=" + sellerId + "&buyerId=" + buyerId + "&bookId=" + bookId, null, successToSendRequest(sellerId,bookId), errorToSendRequest);
 
             } else if (
                 result.dismiss === Swal.DismissReason.cancel
@@ -301,12 +301,16 @@ function sendRequest(buyerId, sellerId, bookId, sellerName) {
     }
 
 }
-function successToSendRequest(sellerId) {
+function successToSendRequest(sellerId,bookId) {
     Swal.fire({
         icon: "success",
         title: "The request has been sent",
         showConfirmButton: false,
         timer: 1500
+    });
+    // disable the send request of the book
+    document.querySelectorAll(`.btn-request-${bookId}`).forEach((button) => {
+        button.disabled = true;
     });
     sendNotificationToSeller(sellerId)
     showAllRequests();
@@ -533,7 +537,7 @@ function updateMessageCount(count) {
 
 // login with google 
 const clientId = "330257384068-acpk14o95tj991u9u5l9vngpmll1c38g.apps.googleusercontent.com"; // Your Client ID
-const redirectUri = "http://localhost:65055/HTMLPage1.html"; // Replace with your actual redirect URI
+const redirectUri = "http://localhost:65055/index.html"; // Replace with your actual redirect URI
 
 
 function oauthSignIn() {
