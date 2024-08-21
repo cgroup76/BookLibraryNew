@@ -1,5 +1,5 @@
 ﻿
-    var usersAPI = "https://localhost:7225/api/IUsers";
+   // var usersAPI = "https://localhost:7225/api/IUsers";
     var booksAPI = "https://localhost:7225/api/Books";
         const rating = stars => '★★★★★☆☆☆☆☆'.slice(5 - stars, 10 - stars);
 

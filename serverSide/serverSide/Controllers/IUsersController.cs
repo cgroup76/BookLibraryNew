@@ -12,7 +12,6 @@ namespace serverSide.Controllers
     public class IUsersController : ControllerBase
     {
 
-
         // GET: api/<IUsersController>
         [HttpGet]
         public List<dynamic> Get(int userId)
