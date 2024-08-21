@@ -21,14 +21,20 @@ var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
 
   //post review- allowed only 1 time and just in case the user read the book 
     function postReview() {
-            if (document.querySelector('input[name="rating"]:checked') == null) { }
+        if (document.querySelector('input[name="rating"]:checked') == null) {
+            Swal.fire("Please add rating to the review");
+            return;
+        }
     else {
         bookRating = document.querySelector('input[name="rating"]:checked').value;
             }
     var comment = document.getElementById("comment").value;
     let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
 
-
+        if (comment == "") {
+            Swal.fire("Please add comment to the review");
+            return;
+        }
     ajaxCall("PUT", booksAPI + `/RateBook?bookID=${bookIdToRate}&newRating=${bookRating}&userID=${userId}&review=${comment}`, null, successRating, errorRating);
 
     return false;
