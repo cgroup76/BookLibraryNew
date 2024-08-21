@@ -411,7 +411,7 @@
         // Add on click for the like button
         likeButton.onclick = function () {
 
-            postLike(post.UserCreateId, post.PostId, this, this.parentElement);
+            postLike(post.PostId, this, this.parentElement);
         };
                 }
     else {
@@ -575,8 +575,9 @@
     // add like to post
     let currentLikeDiv;
 
-    function postLike(userId, postId, likeBtn, likeDiv) {
-        currentLikeBtn = likeBtn;
+function postLike(postId, likeBtn, likeDiv) {
+    let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId
+    currentLikeBtn = likeBtn;
     currentLikeDiv = likeDiv;
     ajaxCall("PUT", clubBooksAPI + `/addLikeToPost?postId=${postId}&userId=${userId}`, null, successToLike, errorLike)
         }
