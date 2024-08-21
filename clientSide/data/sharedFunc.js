@@ -1,8 +1,8 @@
 // JavaScript source code
 
 
-var usersAPI = "https://localhost:7225/api/IUsers";
-//var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
+//var usersAPI = "https://localhost:7225/api/IUsers";
+var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
 let requestedBookToBuy = [];
 
 $(document).ready(function () {

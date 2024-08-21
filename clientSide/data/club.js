@@ -22,11 +22,17 @@
     $("#clear-search-club-btn").click(getClubs);
         });
 
-    var booksAPI = "https://localhost:7225/api/Books";
-    var clubBooksAPI = "https://localhost:7225/api/BookClub";
-    var uploadFilesAPI = 'https://localhost:7225/api/upload';
-    var usersAPI = "https://localhost:7225/api/IUsers";
-    var imageFolder = "https://localhost:7225/Images";
+   // var booksAPI = "https://localhost:7225/api/Books";
+var booksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Books";
+   // var clubBooksAPI = "https://localhost:7225/api/BookClub";
+var clubBooksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/BookClub";
+    //var uploadFilesAPI = 'https://localhost:7225/api/upload';
+var uploadFilesAPI = 'https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/upload';
+  //  var usersAPI = "https://localhost:7225/api/IUsers";
+var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
+//var imageFolder = "https://localhost:7225/Images";
+var imageFolder = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/Images";
+
     var allBooks = [];
     var allClubs = [];
     let booksDict = [];
@@ -34,7 +40,6 @@
     let currentClub;
     let imageLink = "";
     let currentLikeBtn;
-    let imageCounter = 0;
 
 
     function searchClub() {
@@ -127,7 +132,7 @@
 
     logoutUser("endSession");
             }
-    else {Swal.fire("Error to create book club"); }
+    else {Swal.fire("The book club for this book already exists"); }
         }
     function errorR(err) {
         console.log(err);
@@ -525,13 +530,14 @@
 
     let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
     let image = imageLink;
-    let date = new Date().toJSON();
+        let date = new Date().toJSON();
+        let uniqueString = generateRandomString(5);
     date = date.split("T")[0];
 
     if (image == "") {
 
         let formDataTextToImage = new FormData();
-    formDataTextToImage.append('file', currentImageBlob, `generated-image${userId}-${date}-${imageCounter++}.png`);
+        formDataTextToImage.append('file', currentImageBlob, `generated-image${userId}-${date}-${uniqueString }.png`);
 
     $.ajax({
         type: "POST",
@@ -571,6 +577,16 @@
         Swal.fire('Error', "Could not submit your post - please try again later", 'error');
             }
         }
+
+// generate random string for the text to image photo
+function generateRandomString(length) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
 
     // add like to post
     let currentLikeDiv;

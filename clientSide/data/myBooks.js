@@ -1,7 +1,8 @@
 ﻿
-    var usersAPI = "https://localhost:7225/api/IUsers";
-    var booksAPI = "https://localhost:7225/api/Books";
-
+    //var usersAPI = "https://localhost:7225/api/IUsers";
+    //var booksAPI = "https://localhost:7225/api/Books";
+var booksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Books";
+var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
     var allMyBooks = [];
     var allRecommendedBooks = [];
 
