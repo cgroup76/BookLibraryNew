@@ -22,11 +22,17 @@
     $("#clear-search-club-btn").click(getClubs);
         });
 
-    var booksAPI = "https://localhost:7225/api/Books";
-    var clubBooksAPI = "https://localhost:7225/api/BookClub";
-    var uploadFilesAPI = 'https://localhost:7225/api/upload';
-    var usersAPI = "https://localhost:7225/api/IUsers";
-    var imageFolder = "https://localhost:7225/Images";
+   // var booksAPI = "https://localhost:7225/api/Books";
+var booksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Books";
+   // var clubBooksAPI = "https://localhost:7225/api/BookClub";
+var clubBooksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/BookClub";
+    //var uploadFilesAPI = 'https://localhost:7225/api/upload';
+var uploadFilesAPI = 'https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/upload';
+  //  var usersAPI = "https://localhost:7225/api/IUsers";
+var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
+//var imageFolder = "https://localhost:7225/Images";
+var imageFolder = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/Images";
+
     var allBooks = [];
     var allClubs = [];
     let booksDict = [];
@@ -34,7 +40,6 @@
     let currentClub;
     let imageLink = "";
     let currentLikeBtn;
-    let imageCounter = 0;
 
 
     function searchClub() {
@@ -42,7 +47,7 @@
     console.log(searchstring);
     let searchClub = [];
             allClubs.forEach((club) => {
-                if (club.ClubName == searchstring) {
+                if (((club.ClubName).replace(/[^\w\s]/gi, '')) == searchstring) {
         searchClub.push(club);
                 }
             })
@@ -127,7 +132,7 @@
 
     logoutUser("endSession");
             }
-    else {Swal.fire("Error to create book club"); }
+    else {Swal.fire("The book club for this book already exists"); }
         }
     function errorR(err) {
         console.log(err);
@@ -146,7 +151,8 @@
     function successjoinClub() {
         Swal.fire("success join club");
     $(".create-post").show();
-    $("#join-club").hide();
+        $("#join-club").hide();
+        $(`.membersIn-${currentClub.ClubId}`).html(`Members in club:  ${currentClub.ClubMembers + 1}`)
         }
 
     // join club
@@ -185,7 +191,7 @@
                         <img src="${club.ClubImage}" class="book-club-image-card" alt="Club Image for ${club.ClubName}">
                          <h6 class="card-title">${club.ClubName}</h6>
                         <br/>
-                        <p>Members in club:  ${club.ClubMembers}</p>
+                        <p class="membersIn-${club.ClubId}">Members in club:  ${club.ClubMembers}</p>
                     </div>
                 </div>
             </a>`;
@@ -194,7 +200,7 @@
 
     var clubNameSearchBar = "";
             allClubs.forEach((club) => {
-        clubNameSearchBar += `<option value='${club.ClubName}'>`
+                clubNameSearchBar += `<option value='${(club.ClubName).replace(/[^\w\s]/gi, '')}'>`
     })
     $("#clubSearch").html(clubNameSearchBar);
         }
@@ -220,7 +226,7 @@
 
     function activateSearchBooksBar() {
         allBooks.forEach((book) => {
-            let text = book.Title;
+            let text = (book.Title).replace(/[^\w\s]/gi, '');
             booksDict.push(text);
         });
         }
@@ -233,7 +239,7 @@
     listItem.className = 'dropdown-item';
     listItem.href = '#';
     listItem.textContent = item;
-
+ 
     listItem.addEventListener('click', function () {
         document.querySelector('.text-input').value = item;  // Make sure this element exists
                 });
@@ -264,7 +270,7 @@
     return response.blob();
         }
 
-    let currentImageBlob;
+    let currentImageBlob = "";
 
     async function TextToImage() {
             const textInput = document.querySelector(".text-input-to-image").value.trim(); // עדכון לקרוא את שדה התיאור מהכרטיס
@@ -272,7 +278,7 @@
     console.log("Text input value:", textInput); // Debugging line
 
     if (!textInput) {
-        alert("Please enter a description.");
+        swal.fire("Please enter a description.");
     return;
             }
 
@@ -282,7 +288,7 @@
 
     const imageBlob = await queryTEXTtoIMG(textInput);
     currentImageBlob = imageBlob;
-
+    console.log(currentImageBlob)
     // Hide the loading spinner once the image is generated
     loadingSpinner.style.display = "none";
 
@@ -297,7 +303,7 @@
         // Hide the loading spinner once the image is generated
         loadingSpinner.style.display = "none";
 
-    alert(error.message);
+            swal.fire(error.message);
 
             }
         }
@@ -400,11 +406,15 @@
     postLikesDiv.classList.add('post-likes');
     postLikesDiv.appendChild(likeNum)
     postLikesDiv.appendChild(likeButton)
+                console.log(post.Image)
+                let postPic;
+                if (post.Image !== "null") {
 
-    const postPic = document.createElement('img');
-    postPic.src = post.Image;
-    postPic.alt = 'post picture';
-    postPic.classList.add('post-pic');
+                    postPic = document.createElement('img');
+                    postPic.src = post.Image;
+                    postPic.alt = 'post picture';
+                    postPic.classList.add('post-pic');
+                }
 
     if (post.userLike == 0) { // the user didnt like the post in the past
 
@@ -420,8 +430,10 @@
                 }
 
     // Append all elements to the post div
-    postDiv.appendChild(postHeader);
-    postDiv.appendChild(postPic);
+                postDiv.appendChild(postHeader);
+                if (post.Image != "null") {
+                    postDiv.appendChild(postPic);
+                }
     postDiv.appendChild(postContentDiv);
     postDiv.appendChild(postLikesDiv);
 
@@ -517,7 +529,7 @@
     function sendPost() {
 
         let text = document.querySelector('textarea').value;
-    console.log(text)
+
     if (text == "") {
         Swal.fire('Error', "Could not submit your post - please add description", 'error');
     return;
@@ -525,44 +537,49 @@
 
     let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
     let image = imageLink;
-    let date = new Date().toJSON();
+        let date = new Date().toJSON();
+        let uniqueString = generateRandomString(5);
     date = date.split("T")[0];
 
-    if (image == "") {
+        if (image == "" && currentImageBlob != "") {
 
-        let formDataTextToImage = new FormData();
-    formDataTextToImage.append('file', currentImageBlob, `generated-image${userId}-${date}-${imageCounter++}.png`);
+            let formDataTextToImage = new FormData();
+            formDataTextToImage.append('file', currentImageBlob, `generated-image${userId}-${date}-${uniqueString}.png`);
 
-    $.ajax({
-        type: "POST",
-    url: uploadFilesAPI + "/upload",
-    contentType: false,
-    processData: false,
-    async: false,
-    data: formDataTextToImage,
-    success: showImage,
-    error: errorR
-                });
+            $.ajax({
+                type: "POST",
+                url: uploadFilesAPI + "/upload",
+                contentType: false,
+                processData: false,
+                async: false,
+                data: formDataTextToImage,
+                success: showImage,
+                error: errorR
+            });
 
 
-    ajaxCallSync("POST", clubBooksAPI + `/addNewPost?clubId=${currentClub.ClubId}&userId=${userId}&description=${text}&image=${imageLink}`, null, successToPost, errorToPost);
+            ajaxCallSync("POST", clubBooksAPI + `/addNewPost?clubId=${currentClub.ClubId}&userId=${userId}&description=${text}&image=${imageLink}`, null, successToPost, errorToPost);
 
-            }
-    else {
-        ajaxCall("POST", clubBooksAPI + `/addNewPost?clubId=${currentClub.ClubId}&userId=${userId}&description=${text}&image=${image}`, null, successToPost, errorToPost);
-            }
+        }
+        else if (image == "" && currentImageBlob == "") {
+            ajaxCall("POST", clubBooksAPI + `/addNewPost?clubId=${currentClub.ClubId}&userId=${userId}&description=${text}&image=${null}`, null, successToPost, errorToPost);
+        }
+        else {
+            ajaxCall("POST", clubBooksAPI + `/addNewPost?clubId=${currentClub.ClubId}&userId=${userId}&description=${text}&image=${image}`, null, successToPost, errorToPost);
+        }
     imageLink = "";
         }
     function successToPost() {
         Swal.fire("Post Was Published!");
     $(".add-post-image").attr("src", "");
     imageLink = "";
-    imageBlob = "";
+    currentImageBlob = "";
     $("#comment").val("");
     $(".add-image-btn").removeAttr("disabled");
     loadPosts(currentClub.ClubId);
         }
-    function errorToPost(error) {
+function errorToPost(error) {
+        console.log(error)
             if (error.status == 401) {
 
         logoutUser('endSession');
@@ -571,6 +588,16 @@
         Swal.fire('Error', "Could not submit your post - please try again later", 'error');
             }
         }
+
+// generate random string for the text to image photo
+function generateRandomString(length) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
 
     // add like to post
     let currentLikeDiv;

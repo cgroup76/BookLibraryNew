@@ -1,7 +1,11 @@
 
-    var usersAPI = "https://localhost:7225/api/IUsers";
-    var booksAPI = "https://localhost:7225/api/Books";
-    var authorsAPI = "https://localhost:7225/api/Authors";
+    //var usersAPI = "https://localhost:7225/api/IUsers";
+   // var booksAPI = "https://localhost:7225/api/Books";
+//var authorsAPI = "https://localhost:7225/api/Authors";
+var authorsAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Authors";
+var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
+var booksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Books";
+
     var allBooksForAdmin = [];
     var allUsersForAdmin = [];
     var allAuthorForAdmin = [];

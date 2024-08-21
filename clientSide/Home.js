@@ -1,6 +1,9 @@
 ﻿
    // var usersAPI = "https://localhost:7225/api/IUsers";
-    var booksAPI = "https://localhost:7225/api/Books";
+    //var booksAPI = "https://localhost:7225/api/Books";
+var booksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Books";
+var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
+
         const rating = stars => '★★★★★☆☆☆☆☆'.slice(5 - stars, 10 - stars);
 
     var allBooks = [];
@@ -101,7 +104,8 @@
                 const buyerId = buyer.userId;
 
     // If someone already bought the book
-    if (book.IsAvailable == 0) {
+     if (buyerId == 1) { }  //hide buttons from admin
+    else if (book.IsAvailable == 0) {
                     if (book.UserId == buyerId) { // The logged-in user bought this book
         $('.buy-the-book').html(`<a class='btn buyABookBtn pinkB ' id='notAllowed' disabled><s>Buy</s></a>`);
 
@@ -146,7 +150,7 @@
                                 <div class='book-review'>
                                 <svg class='user-image-info' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>
                                 <h5 class='review-user'>${review.UserName}</h5>
-                                <h5 class='review-rating'>${rating(review.Rating)}  ${(review.Rating).toFixed(1)}</h5>
+                                <h5 class='review-rating pink'>${rating(review.Rating)}  ${(review.Rating).toFixed(1)}</h5>
                                 <p class='review-text'>${review.Review}</p>
                                 </div>
                                 </div>
@@ -294,10 +298,16 @@
             <span class='card-text'>${book.Price}$       </span>`;
 
             if (buyer != null) {
-                        const buyerId = buyer.userId;
+                const buyerId = buyer.userId;
+
+                if (buyerId == 1) {
+                    booksHtml += `<a class='btn buyABookBtn pinkB ' id='notAllowed' disabled><s>Buy</s></a></div >
+                                                   </div >
+                                                   </div ></a> `;
+                } // hide buttons from admin
 
             // If someone already bought the book
-            if (book.IsAvailable == 0) {
+            else if (book.IsAvailable == 0) {
                             if (book.UserId == buyerId) { // The logged-in user bought this book
                 booksHtml += `<a class='btn buyABookBtn pinkB ' id='notAllowed' disabled><s>Buy</s></a>
                                                                           </div>
@@ -389,8 +399,10 @@
         function activateSreachBooksBar() {
 
             allBooks.forEach((book) => {
-                let text = book.Title + " " + book.FirstAuthorName + " " + book.SecondAuthorName + " " + book.TextSnippet + " " + book.Description;
-                booksDict[JSON.stringify(book)] = text.toLowerCase();
+                if (book.IsActive == 1) {
+                    let text = book.Title + " " + book.FirstAuthorName + " " + book.SecondAuthorName + " " + book.TextSnippet + " " + book.Description;
+                    booksDict[JSON.stringify(book)] = text.toLowerCase();
+                }
             })
         }
         function searchBook() {
@@ -447,28 +459,29 @@
                             if (book.IsAvailable == 0) {
                                 if (book.UserId == buyerId) { // The logged-in user bought this book
                                     booksHtml += ` <a class='btn buyABookBtn pinkB ' id = 'notAllowed' disabled > <s>Buy</s></a >
+                                                                             </div>
                                                                           </div>
                                                                           </div>`;
                                 } else {
                                     const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
                                     booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='showBookInfo(${book.Id})'>Info</a>
                                                                       </div>
-                                                                      </div >
-                                                                      </div > `;
+                                                                      </div>
+                                                                      </div> `;
                                 }
                             } else {
                                 // If the book is available for purchase
-                                booksHtml += `< a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'showBookInfo(${book.Id})' > Info</a >
-                                                                      </div >
-                                                                      </div >
-                                                                      </div > `;
+                                booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'showBookInfo(${book.Id})'> Info</a >
+                                                                      </div>
+                                                                      </div>
+                                                                      </div> `;
                             }
                         } else {
                             // If the user is not logged in, there's no need to show the purchase option
-                            booksHtml += `< a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'showBookInfo(${book.Id})' > Info</a >
-                                                                        </div >
-                                                                      </div >
-                                                                      </div > `;
+                            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'showBookInfo(${book.Id})'> Info</a >
+                                                                        </div>
+                                                                      </div>
+                                                                      </div> `;
                         }
                     });
                     BooksContainer.innerHTML = booksHtml;

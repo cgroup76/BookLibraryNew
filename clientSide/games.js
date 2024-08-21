@@ -1,8 +1,12 @@
 // JavaScript source code
 
-const gameAPI = "https://localhost:7225/api/Score";
-const booksAPI = "https://localhost:7225/api/Books";
-const authorsAPI = "https://localhost:7225/api/Authors";
+//const gameAPI = "https://localhost:7225/api/Score";
+//const booksAPI = "https://localhost:7225/api/Books";
+//const authorsAPI = "https://localhost:7225/api/Authors";
+var authorsAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Authors";
+var booksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Books";
+const gameAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Score";
+
 let gameName;
 let allBooks = [];
 let wordList = [];

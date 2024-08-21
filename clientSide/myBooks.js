@@ -1,7 +1,8 @@
 ﻿
-    var usersAPI = "https://localhost:7225/api/IUsers";
-    var booksAPI = "https://localhost:7225/api/Books";
-
+    //var usersAPI = "https://localhost:7225/api/IUsers";
+    //var booksAPI = "https://localhost:7225/api/Books";
+var booksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Books";
+var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
     var allMyBooks = [];
     var allRecommendedBooks = [];
 
@@ -196,6 +197,7 @@ function getRecommendedBooksForUser() {
 }
 function successRecommendedBooks(recommended) {
     allRecommendedBooks = recommended;
+    let recomendedBooksId = [];
     let html = "";
     let index = 0;
     const buyerId = (JSON.parse(localStorage.getItem("loginUserDetails"))).userId;
@@ -203,6 +205,8 @@ function successRecommendedBooks(recommended) {
     recommended.forEach((book) => {
 
         if (index++ == 0) {
+
+            recomendedBooksId.push(book.Id);
 
             html += ` <div class='carousel-item active '>
                                 <div class='container'>
@@ -221,7 +225,10 @@ function successRecommendedBooks(recommended) {
 
         }
 
-        else {
+        else if (!recomendedBooksId.includes(book.Id)) {  // check if the book was not already added
+
+            recomendedBooksId.push(book.Id);
+
             html += ` <div class='carousel-item  '>
                                 <div class='container'>
                                         <div class='top-books-container row recommended-book' onclick='showBookInfo(${book.Id})'>
