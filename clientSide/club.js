@@ -47,7 +47,7 @@ var imageFolder = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/Images";
     console.log(searchstring);
     let searchClub = [];
             allClubs.forEach((club) => {
-                if (((club.ClubName).replace(/[^\w\s]/gi, '')) == searchstring) {
+                if (((club.ClubName).replace(/[^\w\s]/gi, '')) == searchstring) {  // remove special signs 
         searchClub.push(club);
                 }
             })
@@ -265,7 +265,7 @@ var imageFolder = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/Images";
                 }
     );
     if (!response.ok) {
-                throw new Error("Image generation failed. Please try again.");
+                throw new Error("Image generation server failed. Please try again late.");
             }
     return response.blob();
         }
@@ -273,7 +273,7 @@ var imageFolder = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/Images";
     let currentImageBlob = "";
 
     async function TextToImage() {
-            const textInput = document.querySelector(".text-input-to-image").value.trim(); // עדכון לקרוא את שדה התיאור מהכרטיס
+            const textInput = document.querySelector(".text-input-to-image").value.trim(); 
 
     console.log("Text input value:", textInput); // Debugging line
 
@@ -288,7 +288,7 @@ var imageFolder = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/Images";
 
     const imageBlob = await queryTEXTtoIMG(textInput);
     currentImageBlob = imageBlob;
-    console.log(currentImageBlob)
+
     // Hide the loading spinner once the image is generated
     loadingSpinner.style.display = "none";
 
@@ -469,19 +469,6 @@ var imageFolder = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/Images";
 
     $(".club-members").html(html);
         }
-    function postReviewClub() {
-            if (document.querySelector('input[name="rating"]:checked') == null) { }
-    else {
-        bookRating = document.querySelector('input[name="rating"]:checked').value;
-            }
-    var comment = document.getElementById("comment").value;
-    let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
-
-
-    ajaxCall("PUT", booksAPI + `/RateBook?bookID=${bookIdToRate}&newRating=${bookRating}&userID=${userId}&review=${comment}`, null, successRating, errorRating);
-
-    return false;
-        }
 
     ///
     function showMyBooks() { };
@@ -660,7 +647,7 @@ function postLike(postId, likeBtn, likeDiv) {
     function showImage(data) {
 
         imageLink = imageFolder + "/" + data;
-    console.log(imageLink)
+
     $('.add-post-image').show();
     $(".add-post-image").attr("src", imageLink);
     $(".add-image-btn").attr("disabled", "disabled");
