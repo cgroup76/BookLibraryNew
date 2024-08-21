@@ -107,7 +107,7 @@
 
                     } else {
                         const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
-    $('.buy-the-book').html(`<a class='btn btn-outline-dark pinkB' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>`);
+                        $('.buy-the-book').html(`<a class='btn btn-outline-dark pinkB btn-request-${book.Id}' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>`);
                     }
                 } else {
         // If the book is available for purchase
@@ -305,7 +305,7 @@
                                                                           </div></a>`;
                             } else {
                                 const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
-            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
+            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB btn-request-${book.Id}' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
         </div>
     </div>
 </div></a > `;
