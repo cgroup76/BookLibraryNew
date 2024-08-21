@@ -474,7 +474,7 @@ let connection = new signalR.HubConnectionBuilder()
 
 connection.on("ReceiveMessage", function (user, message) {
     var currentUser = JSON.parse(localStorage.getItem('loginUserDetails'));
-    console.log(currentUser)
+  
     if (currentUser != null) {
         let userId = (currentUser.userId).toString(); // Ensure this is a string comparison
         if (userId === user) {
@@ -607,7 +607,7 @@ function trySampleRequest() {
         xhr.onreadystatechange = function (e) {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var userEmail = JSON.parse(xhr.response).email;
-                console.log(userEmail.email)
+               
                 let user = {
                     "id": 0,
                     "userName": userEmail.split('@')[0],

@@ -403,7 +403,7 @@ function createAlphabetButtons() {
             this.style.cursor = 'not-allowed';
 
         });
-        row1.appendChild(divBtn); // First 13 letters go to row 1
+        row1.appendChild(divBtn); 
 
        
     }
