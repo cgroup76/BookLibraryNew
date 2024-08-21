@@ -14,3 +14,5 @@ clientSide/.vs/clientSide/FileContentIndex/5348cd41-9cc8-47c8-b535-2dd8d66a8e26.
 clientSide/.vs/clientSide/FileContentIndex/eb63f490-8c22-4393-930e-dc845966b58e.vsidx
 clientSide/.vs/clientSide/FileContentIndex/e000f481-b077-410c-999d-d04e4614a8ba.vsidx
 clientSide/.vs/clientSide/FileContentIndex/eb3e651b-6c32-456b-b591-ecd68f478542.vsidx
+.vs/slnx.sqlite
+serverSide/serverSide/bin/Debug/net6.0/serverSide.dll
