@@ -234,7 +234,7 @@ function successLogout(status) {
             background: "#fff url(/images/trees.png)",
             backdrop: `
                                 rgba(0,0,123,0.4)
-                                url("/alligator.png")
+                                url("alligator.png")
                                 center top
                                 no-repeat
                                 `
