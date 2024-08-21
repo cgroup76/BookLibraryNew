@@ -1104,9 +1104,9 @@ public class DBservicesUsers
 
             KnnUserRecommenderService knnAlgorithem = new KnnUserRecommenderService(allUserPurchaseData, 2, userId);
 
-            Dictionary<int, double[]> user = knnAlgorithem.BuildUserPreferenceVectorsGeneralized(allUserPurchaseData);
+            Dictionary<int, double[]> usersPreferenceMatrix = knnAlgorithem.BuildUserPreferenceVectorsGeneralized(allUserPurchaseData);
 
-            List<int> recommendedBookId = knnAlgorithem.RunKnnAlgorithmOnGeneralizedData(user);
+            List<int> recommendedBookId = knnAlgorithem.RunKnnAlgorithmOnGeneralizedData(usersPreferenceMatrix);
 
             if(recommendedBookId == null) { return null; }
 
