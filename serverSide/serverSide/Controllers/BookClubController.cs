@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using serverSide.BL;
+using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,9 +33,9 @@ namespace serverSide.Controllers
 
         // POST api/<BookClubController>
         [HttpPost("creatClub")]
-        public IActionResult CreateClub(string clubName, int userId)
+        public IActionResult CreateClub(string clubName, int userId, int bookId)
         {
-           int status= BookClub.createNewClub(clubName, userId);
+           int status= BookClub.createNewClub(clubName, userId, bookId);
             if (status == 1) { return Ok(true); }
 
             else if (status <= 0) { return NotFound(false); }

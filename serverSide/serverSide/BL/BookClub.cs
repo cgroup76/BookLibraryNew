@@ -22,11 +22,11 @@ namespace serverSide.BL
             BookImage = bookImage;
         }
 
-        public static int createNewClub(string clubName, int userId)
+        public static int createNewClub(string clubName, int userId, int bookId)
         {
             DBserviceBookClub dBservicesBookClub = new DBserviceBookClub();
 
-           return (dBservicesBookClub.AddNewBookClub(clubName, userId));
+           return (dBservicesBookClub.AddNewBookClub(clubName, userId, bookId));
 
            
         }

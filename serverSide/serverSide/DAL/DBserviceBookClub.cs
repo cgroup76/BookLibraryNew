@@ -3,6 +3,7 @@ using System.Dynamic;
 using System.Data.SqlClient;
 using System.Data;
 using static System.Net.Mime.MediaTypeNames;
+using System.Net;
 
 namespace serverSide.DAL
 {
@@ -28,7 +29,7 @@ namespace serverSide.DAL
         //--------------------------------------------------------------------------------------------------
         // This method adds a new Club
         //--------------------------------------------------------------------------------------------------
-        public int AddNewBookClub( string clubName, int userId)
+        public int AddNewBookClub( string clubName, int userId, int bookId)
         {
 
             SqlConnection con;
@@ -44,7 +45,7 @@ namespace serverSide.DAL
                 throw (ex);
             }
 
-            cmd = CreateCommandWithStoredProcedureAddNewBookClub("creatNewBookClub", con, clubName, userId);             // create the command
+            cmd = CreateCommandWithStoredProcedureAddNewBookClub("creatNewBookClub", con, clubName, userId, bookId);             // create the command
 
             returnValue.ParameterName = "@RETURN_VALUE";
             returnValue.Direction = ParameterDirection.ReturnValue;
@@ -79,7 +80,7 @@ namespace serverSide.DAL
         // Create the SqlCommand using a stored procedure to  adds a new Club
         //---------------------------------------------------------------------------------
 
-        private SqlCommand CreateCommandWithStoredProcedureAddNewBookClub(String spName, SqlConnection con, string clubName, int userId)
+        private SqlCommand CreateCommandWithStoredProcedureAddNewBookClub(String spName, SqlConnection con, string clubName, int userId, int bookId)
         {
 
             SqlCommand cmd = new SqlCommand(); // create the command object
@@ -95,6 +96,8 @@ namespace serverSide.DAL
             cmd.Parameters.AddWithValue("@userId", userId);
 
             cmd.Parameters.AddWithValue("@title", clubName);
+
+            cmd.Parameters.AddWithValue("@bookId", bookId);
 
 
             return cmd;

@@ -3,7 +3,7 @@
 
     $(document).ready(function () {
 
-        loadBooks();
+    loadBooks();
 
     getClubs();
 
@@ -20,14 +20,15 @@
     $("#clear-search-club-btn").hide();
 
     $("#clear-search-club-btn").click(getClubs);
+
         });
 
    // var booksAPI = "https://localhost:7225/api/Books";
 var booksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Books";
-   // var clubBooksAPI = "https://localhost:7225/api/BookClub";
-var clubBooksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/BookClub";
+    var clubBooksAPI = "https://localhost:7225/api/BookClub";
+// var clubBooksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/BookClub";
     //var uploadFilesAPI = 'https://localhost:7225/api/upload';
-var uploadFilesAPI = 'https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/upload';
+var uploadFilesAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/upload";
   //  var usersAPI = "https://localhost:7225/api/IUsers";
 var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
 //var imageFolder = "https://localhost:7225/Images";
@@ -36,7 +37,8 @@ var imageFolder = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/Images";
     var allBooks = [];
     var allClubs = [];
     let booksDict = [];
-    let clubsDict = [];
+let clubsDict = [];
+let clubNameDict = {}
     let currentClub;
     let imageLink = "";
     let currentLikeBtn;
@@ -86,35 +88,44 @@ var imageFolder = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/Images";
 
     // create a new club
 
-    function createNewClub() {
-        document.getElementById('overlay').style.display = 'block';
+function createNewClub() {
+    document.getElementById('overlay').style.display = 'block';
     document.getElementById('form-modal').style.display = 'block';
 
-    const clubTitleSelect = document.getElementById('club-title');//make dropdown with book titles
-    clubTitleSelect.innerHTML = '';//clear previous select
-            booksDict.forEach(bookTitle => {
-                const option = document.createElement('option');
-    option.value = bookTitle;
-    option.textContent = bookTitle;
-    clubTitleSelect.appendChild(option);
-            });
-    document.getElementById('create-club-form').onsubmit =
-    async function (event) {
-        event.preventDefault(); //prevent from the browser to do the default action, like in this case to load the browser again
-    let selectedTitle = clubTitleSelect.value;
+    const clubTitleSelect = document.getElementById('club-title'); // make dropdown with book titles
+    clubTitleSelect.innerHTML = ''; // clear previous select
 
-    var userId = JSON.parse(localStorage.getItem("loginUserDetails"))
+    Object.entries(clubNameDict).forEach(([key, value]) => {
+        const option = document.createElement('option');
+        option.value = value; // or key if you prefer
+        option.textContent = key; // or key if you prefer
+        clubTitleSelect.appendChild(option);
+    });
 
-    if (userId != null) {
+    document.getElementById('create-club-form').onsubmit = async function (event) {
+        event.preventDefault(); // prevent the browser from performing the default action
+        let selectedBookId = clubTitleSelect.value;
+        let selectedTitle = clubTitleSelect.options[clubTitleSelect.selectedIndex].textContent;
+        var userId = JSON.parse(localStorage.getItem("loginUserDetails"));
 
-        userId = userId.userId; // set the user id from the json
+        if (userId != null) {
+            userId = userId.userId; // set the user id from the json
 
-    await ajaxCall("POST", clubBooksAPI + `/creatClub?clubName=${selectedTitle}&userId=${userId}`, null, successCreateBookClub, errorCreateBookClub);
-    closeForm();
-                    }
-    else {Swal.fire("Please login to create a club"); }
-                }
+            await ajaxCall(
+                "POST",
+                clubBooksAPI + `/creatClub?clubName=${selectedTitle}&userId=${userId}&bookId=${selectedBookId}`,
+                null,
+                successCreateBookClub,
+                errorCreateBookClub
+            );
+
+            closeForm();
+        } else {
+            Swal.fire("Please login to create a club");
         }
+    }
+}
+
     function closeForm() {
         console.log("Closing form");
     document.getElementById('overlay').style.display = 'none';
@@ -217,7 +228,7 @@ var imageFolder = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/Images";
         allBooks = response;
 
     activateSearchBooksBar();
-    populateDropdown(booksDict);
+        populateDropdown(clubNameDict);
         }
 
     function errorToLoadBooks() {
@@ -228,15 +239,16 @@ var imageFolder = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/Images";
         allBooks.forEach((book) => {
             let text = (book.Title).replace(/[^\w\s]/gi, '');
             booksDict.push(text);
+            clubNameDict[text] = book.Id; 
         });
         }
 
     function populateDropdown(items) {
             var dropdownMenu = document.getElementById('create');
     dropdownMenu.innerHTML = '';
-            items.forEach(item => {
+        Object.keys(items).forEach(item => {
                 var listItem = document.createElement('a');
-    listItem.className = 'dropdown-item';
+    listItem.className = `dropdown-item book-id-${items[item]}`;
     listItem.href = '#';
     listItem.textContent = item;
  
