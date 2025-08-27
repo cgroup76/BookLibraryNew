@@ -2,7 +2,6 @@
 A digital-library web app where users can browse, borrow, review, and discuss books with **real-time messaging** and **smart recommendations**.
 
 **Live:** https://proj.ruppin.ac.il/cgroup76/test2/tar6/index.html  
-**Repo:** (add link)
 
 ---
 
