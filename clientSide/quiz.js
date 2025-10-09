@@ -98,7 +98,7 @@ function errorLoadAuthors(error) {
 function generateAnswers(correctBook, questionInfo) {
     let Answers = [];
     Answers.push(correctBook[questionInfo]);
-   
+
     while (Answers.length < NUMOFA) {
         let randomBookIndex = randomIntegerInRange(0, allBooks.length - 1);
         let wrongAnswer = (allBooks[randomBookIndex])[questionInfo];

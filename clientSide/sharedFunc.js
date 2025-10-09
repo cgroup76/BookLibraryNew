@@ -10,7 +10,7 @@ $(document).ready(function () {
     checkForLoginUser();
 
     showAllRequests();
-    
+
     // Log in or sign up forms
     $('.login').click(showLoginForm);
     $('.signup').click(showSignupForm);
@@ -30,7 +30,7 @@ $(document).ready(function () {
  */
 function checkForLoginUser() {
     var loginUser = JSON.parse(localStorage.getItem("loginUserDetails"));
-   
+
     if (loginUser != null) {
         $('.userNameBox').show();
         $('.logoutBox').show();
@@ -40,7 +40,7 @@ function checkForLoginUser() {
         $('.requestBox').show();
         $('.adminPage').hide();
         $('.bookClubPage').show();
-        
+
         // Check if the login user is admin and open the access to admin page
         if (loginUser.userName == "admin") {
             $('.adminPage').show();
@@ -48,7 +48,7 @@ function checkForLoginUser() {
             $('.bookClubPage').hide();
             $('.userNameBox').hide();
             $('.myBooks').hide();
-            $('.requestBox').hide(); 
+            $('.requestBox').hide();
         }
     } else {
         $('.bookClubPage').hide();
@@ -196,9 +196,9 @@ function successLogin(userDetails) {
  * Error callback for login
  * @param {Object} errorMessage - Error message object
  */
-function error(errorMessage) { 
-    console.log(errorMessage); 
-    Swal.fire("Incorrect email or password"); 
+function error(errorMessage) {
+    console.log(errorMessage);
+    Swal.fire("Incorrect email or password");
 }
 
 
@@ -212,9 +212,9 @@ function signupNewUser() {
     var userPassword = $('#userPassword').val();
     var userName = $('#userName').val();
 
-    if (userName == "") { 
-        Swal.fire("Please enter a user name"); 
-        return; 
+    if (userName == "") {
+        Swal.fire("Please enter a user name");
+        return;
     }
 
     // Check email and password in the correct format
@@ -244,8 +244,8 @@ function signupNewUser() {
  * Error callback for signup
  * @param {Object} errorMessage - Error message object
  */
-function errorSignup(errorMessage) { 
-    console.log(errorMessage); 
+function errorSignup(errorMessage) {
+    console.log(errorMessage);
 }
 
 // Logout functionality
@@ -299,8 +299,8 @@ function successLogout(status) {
  * Error callback for logout
  * @param {Object} errorMessage - Error message object
  */
-function errorLogout(errorMessage) { 
-    console.log(errorMessage); 
+function errorLogout(errorMessage) {
+    console.log(errorMessage);
 }
 //-----------------------
 
@@ -347,7 +347,7 @@ function sendRequest(buyerId, sellerId, bookId, sellerName) {
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                ajaxCall("POST", usersAPI + "/insertNewRequest?sellerId=" + sellerId + "&buyerId=" + buyerId + "&bookId=" + bookId, null, successToSendRequest(sellerId,bookId), errorToSendRequest);
+                ajaxCall("POST", usersAPI + "/insertNewRequest?sellerId=" + sellerId + "&buyerId=" + buyerId + "&bookId=" + bookId, null, successToSendRequest(sellerId, bookId), errorToSendRequest);
 
             } else if (
                 result.dismiss === Swal.DismissReason.cancel
@@ -361,7 +361,7 @@ function sendRequest(buyerId, sellerId, bookId, sellerName) {
     }
 
 }
-function successToSendRequest(sellerId,bookId) {
+function successToSendRequest(sellerId, bookId) {
     Swal.fire({
         icon: "success",
         title: "The request has been sent",
@@ -479,14 +479,14 @@ function errorShowRequest(error) {
 
 
 //approve/ deniened requests
-function handleRequest(buyerId,sellerId,bookId,requestStatus,bookName) {
+function handleRequest(buyerId, sellerId, bookId, requestStatus, bookName) {
     console.log(buyerId, sellerId, bookId, requestStatus);
-    ajaxCall("PUT",`${usersAPI}/requestHandling?sellerId=${sellerId}&buyerId=${buyerId}&bookId=${bookId}&requeststatus=${requestStatus}`, null,
+    ajaxCall("PUT", `${usersAPI}/requestHandling?sellerId=${sellerId}&buyerId=${buyerId}&bookId=${bookId}&requeststatus=${requestStatus}`, null,
         function (response) { successToHandle(requestStatus, buyerId, bookName); },
         errorToHandle
     );
 }
-function successToHandle(requestStatus,buyerId,bookName) {
+function successToHandle(requestStatus, buyerId, bookName) {
     if (requestStatus == 'approved') {
         Swal.fire({
             icon: "success",
@@ -526,7 +526,7 @@ let connection = new signalR.HubConnectionBuilder()
 
 connection.on("ReceiveMessage", function (user, message) {
     var currentUser = JSON.parse(localStorage.getItem('loginUserDetails'));
-  
+
     if (currentUser != null) {
         let userId = (currentUser.userId).toString(); // Ensure this is a string comparison
         if (userId === user) {
@@ -539,10 +539,10 @@ connection.on("ReceiveMessage", function (user, message) {
                 <div style="text-align: center;">
                 <iframe src="https://giphy.com/embed/3tESFsOZxN9qAJbfK8" width="300" height="300" style="" frameBorder="0" class="giphy-embed"></iframe>
                 </div>`,
-                timer: 3000, 
-                showConfirmButton: false, 
+                timer: 3000,
+                showConfirmButton: false,
                 allowOutsideClick: false
-                
+
             });
             allBooks = [];
             showBooks();
@@ -568,9 +568,9 @@ startConnection();
 
 function sendNotificationToBuyer(bookName, buyerId, requestStatus) {
     if (connection.state === signalR.HubConnectionState.Connected) {
-       
+
         let messageToBuyer = `Your request for the book '${bookName}' has been ${requestStatus}.`
-      
+
         connection.invoke("SendMessage", buyerId.toString(), messageToBuyer).catch(err => console.error("Error sending message:", err));
     } else {
         console.error("Connection is not established.");
@@ -578,9 +578,9 @@ function sendNotificationToBuyer(bookName, buyerId, requestStatus) {
 }
 function sendNotificationToSeller(sellerId) {
     if (connection.state === signalR.HubConnectionState.Connected) {
-       
+
         let messageToSeller = `You have new request! check your message box'.`
-        connection.invoke("SendMessage",sellerId.toString(), messageToSeller).catch(err => console.error("Error sending message:", err));
+        connection.invoke("SendMessage", sellerId.toString(), messageToSeller).catch(err => console.error("Error sending message:", err));
     } else {
         console.error("Connection is not established.");
     }
@@ -659,7 +659,7 @@ function trySampleRequest() {
         xhr.onreadystatechange = function (e) {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var userEmail = JSON.parse(xhr.response).email;
-               
+
                 let user = {
                     "id": 0,
                     "userName": userEmail.split('@')[0],
@@ -680,7 +680,7 @@ function trySampleRequest() {
     } else {
         oauth2SignIn();
     }
-    
+
 }
 
 

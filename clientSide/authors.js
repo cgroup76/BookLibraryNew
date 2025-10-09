@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedAuthor = author;
             }
         });
-        
+
         if (selectedAuthor == "") {
             $(".author-details").html(''); // If no author name was selected
         } else {
@@ -48,49 +48,49 @@ function showSearchedAuthor(author) {
     <div class=''>
         <div class='card-body'>
             <h2 class='card-text'>${author.name}</h2>`;
-            
-    if (author.dateOfBirth == undefined || author.dateOfBirth == "") { 
+
+    if (author.dateOfBirth == undefined || author.dateOfBirth == "") {
         // No birth date
     } else {
         html += `<p class='card-text'><strong>Born:</strong> ${author.dateOfBirth}</p>`;
     }
-    
-    if (author.dateOfDeath == undefined || author.dateOfDeath == "") { 
+
+    if (author.dateOfDeath == undefined || author.dateOfDeath == "") {
         // No death date
     } else {
         html += `<p class='card-text'><strong>Died:</strong> ${author.dateOfDeath}</p>`;
     }
-    
-    if (author.age == undefined || author.age == "") { 
+
+    if (author.age == undefined || author.age == "") {
         // No age
     } else {
         html += `<p class='card-text'><strong>Age:</strong> ${author.age}</p>`;
     }
-    
-    if (author.nationality == undefined || author.nationality == "") { 
+
+    if (author.nationality == undefined || author.nationality == "") {
         // No nationality
     } else {
         html += `<p class='card-text'><strong>Nationality:</strong> ${author.nationality}</p>`;
     }
-    
-    if (author.notableWork == undefined || author.notableWork == "") { 
+
+    if (author.notableWork == undefined || author.notableWork == "") {
         // No notable work
     } else {
         html += `<p class='card-text'><strong>Notable Work:</strong> ${author.notableWork}</p>`;
     }
-    
-    if (author.awards == undefined || author.awards == "") { 
+
+    if (author.awards == undefined || author.awards == "") {
         // No awards
     } else {
         html += `<p class='card-text'><strong>Awards:</strong> ${author.awards}</p>`;
     }
-    
-    if (author.description == undefined || author.description == "") { 
+
+    if (author.description == undefined || author.description == "") {
         // No description
     } else {
         html += `<p class='card-text'><strong>Description:</strong> ${author.description}</p>`;
     }
-    
+
     html += `  <h4 class='authorBooksTitle'></h4>  <div class="row authour-books"></div> </div>
     </div>`;
     $(".author-details").html(html);

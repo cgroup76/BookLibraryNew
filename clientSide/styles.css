@@ -727,7 +727,7 @@ li {
     display: block;
     transform: translate(-50%, -50%) scale(1);
     }
-}
+
 
 /* Rating system */
 .rating {
@@ -957,7 +957,7 @@ li {
     right: 0;
     top: 0;
     }
-}
+
 
 .gsi-material-button:disabled {
     cursor: default;

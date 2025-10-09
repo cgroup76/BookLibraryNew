@@ -106,21 +106,21 @@ function openGame() {
             $('#container-hangMan').show();
             startHangManGame();
         }
-        break;
+            break;
         case 'MemoryGame': {
             $('#container-quiz').hide();
             $('#container-Memorybody').show();
             $('#container-hangMan').hide();
             startMemoryGame();
         }
-        break;
+            break;
         case 'BookQuiz': {
             $('#container-quiz').show();
             $('#container-Memorybody').hide();
             $('#container-hangMan').hide();
             createQuiz();
         }
-        break;
+            break;
     }
 }
 
@@ -239,7 +239,7 @@ function checkForMatch() {
 
     const isMatch = firstCard.dataset.AuthorName === secondCard.dataset.AuthorName;
     const isCardAndAuthor = firstCard.dataset.type !== secondCard.dataset.type;
-    
+
     if (isMatch && isCardAndAuthor) {
         disableCards();
         if (firstCard) {
@@ -268,7 +268,7 @@ function checkForMatch() {
         victoryAttempts = attempts;
         let gameResult = "";
         let user = JSON.parse(localStorage.getItem('loginUserDetails'));
-        
+
         if (user != null) {
             gameResult = {
                 "gameName": "MemoryCard",
@@ -464,7 +464,7 @@ function displayWord() {
     for (let i = 0; i < choosenWord.length; i++) {
         let span = document.createElement('span');
         span.className = 'letter';
-        
+
         if (choosenWord[i] == ' ') {
             span.innerText = ' ';
         } else if (choosenWord[i] == ',') {
@@ -512,7 +512,7 @@ function displayWord() {
  */
 function handleGuess(letter) {
     const incorrectGuessDisplay = document.querySelector('.failedGuess b');
-    
+
     if (choosenWord.includes(letter)) {
         for (let i = 0; i < choosenWord.length; i++) {
             correctGuess.push(letter);
@@ -533,13 +533,13 @@ function handleGuess(letter) {
  */
 function checkWin() {
     let allGuessed = choosenWord.split('').every(letter => {
-        return letter == ' ' || letter == ',' || letter == "'" || letter == ':' || 
-               letter == '#' || letter == '!' || letter == ')' || letter == '(' || 
-               letter == '1' || letter == '2' || letter == '3' || letter == '4' || 
-               letter == '5' || letter == '6' || letter == '7' || letter == '8' || 
-               letter == '9' || correctGuess.includes(letter);
+        return letter == ' ' || letter == ',' || letter == "'" || letter == ':' ||
+            letter == '#' || letter == '!' || letter == ')' || letter == '(' ||
+            letter == '1' || letter == '2' || letter == '3' || letter == '4' ||
+            letter == '5' || letter == '6' || letter == '7' || letter == '8' ||
+            letter == '9' || correctGuess.includes(letter);
     });
-    
+
     if (allGuessed) {
         getScore(incorrectGuess);
         Swal.fire('Congratulations!', 'You guessed the word!', 'success');
@@ -849,8 +849,8 @@ function checkQuizResults() {
     let user = JSON.parse(localStorage.getItem('loginUserDetails'));
 
     while (index < NUMOFA) {
-        if (userQuizAnswers[index] == QuizCorrectAnswers[index]) { 
-            numOfCorrectAns++; 
+        if (userQuizAnswers[index] == QuizCorrectAnswers[index]) {
+            numOfCorrectAns++;
         }
         index++;
     }
@@ -900,14 +900,14 @@ function successTop5(topResult) {
                 html += `<p>${index++}. <strong class='pink'>User: ${r.userName} time: ${r.time} score: ${r.scoreNum}</strong> `;
             }
         } else {
-            if (gameName == 'HangMan') { 
-                html += `<p>${index++}. User: ${r.userName} score: ${r.scoreNum} `; 
+            if (gameName == 'HangMan') {
+                html += `<p>${index++}. User: ${r.userName} score: ${r.scoreNum} `;
             } else {
                 html += `<p>${index++}. User: ${r.userName} time: ${r.time} score: ${r.scoreNum} `;
             }
         }
     });
-    
+
     $('.game-container').hide();
     $('.game-box').hide();
     $('.resultContainer').show();
@@ -918,8 +918,8 @@ function successTop5(topResult) {
  * Error callback for top 5 results
  * @param {Object} err - Error object
  */
-function errorTop5(err) { 
-    console.log(err); 
+function errorTop5(err) {
+    console.log(err);
 }
 
 /**

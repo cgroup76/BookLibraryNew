@@ -1,50 +1,50 @@
 
-    //var usersAPI = "https://localhost:7225/api/IUsers";
-   // var booksAPI = "https://localhost:7225/api/Books";
+//var usersAPI = "https://localhost:7225/api/IUsers";
+// var booksAPI = "https://localhost:7225/api/Books";
 //var authorsAPI = "https://localhost:7225/api/Authors";
 var authorsAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Authors";
 var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
 var booksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Books";
 
-    var allBooksForAdmin = [];
-    var allUsersForAdmin = [];
-    var allAuthorForAdmin = [];
+var allBooksForAdmin = [];
+var allUsersForAdmin = [];
+var allAuthorForAdmin = [];
 
-    $(document).ready(function () {
-        $('.closeTable').click(closeTable);
+$(document).ready(function () {
+    $('.closeTable').click(closeTable);
     $("#bookTableContainer").hide();
     $("#usersTableContainer").hide();
     $("#authorTableContainer").hide();
     showBooksForAdmin();
 
-        });
+});
 
-    function ajaxCall(method, api, data, successCB, errorCB) {
-        $.ajax({
-            type: method,
-            url: api,
-            data: JSON.stringify(data),
-            cache: false,
-            contentType: "application/json",
-            dataType: "json",
-            success: successCB,
-            error: errorCB
-        });
-        }
+function ajaxCall(method, api, data, successCB, errorCB) {
+    $.ajax({
+        type: method,
+        url: api,
+        data: JSON.stringify(data),
+        cache: false,
+        contentType: "application/json",
+        dataType: "json",
+        success: successCB,
+        error: errorCB
+    });
+}
 
-        //load all books for admin table
-    function showBooksForAdmin() {
+//load all books for admin table
+function showBooksForAdmin() {
 
-        ajaxCall("GET", booksAPI, null, BooksForAdmin, errorToLoad);
-        }
+    ajaxCall("GET", booksAPI, null, BooksForAdmin, errorToLoad);
+}
 
 
-    function BooksForAdmin(books) {
-        allBooksForAdmin = books
-            const BooksContainer = document.getElementById('booksTableInput');
+function BooksForAdmin(books) {
+    allBooksForAdmin = books
+    const BooksContainer = document.getElementById('booksTableInput');
     let booksHtml = "";
 
-            allBooksForAdmin.forEach((book) => {
+    allBooksForAdmin.forEach((book) => {
         booksHtml += `
                                     <tr>
                                         <td><img src='${book.SmallThumbnail}' alt='Thumbnail' width='50' height='75'></td>
@@ -57,32 +57,32 @@ var booksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Books";
                                             ${book.SecondAuthorName}
                                         </td>
                                         <td>${book.UserName}</td>`
-                if (book.IsAvailable == 1 && book.IsActive == 1) {
-        booksHtml +=
-        `<td> Active </br>
+        if (book.IsAvailable == 1 && book.IsActive == 1) {
+            booksHtml +=
+                `<td> Active </br>
                                                  <button id="activityBtn" onclick="changeActivtiy(${book.Id})">Mark as inactive</button>
                                                  </td>
                                                 </tr>`;
-                }
-    else if ((book.IsAvailable == 1 && book.IsActive == 0)) {
-        booksHtml +=
-        `<td> Inactive </br>
+        }
+        else if ((book.IsAvailable == 1 && book.IsActive == 0)) {
+            booksHtml +=
+                `<td> Inactive </br>
                               <button id="activityBtn" onclick="changeActivtiy(${book.Id})">Mark as active</button>
                               </td>
                              </tr>`;
-                }
-    else if (book.IsAvailable == 0) {
-        booksHtml +=
-        `<td> Active  </td>
+        }
+        else if (book.IsAvailable == 0) {
+            booksHtml +=
+                `<td> Active  </td>
                              </tr>`;
 
-                }
+        }
 
-            });
+    });
 
     booksHtml += '</tbody></table ></div > ';
-BooksContainer.innerHTML = booksHtml;
-        }
+    BooksContainer.innerHTML = booksHtml;
+}
 function changeActivtiy(bookId) {
     ajaxCall("PUT", `${booksAPI}/changeBookActivity?bookId=${bookId}`, null, successToChange, errorToChange)
 }
@@ -212,6 +212,6 @@ function closeTable() {
     $(".authersTable").show();
     $(".booksTable").show();
 }
-        
-      
+
+
 

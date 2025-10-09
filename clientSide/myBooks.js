@@ -33,7 +33,7 @@ function postReview() {
     } else {
         bookRating = document.querySelector('input[name="rating"]:checked').value;
     }
-    
+
     var comment = document.getElementById("comment").value;
     let userId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
 
@@ -41,7 +41,7 @@ function postReview() {
         Swal.fire("Please add comment to the review");
         return;
     }
-    
+
     ajaxCall("PUT", booksAPI + `/RateBook?bookID=${bookIdToRate}&newRating=${bookRating}&userID=${userId}&review=${comment}`, null, successRating, errorRating);
 
     return false;
@@ -156,7 +156,7 @@ function BooksToShow(books) {
             <div class='card-body' id='markAsRead-${book.Id}'>
                 <h5 class='card-title'>${book.Title}</h5>
                 <p>Written by: ${book.FirstAuthorName}</p>`;
-                
+
         if (book.IsRead == 'False') {
             booksHtml += `<a class='btn btn-outline-dark pinkB' onclick="ReadTheBook(${book.UserId}, ${book.Id})">Mark as read</a>`;
         } else if (book.WasRated == 0) {
@@ -165,7 +165,7 @@ function BooksToShow(books) {
         } else {
             // Book already rated
         }
-        
+
         booksHtml += `
             </div>
         </div>
@@ -211,8 +211,8 @@ function successToMarkAsRead() {
     Swal.fire('Success', 'Book marked as read.', 'success');
 
     for (let i = 0; i < allMyBooks.length; i++) {
-        if (allMyBooks[i].Id == currentBookId) { 
-            allMyBooks[i].IsRead = "True"; 
+        if (allMyBooks[i].Id == currentBookId) {
+            allMyBooks[i].IsRead = "True";
         }
     }
 }
@@ -318,10 +318,10 @@ function showBookInfo(bookId) {
     $('.book-info-category').html(book.Category);
     $('.book-info-numOfPages').html(book.NumOfPages);
 
-    if (book.IsEbook == 0) { 
-        $('.book-info-format').html('Hard Cover'); 
-    } else { 
-        $('.book-info-format').html('EBook'); 
+    if (book.IsEbook == 0) {
+        $('.book-info-format').html('Hard Cover');
+    } else {
+        $('.book-info-format').html('EBook');
     }
 
     $('.book-info-lang').html('English');
@@ -369,8 +369,8 @@ function seccessToLoadReviews(reviews) {
  * Handle error when loading reviews fails
  * @param {Object} err - Error object
  */
-function errorR(err) { 
-    console.log(err); 
+function errorR(err) {
+    console.log(err);
 }
 
 /**
@@ -381,4 +381,3 @@ function closeBookInfo() {
     $('#overlay').removeClass('active');
     $('#review-carosel').html("");
 }
-  

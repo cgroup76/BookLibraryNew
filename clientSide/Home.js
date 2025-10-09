@@ -1,50 +1,51 @@
 ﻿
 // API endpoints
-   // var usersAPI = "https://localhost:7225/api/IUsers";
+// var usersAPI = "https://localhost:7225/api/IUsers";
 // var booksAPI = "https://localhost:7225/api/Books";
 var booksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Books";
 var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
 
 // Utility function to generate star rating display
-        const rating = stars => '★★★★★☆☆☆☆☆'.slice(5 - stars, 10 - stars);
+const rating = stars => '★★★★★☆☆☆☆☆'.slice(5 - stars, 10 - stars);
 
 // Global variables
-    var allBooks = [];
+var allBooks = [];
 let booksDict = {};
-    var top5Books = [];
-    var currentBookId;
+var top5Books = [];
+var currentBookId;
 
-    $(document).ready(function () {
-        showBooks();
+$(document).ready(function () {
+    showBooks();
 
     // Search book by title / author / text
     $(".search-book-btn").click(searchBook);
     $('.reset-search-book').click(showBooks);
     $('.reset-search-book').hide();
 });
-// Page load animation
-    window.addEventListener('load', function () {
-            const blobs = document.querySelectorAll('.bubble-head');
-            blobs.forEach(blob => {
-        blob.style.animationPlayState = 'running'; // Trigger animation on load
-            });
-        });
 
-    window.addEventListener('load', function () {
-            const blobs = document.querySelectorAll('.bubble-head-left-s');
-            blobs.forEach(blob => {
+// Page load animation
+window.addEventListener('load', function () {
+    const blobs = document.querySelectorAll('.bubble-head');
+    blobs.forEach(blob => {
         blob.style.animationPlayState = 'running'; // Trigger animation on load
-            });
-        });
+    });
+});
+
+window.addEventListener('load', function () {
+    const blobs = document.querySelectorAll('.bubble-head-left-s');
+    blobs.forEach(blob => {
+        blob.style.animationPlayState = 'running'; // Trigger animation on load
+    });
+});
 
 // Text to speech functionality for search bar
 // Works on Google Chrome / Opera / Samsung Internet
-    const transcript = document.querySelector(".search-string");
+const transcript = document.querySelector(".search-string");
 
-        // Select the SVG element by its class and add a click event listener
-        document.querySelector('.speech-to-text').addEventListener('click', () => {
-        // Start speech recognition logic here
-        transcript.value = "";  // Clear input field
+// Select the SVG element by its class and add a click event listener
+document.querySelector('.speech-to-text').addEventListener('click', () => {
+    // Start speech recognition logic here
+    transcript.value = "";  // Clear input field
 
     recognition = new webkitSpeechRecognition();  // Initialize speech recognition
 
@@ -56,43 +57,43 @@ let booksDict = {};
 
     recognition.start();  // Start speech recognition
 
-            // Handle the results of speech recognition
-            recognition.onresult = (event) => {
+    // Handle the results of speech recognition
+    recognition.onresult = (event) => {
         let text = "";
-    for (let i = event.resultIndex; i < event.results.length; ++i) {
-                    if (event.results[i][0].confidence > 0.8) {
-        text += event.results[i][0].transcript;
-                    }
-                }
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i][0].confidence > 0.8) {
+                text += event.results[i][0].transcript;
+            }
+        }
 
-    transcript.value = text.trim();  // Update input field with transcribed text
-            };
+        transcript.value = text.trim();  // Update input field with transcribed text
+    };
 
-            recognition.onend = () => {
+    recognition.onend = () => {
         // Re-enable recognition or handle when recognition ends
     };
 
-            recognition.onerror = (event) => {
+    recognition.onerror = (event) => {
         console.error("Speech recognition error:", event.error);
-    recognition.stop();
-            };
-        });
+        recognition.stop();
+    };
+});
 
-    //-----------------------
+//-----------------------
 
 
-    // book info
+// book info
 
 /**
  * Show book information modal
  * @param {number} bookId - ID of the book to display
  */
-    function showBookInfo(bookId) {
-            const buyer = JSON.parse(localStorage.getItem("loginUserDetails"));
+function showBookInfo(bookId) {
+    const buyer = JSON.parse(localStorage.getItem("loginUserDetails"));
 
     ajaxCall("GET", booksAPI + `/getBookReviews?bookId=${bookId}`, null, seccessToLoadReviews, errorR);
 
-            let book = allBooks.find((book) => book.Id === bookId);
+    let book = allBooks.find((book) => book.Id === bookId);
 
     $('#book-info-container').addClass('active');
     $('#overlay').addClass('active');
@@ -105,22 +106,22 @@ let booksDict = {};
     $('.book-info-numOfPages').html(book.NumOfPages);
 
     if (buyer != null) {
-                const buyerId = buyer.userId;
+        const buyerId = buyer.userId;
 
-    // If someone already bought the book
+        // If someone already bought the book
         if (buyerId == 1) { }  // hide buttons from admin
-    else if (book.IsAvailable == 0) {
-                    if (book.UserId == buyerId) { // The logged-in user bought this book
-        $('.buy-the-book').html(`<a class='btn buyABookBtn pinkB ' id='notAllowed' disabled><s>Buy</s></a>`);
-                    } else {
-                        const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
-                        $('.buy-the-book').html(`<a class='btn btn-outline-dark pinkB btn-request-${book.Id}' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>`);
-                    }
-                } else {
-        // If the book is available for purchase
-            $('.buy-the-book').html(`<a class='btn btn-outline-dark pinkB' onclick='buyABook(${book.Id})'>Buy</a>`);
-                }
+        else if (book.IsAvailable == 0) {
+            if (book.UserId == buyerId) { // The logged-in user bought this book
+                $('.buy-the-book').html(`<a class='btn buyABookBtn pinkB ' id='notAllowed' disabled><s>Buy</s></a>`);
             } else {
+                const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
+                $('.buy-the-book').html(`<a class='btn btn-outline-dark pinkB btn-request-${book.Id}' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>`);
+            }
+        } else {
+            // If the book is available for purchase
+            $('.buy-the-book').html(`<a class='btn btn-outline-dark pinkB' onclick='buyABook(${book.Id})'>Buy</a>`);
+        }
+    } else {
         // If the user is not logged in, there's no need to show the purchase option
         $('.buy-the-book').html(`<a class='btn btn-outline-dark pinkB' onclick='buyABook(${book.Id})'>Buy</a>`);
     }
@@ -135,11 +136,11 @@ let booksDict = {};
  * Success callback for loading book reviews
  * @param {Array} reviews - Array of review objects
  */
-    function seccessToLoadReviews(reviews) {
-        let html = '';
+function seccessToLoadReviews(reviews) {
+    let html = '';
     let index = 1;
-            
-            if (reviews.length > 0) {
+
+    if (reviews.length > 0) {
         reviews.forEach((review) => {
             if (index++ == 1) {
                 html += `<div class="carousel-item active">
@@ -167,62 +168,62 @@ let booksDict = {};
             }
 
         })
-                $('#review-carosel').html(html);
-            }
-        }
+        $('#review-carosel').html(html);
+    }
+}
 
-    function errorR(err) {console.log(err)}
+function errorR(err) { console.log(err) }
 
-    function closeBookInfo() {
-        $('#book-info-container').removeClass('active');
+function closeBookInfo() {
+    $('#book-info-container').removeClass('active');
     $('#overlay').removeClass('active');
     $('#review-carosel').html("");
-        }
+}
 
 
 
-    function showMyBooks() { }
+function showMyBooks() { }
 
-        // show books
+// show books
 
 
-    function showBooks() {
+function showBooks() {
 
-            if (allBooks.length == 0) {
+    if (allBooks.length == 0) {
         ajaxCall("GET", booksAPI, null, showAllBooks, errorToLoadBooks);
 
-            }
-    else {BooksToShow(allBooks, 'allBooks'); }
+    }
+    else { BooksToShow(allBooks, 'allBooks'); }
 
     getTop5Books();
-        }
+}
 
-    function showAllBooks(books) {
-        allBooks = books;
+function showAllBooks(books) {
+    allBooks = books;
     activateSreachBooksBar();
     BooksToShow(allBooks, 'allBooks');
-        }
+}
 
-    function getTop5Books() {
-            if (top5Books.length == 0) {
+function getTop5Books() {
+    if (top5Books.length == 0) {
         ajaxCall("GET", booksAPI + '/showTop5BooksByRating', null, top5booksByRating, errorToLoadBooks);
-            }
-    else {showTop5Books(top5Books); }
-        }
+    }
+    else { showTop5Books(top5Books); }
+}
 
-    function top5booksByRating(topBooks) {
-        top5Books = topBooks;
+function top5booksByRating(topBooks) {
+    top5Books = topBooks;
     showTop5Books(top5Books);
-        }
-    function showTop5Books(books, container) {
-        let html = "";
+}
+function showTop5Books(books, container) {
+    let html = "";
     let index = 0;
 
-            books.forEach((book) => {
+    books.forEach((book) => {
 
-                if (index++ == 0) {
+        if (index++ == 0) {
 
-        html += ` <div class='carousel-item active '>
+            html += ` <div class='carousel-item active '>
                             <div class='container'>
                                     <div class='top-books-container row'>
                                     <div class='col-md-5 col-xs-6'>
@@ -243,10 +244,10 @@ let booksDict = {};
                                     </div>
                                     </div >`;
 
-                }
+        }
 
-    else {
-        html += ` <div class='carousel-item  '>
+        else {
+            html += ` <div class='carousel-item  '>
                             <div class='container'>
                                     <div class='top-books-container row'>
                                     <div class='col-md-5 col-xs-6'>
@@ -266,41 +267,41 @@ let booksDict = {};
                                     </div>
                                     </div>
                                     </div >`;
-                }
-            })
+        }
+    })
     $("#top5Books").html(html);
-        }
-    // limit the length of the string
-    function limitStringLength(str, maxLength) {
-            if (str.length > maxLength) {
-                return str.slice(0, maxLength) + "...";
-            } else {
-                return str;
-            }
-        }
+}
+// limit the length of the string
+function limitStringLength(str, maxLength) {
+    if (str.length > maxLength) {
+        return str.slice(0, maxLength) + "...";
+    } else {
+        return str;
+    }
+}
 
-    function BooksToShow(books, containerId) {
-        $('.reset-search-book').hide();
+function BooksToShow(books, containerId) {
+    $('.reset-search-book').hide();
 
     allBooks = books;
     const BooksContainer = document.getElementById('allBooks');
     if (BooksContainer.classList.contains('container')) {
         // If it has the class 'row', remove 'row' and add 'container'
         BooksContainer.classList.remove('container');
-    BooksContainer.classList.add('row');
-            }
+        BooksContainer.classList.add('row');
+    }
     let booksHtml = '';
     const buyer = JSON.parse(localStorage.getItem("loginUserDetails"));
 
-            books.forEach((book) => {
-                if (book.IsActive == 1) {
-        booksHtml += `<a onclick='showBookInfo(${book.Id})'>
+    books.forEach((book) => {
+        if (book.IsActive == 1) {
+            booksHtml += `<a onclick='showBookInfo(${book.Id})'>
                                                     <div class='col-lg-3 col-sm-4 book-info'>`
 
-                    if (buyer != null && book.IsAvailable == 0 && buyer.userId == book.UserId) {booksHtml += `<div class='card mb-4 book-card book-${book.Id} bought'>`}
-    else {booksHtml += `<div class='card mb-4 book-card book-${book.Id}'>`}
+            if (buyer != null && book.IsAvailable == 0 && buyer.userId == book.UserId) { booksHtml += `<div class='card mb-4 book-card book-${book.Id} bought'>` }
+            else { booksHtml += `<div class='card mb-4 book-card book-${book.Id}'>` }
 
-    booksHtml +=                          `  <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
+            booksHtml += `  <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
         <div class='card-body w-100'>
             <h6 class='card-title'>${book.Title}</h6>
             <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
@@ -315,143 +316,143 @@ let booksDict = {};
                                                    </div ></a> `;
                 } // hide buttons from admin
 
-            // If someone already bought the book
-            else if (book.IsAvailable == 0) {
-                            if (book.UserId == buyerId) { // The logged-in user bought this book
-                booksHtml += `<a class='btn buyABookBtn pinkB ' id='notAllowed' disabled><s>Buy</s></a>
+                // If someone already bought the book
+                else if (book.IsAvailable == 0) {
+                    if (book.UserId == buyerId) { // The logged-in user bought this book
+                        booksHtml += `<a class='btn buyABookBtn pinkB ' id='notAllowed' disabled><s>Buy</s></a>
                                                                           </div>
                                                                           </div>
                                                                           </div></a>`;
-                            } else {
-                                const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
-            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB btn-request-${book.Id}' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
+                    } else {
+                        const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
+                        booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB btn-request-${book.Id}' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>
         </div>
     </div>
 </div></a > `;
-                            }
-                        } else {
-                            // If the book is available for purchase
-                            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'buyABook(${book.Id})' > Buy</a >
+                    }
+                } else {
+                    // If the book is available for purchase
+                    booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'buyABook(${book.Id})' > Buy</a >
                                                                       </div >
                                                                       </div >
                                                                       </div ></a> `;
-                        }
-                    } else {
-                        // If the user is not logged in, there's no need to show the purchase option
-                        booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'buyABook(${book.Id})' > Buy</a >
+                }
+            } else {
+                // If the user is not logged in, there's no need to show the purchase option
+                booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'buyABook(${book.Id})' > Buy</a >
                                                                   </div >
                                                                   </div >
                                                                   </div ></a> `;
-                    }
-                }
-            });
-
-            BooksContainer.innerHTML = booksHtml;
-        }
-
-        function errorToLoadBooks(message) { console.log(message); }
-
-        // buy a book
-
-        function buyABook(bookId) {
-
-            currentBookId = bookId;
-
-            var buyer = JSON.parse(localStorage.getItem("loginUserDetails"))
-
-            if (buyer != null) {
-
-                buyer = buyer.userId; // set the buyer id from the json
-
-                ajaxCall("POST", usersAPI + '/addNewBookToUser?userId=' + buyer + '&bookId=' + bookId, null, successToBuyABook, errorBuyABook);
-            }
-
-            else { Swal.fire("Please login first"); }
-        }
-
-        function successToBuyABook(status) {
-            Swal.fire('Success', "The book has been successfully purchased", 'success');
-            closeBookInfo();
-            $(`.book - ${ currentBookId } `).addClass('bought');
-            setBooksDetails(allBooks);
-            setBooksDetails(top5Books);
-
-            showBooks();
-        }
-
-        function errorBuyABook(error) {
-            if (error.status == 401) {
-
-                Swal.fire("Connection time ended - Please login first");
-
-                localStorage.clear();
-
-                checkForLoginUser();
-
-                showLoginForm();
-            }
-            else { Swal.fire("Error to buy a book"); }
-        }
-        // set the book details
-        function setBooksDetails(books) {
-            for (let i = 0; i < books.length; i++) {
-                if (books[i].Id == currentBookId) {
-                    books[i].IsAvailable = 0;
-                    books[i].UserId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
-                }
             }
         }
-       
+    });
 
-     
-        //------------------------
-        function activateSreachBooksBar() {
+    BooksContainer.innerHTML = booksHtml;
+}
 
-            allBooks.forEach((book) => {
-                if (book.IsActive == 1) {
-                    let text = book.Title + " " + book.FirstAuthorName + " " + book.SecondAuthorName + " " + book.TextSnippet + " " + book.Description;
-                    booksDict[JSON.stringify(book)] = text.toLowerCase();
-                }
-            })
+function errorToLoadBooks(message) { console.log(message); }
+
+// buy a book
+
+function buyABook(bookId) {
+
+    currentBookId = bookId;
+
+    var buyer = JSON.parse(localStorage.getItem("loginUserDetails"))
+
+    if (buyer != null) {
+
+        buyer = buyer.userId; // set the buyer id from the json
+
+        ajaxCall("POST", usersAPI + '/addNewBookToUser?userId=' + buyer + '&bookId=' + bookId, null, successToBuyABook, errorBuyABook);
+    }
+
+    else { Swal.fire("Please login first"); }
+}
+
+function successToBuyABook(status) {
+    Swal.fire('Success', "The book has been successfully purchased", 'success');
+    closeBookInfo();
+    $(`.book - ${currentBookId} `).addClass('bought');
+    setBooksDetails(allBooks);
+    setBooksDetails(top5Books);
+
+    showBooks();
+}
+
+function errorBuyABook(error) {
+    if (error.status == 401) {
+
+        Swal.fire("Connection time ended - Please login first");
+
+        localStorage.clear();
+
+        checkForLoginUser();
+
+        showLoginForm();
+    }
+    else { Swal.fire("Error to buy a book"); }
+}
+// set the book details
+function setBooksDetails(books) {
+    for (let i = 0; i < books.length; i++) {
+        if (books[i].Id == currentBookId) {
+            books[i].IsAvailable = 0;
+            books[i].UserId = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
         }
-        function searchBook() {
-            let searchString = ($(".search-string").val()).toLowerCase();
-            let bookList = []
+    }
+}
 
-            if (searchString == "") { }
-            else {
-                for (let key in booksDict) {
 
-                    let index = booksDict[key].indexOf(searchString)
 
-                    if (index != -1) {
+//------------------------
+function activateSreachBooksBar() {
 
-                        let str = booksDict[key];
-                        let section1 = str.substring(index - 50 - searchString.length, index);
-                        let section2 = str.substring((index + searchString.length), (index + searchString.length + 200) );
-                        let findSearchString = searchString
+    allBooks.forEach((book) => {
+        if (book.IsActive == 1) {
+            let text = book.Title + " " + book.FirstAuthorName + " " + book.SecondAuthorName + " " + book.TextSnippet + " " + book.Description;
+            booksDict[JSON.stringify(book)] = text.toLowerCase();
+        }
+    })
+}
+function searchBook() {
+    let searchString = ($(".search-string").val()).toLowerCase();
+    let bookList = []
 
-                        let book = JSON.parse(key);
-                        book['foundString'] = `<p>...${ section1 } <strong class='pink'>${findSearchString}</strong>${ section2 }...</p > `;
-                        bookList.push(book);
+    if (searchString == "") { }
+    else {
+        for (let key in booksDict) {
 
-                    }
-                }
-                if (bookList.length == 0) {
-                    document.getElementById("allBooks").innerHTML = "<h5>0 books was found...</h5>";
-                }
-                else {
-                    const BooksContainer = document.getElementById('allBooks');
-                    if (BooksContainer.classList.contains('row')) {
-                        // If it has the class 'row', remove 'row' and add 'container'
-                        BooksContainer.classList.remove('row');
-                        BooksContainer.classList.add('container');
-                    } 
-                    const buyer = JSON.parse(localStorage.getItem("loginUserDetails"));
-                    let booksHtml = '';
+            let index = booksDict[key].indexOf(searchString)
 
-                    bookList.forEach((book) => {
-                        booksHtml += `
+            if (index != -1) {
+
+                let str = booksDict[key];
+                let section1 = str.substring(index - 50 - searchString.length, index);
+                let section2 = str.substring((index + searchString.length), (index + searchString.length + 200));
+                let findSearchString = searchString
+
+                let book = JSON.parse(key);
+                book['foundString'] = `<p>...${section1} <strong class='pink'>${findSearchString}</strong>${section2}...</p > `;
+                bookList.push(book);
+
+            }
+        }
+        if (bookList.length == 0) {
+            document.getElementById("allBooks").innerHTML = "<h5>0 books was found...</h5>";
+        }
+        else {
+            const BooksContainer = document.getElementById('allBooks');
+            if (BooksContainer.classList.contains('row')) {
+                // If it has the class 'row', remove 'row' and add 'container'
+                BooksContainer.classList.remove('row');
+                BooksContainer.classList.add('container');
+            }
+            const buyer = JSON.parse(localStorage.getItem("loginUserDetails"));
+            let booksHtml = '';
+
+            bookList.forEach((book) => {
+                booksHtml += `
                                         <div class='row'>
                                                         <div class=' mb-4 book-card-search col-xl-2 col-lg-3 col-md-4 col-12'>
                                                             <img src='${book.SmallThumbnail}' class='card-img-search' alt='Book'>
@@ -461,43 +462,42 @@ let booksDict = {};
                                                                 ${book.foundString}
                                                                 <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
                                                                 <span class='card-text'>${book.Price}$       </span>`;
-                        if (buyer != null) {
-                            const buyerId = buyer.userId;
+                if (buyer != null) {
+                    const buyerId = buyer.userId;
 
-                            // If someone already bought the book
-                            if (book.IsAvailable == 0) {
-                                if (book.UserId == buyerId) { // The logged-in user bought this book
-                                    booksHtml += ` <a class='btn buyABookBtn pinkB ' id = 'notAllowed' disabled > <s>Buy</s></a >
+                    // If someone already bought the book
+                    if (book.IsAvailable == 0) {
+                        if (book.UserId == buyerId) { // The logged-in user bought this book
+                            booksHtml += ` <a class='btn buyABookBtn pinkB ' id = 'notAllowed' disabled > <s>Buy</s></a >
                                                                              </div>
                                                                           </div>
                                                                           </div>`;
-                                } else {
-                                    const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
-                                    booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='showBookInfo(${book.Id})'>Info</a>
-                                                                      </div>
-                                                                      </div>
-                                                                      </div> `;
-                                }
-                            } else {
-                                // If the book is available for purchase
-                                booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'showBookInfo(${book.Id})'> Info</a >
-                                                                      </div>
-                                                                      </div>
-                                                                      </div> `;
-                            }
                         } else {
-                            // If the user is not logged in, there's no need to show the purchase option
-                            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'showBookInfo(${book.Id})'> Info</a >
-                                                                        </div>
+                            const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
+                            booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick='showBookInfo(${book.Id})'>Info</a>
+                                                                      </div>
                                                                       </div>
                                                                       </div> `;
                         }
-                    });
-                    BooksContainer.innerHTML = booksHtml;
+                    } else {
+                        // If the book is available for purchase
+                        booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'showBookInfo(${book.Id})'> Info</a >
+                                                                      </div>
+                                                                      </div>
+                                                                      </div> `;
+                    }
+                } else {
+                    // If the user is not logged in, there's no need to show the purchase option
+                    booksHtml += `<a class='btn btn-outline-dark buyABookBtn pinkB' onclick = 'showBookInfo(${book.Id})'> Info</a >
+                                                                        </div>
+                                                                      </div>
+                                                                      </div> `;
                 }
-                $('.reset-search-book').show();
-            }
-            return false;
+            });
+            BooksContainer.innerHTML = booksHtml;
         }
+        $('.reset-search-book').show();
+    }
+    return false;
+}
 
-   
