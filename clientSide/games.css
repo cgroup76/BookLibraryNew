@@ -27,9 +27,9 @@ button {
     transition: background-color 0.3s ease-in-out;
 }
 
-    button:hover {
-        background-color: #d63384;
-    }
+button:hover {
+    background-color: #d63384;
+}
 
 .card:hover {
     transform: scale(1.05);
@@ -48,11 +48,11 @@ button {
     justify-content: space-between;
 }
 
-    .game-card img {
-        object-fit: cover;
-        height: 450px;
-        border-radius: 10px 10px 0 0;
-    }
+.game-card img {
+    object-fit: cover;
+    height: 450px;
+    border-radius: 10px 10px 0 0;
+}
 
 .card-body {
     flex-grow: 1;
@@ -61,20 +61,20 @@ button {
     justify-content: flex-end;
 }
 
-    .card-body button {
-        width: 100%;
-        padding-top: 10px;
-        background-color: #ff4081;
-        border: none;
-        color: #fff;
-        font-weight: bold;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-    }
+.card-body button {
+    width: 100%;
+    padding-top: 10px;
+    background-color: #ff4081;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
 
-        .card-body button:hover {
-            background-color: #e00067;
-        }
+.card-body button:hover {
+    background-color: #e00067;
+}
 
 .header {
     background-color: #333;
@@ -82,28 +82,28 @@ button {
     margin-bottom: 20px;
 }
 
-    .header h1 {
-        margin: 0;
-        font-size: 24px;
-    }
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+}
 
 .nav-link {
     color: #fff;
 }
 
-    .nav-link:hover {
-        color: #ff4081;
-    }
+.nav-link:hover {
+    color: #ff4081;
+}
 
 .table th,
 .table td {
     border-right: 1px solid #444;
 }
 
-    .table th:last-child,
-    .table td:last-child {
-        border-right: none;
-    }
+.table th:last-child,
+.table td:last-child {
+    border-right: none;
+}
 
 
 
@@ -140,10 +140,10 @@ button {
     z-index: 1;
 }
 
-    #overlay.active {
-        opacity: 2;
-        pointer-events: all;
-    }
+#overlay.active {
+    opacity: 2;
+    pointer-events: all;
+}
 
 #games.active {
     display: block;
@@ -163,7 +163,7 @@ button {
     color: #343a40;
 }
 
-/*memoey game*/
+/* Memory game */
 .Memorybody {
     font-family: Arial, sans-serif;
     display: flex;
@@ -194,11 +194,10 @@ button {
 }
 
 .game-board {
-    width:100%
+    width: 100%;
 }
 
 .card {
-
     height: 150px; 
     background-color: #ff0083;
     border-radius: 8px;
@@ -215,9 +214,9 @@ button {
     margin: 1%;
 }
 
-    .card.flip {
-        transform: rotateY(180deg); 
-    }
+.card.flip {
+    transform: rotateY(180deg); 
+}
 
 .card-back {
     position: absolute;
@@ -261,15 +260,17 @@ button {
 #start-game-btn {
     background-color: #ff0083;
 }
+
 .col-new-2 {
     flex: 0 0 23.0%;
     max-width: 23.0%;
 }
 
-@media only screen and (max-width: 576px){
-    .card-front{
-        font-size:13px;
+@media only screen and (max-width: 576px) {
+    .card-front {
+        font-size: 13px;
     }
+    
     #games {
         position: fixed;
         background-color: white;
@@ -291,12 +292,13 @@ button {
         overflow: auto;
     }
 }
-/*hangMan*/
+
+/* Hangman game */
 .failedGuess b {
     display: inline; 
     margin-right: 5px; 
 }
-/***********************------------------------------------------------------------*/
+
 .word-display {
     list-style-type: none; 
     padding: 0;
@@ -304,11 +306,11 @@ button {
     text-align: center; 
 }
 
-    .word-display .letter {
-        display: inline; 
-        font-size: 24px; 
-        margin: 5px; 
-    }
+.word-display .letter {
+    display: inline; 
+    font-size: 24px; 
+    margin: 5px; 
+}
 
 
 #button-container {
@@ -341,9 +343,9 @@ button {
     max-width: 50px; 
 }
 
-    #button-container button:hover {
-        background-color: #e00067;
-    }
+#button-container button:hover {
+    background-color: #e00067;
+}
 
 @media (max-width: 600px) {
     #button-container button {
@@ -365,7 +367,7 @@ h6 {
     font-size: 36px;
 }
 
-/*quiz*/
+/* Quiz */
 .question {
     background-color: #00000021;
     color: #fff;
@@ -390,9 +392,11 @@ h6 {
 .pinkB {
     background-color: #ff0083;
 }
-.form-check-label{
-    color:black;
+
+.form-check-label {
+    color: black;
 }
-.hang-photo{
-    height:150px;
+
+.hang-photo {
+    height: 150px;
 }

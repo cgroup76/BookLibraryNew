@@ -1,34 +1,35 @@
 ﻿
+// API endpoints
    // var usersAPI = "https://localhost:7225/api/IUsers";
-    //var booksAPI = "https://localhost:7225/api/Books";
+// var booksAPI = "https://localhost:7225/api/Books";
 var booksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Books";
 var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
 
+// Utility function to generate star rating display
         const rating = stars => '★★★★★☆☆☆☆☆'.slice(5 - stars, 10 - stars);
 
+// Global variables
     var allBooks = [];
-    let booksDict = { };
+let booksDict = {};
     var top5Books = [];
-
     var currentBookId;
 
     $(document).ready(function () {
-
         showBooks();
 
-    //search book by title / author / text
+    // Search book by title / author / text
     $(".search-book-btn").click(searchBook);
-
     $('.reset-search-book').click(showBooks);
     $('.reset-search-book').hide();
-        })
-    // page load animation
+});
+// Page load animation
     window.addEventListener('load', function () {
             const blobs = document.querySelectorAll('.bubble-head');
             blobs.forEach(blob => {
         blob.style.animationPlayState = 'running'; // Trigger animation on load
             });
         });
+
     window.addEventListener('load', function () {
             const blobs = document.querySelectorAll('.bubble-head-left-s');
             blobs.forEach(blob => {
@@ -36,8 +37,8 @@ var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
             });
         });
 
-    // text to speach -> search bar : work on Google chrom / Opera / Samsung Internet
-
+// Text to speech functionality for search bar
+// Works on Google Chrome / Opera / Samsung Internet
     const transcript = document.querySelector(".search-string");
 
         // Select the SVG element by its class and add a click event listener
@@ -82,11 +83,14 @@ var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
 
     // book info
 
+/**
+ * Show book information modal
+ * @param {number} bookId - ID of the book to display
+ */
     function showBookInfo(bookId) {
-
             const buyer = JSON.parse(localStorage.getItem("loginUserDetails"));
 
-    ajaxCall("GET", booksAPI +`/getBookReviews?bookId=${bookId}`, null, seccessToLoadReviews, errorR)
+    ajaxCall("GET", booksAPI + `/getBookReviews?bookId=${bookId}`, null, seccessToLoadReviews, errorR);
 
             let book = allBooks.find((book) => book.Id === bookId);
 
@@ -94,7 +98,7 @@ var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
     $('#overlay').addClass('active');
     $('.book-info-img').attr('src', book.Thumbnail);
     $('.book-info-title').html(book.Title);
-    $('.book-info-rating').html( rating(book.Rating) + "   " + (book.Rating).toFixed(1));
+    $('.book-info-rating').html(rating(book.Rating) + "   " + (book.Rating).toFixed(1));
     $('.book-info-author').html(book.FirstAuthorName);
     $('.book-info-publish').html(book.PublishDate);
     $('.book-info-category').html(book.Category);
@@ -104,28 +108,33 @@ var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
                 const buyerId = buyer.userId;
 
     // If someone already bought the book
-     if (buyerId == 1) { }  //hide buttons from admin
+        if (buyerId == 1) { }  // hide buttons from admin
     else if (book.IsAvailable == 0) {
                     if (book.UserId == buyerId) { // The logged-in user bought this book
         $('.buy-the-book').html(`<a class='btn buyABookBtn pinkB ' id='notAllowed' disabled><s>Buy</s></a>`);
-
                     } else {
                         const userName = book.UserName ? book.UserName.toString() : ''; // Ensure userName exists and convert it to a string
                         $('.buy-the-book').html(`<a class='btn btn-outline-dark pinkB btn-request-${book.Id}' onclick='sendRequest(${buyerId}, ${book.UserId}, ${book.Id}, "${userName}")'>Buy</a>`);
                     }
                 } else {
         // If the book is available for purchase
-        $('.buy-the-book').html(`<a class='btn btn-outline-dark pinkB'  onclick='buyABook(${book.Id})'>Buy</a>`);
+            $('.buy-the-book').html(`<a class='btn btn-outline-dark pinkB' onclick='buyABook(${book.Id})'>Buy</a>`);
                 }
             } else {
         // If the user is not logged in, there's no need to show the purchase option
-        $('.buy-the-book').html(`<a class='btn btn-outline-dark pinkB'  onclick='buyABook(${book.Id})'>Buy</a>`);
-            }
+        $('.buy-the-book').html(`<a class='btn btn-outline-dark pinkB' onclick='buyABook(${book.Id})'>Buy</a>`);
+    }
 
-    if (book.IsEbook == 0) {$('.book-info-format').html('Hard Cover'); }
-    else {$('.book-info-format').html('EBook'); }
-
-        }
+    if (book.IsEbook == 0) {
+        $('.book-info-format').html('Hard Cover');
+    } else {
+        $('.book-info-format').html('EBook');
+    }
+}
+/**
+ * Success callback for loading book reviews
+ * @param {Array} reviews - Array of review objects
+ */
     function seccessToLoadReviews(reviews) {
         let html = '';
     let index = 1;

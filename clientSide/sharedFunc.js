@@ -1,7 +1,7 @@
 // JavaScript source code
 
-
-//var usersAPI = "https://localhost:7225/api/IUsers";
+// API endpoints
+// var usersAPI = "https://localhost:7225/api/IUsers";
 var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
 let requestedBookToBuy = [];
 
@@ -10,22 +10,26 @@ $(document).ready(function () {
     checkForLoginUser();
 
     showAllRequests();
-    // log in or sign up forms
+    
+    // Log in or sign up forms
     $('.login').click(showLoginForm);
     $('.signup').click(showSignupForm);
 
-    // close form
+    // Close form
     $('.closeLoginButton').click(closeLoginForm);
 
-    // submit form
+    // Submit form
     $('#logInButton').click(loginUser);
     $('#signupButton').click(signupNewUser);
 
-    // logout user
+    // Logout user
     $('.logout').click(logoutUser);
-})
+});
+/**
+ * Check if user is logged in and update UI accordingly
+ */
 function checkForLoginUser() {
-    var loginUser = JSON.parse(localStorage.getItem("loginUserDetails"))
+    var loginUser = JSON.parse(localStorage.getItem("loginUserDetails"));
    
     if (loginUser != null) {
         $('.userNameBox').show();
@@ -36,7 +40,8 @@ function checkForLoginUser() {
         $('.requestBox').show();
         $('.adminPage').hide();
         $('.bookClubPage').show();
-        //check if the login user is admin and open the access to admin page
+        
+        // Check if the login user is admin and open the access to admin page
         if (loginUser.userName == "admin") {
             $('.adminPage').show();
             $('.userNameBox').hide();
@@ -45,9 +50,7 @@ function checkForLoginUser() {
             $('.myBooks').hide();
             $('.requestBox').hide(); 
         }
-
-    }
-    else {
+    } else {
         $('.bookClubPage').hide();
         $('.userNameBox').hide();
         $('.logoutBox').hide();
@@ -58,8 +61,16 @@ function checkForLoginUser() {
         $('.adminPage').hide();
     }
 }
-//-----------------------
-// JavaScript source code
+// AJAX utility functions
+
+/**
+ * Make asynchronous AJAX call
+ * @param {string} method - HTTP method (GET, POST, PUT, DELETE)
+ * @param {string} api - API endpoint URL
+ * @param {Object} data - Data to send
+ * @param {Function} successCB - Success callback function
+ * @param {Function} errorCB - Error callback function
+ */
 function ajaxCall(method, api, data, successCB, errorCB) {
     $.ajax({
         type: method,
@@ -72,6 +83,15 @@ function ajaxCall(method, api, data, successCB, errorCB) {
         error: errorCB
     });
 }
+
+/**
+ * Make synchronous AJAX call
+ * @param {string} method - HTTP method (GET, POST, PUT, DELETE)
+ * @param {string} api - API endpoint URL
+ * @param {Object} data - Data to send
+ * @param {Function} successCB - Success callback function
+ * @param {Function} errorCB - Error callback function
+ */
 function ajaxCallSync(method, api, data, successCB, errorCB) {
     $.ajax({
         type: method,
@@ -85,9 +105,11 @@ function ajaxCallSync(method, api, data, successCB, errorCB) {
         error: errorCB
     });
 }
-//-----------------------
-//log in //
+// Login and signup functionality
 
+/**
+ * Show login form
+ */
 function showLoginForm() {
     $('.h5-LogIn').show();
     $('.h5-SignUp').hide();
@@ -99,10 +121,18 @@ function showLoginForm() {
     $('#signupButton').hide();
     $('#logInButton').show();
 }
+
+/**
+ * Close login form
+ */
 function closeLoginForm() {
     $('#logInForm').removeClass('active');
     $('#overlay').removeClass('active');
 }
+
+/**
+ * Show signup form
+ */
 function showSignupForm() {
     $('.h5-LogIn').hide();
     $('.h5-SignUp').show();
@@ -113,18 +143,17 @@ function showSignupForm() {
     $('.signupQuestion').hide();
 }
 
-// login user
-
+/**
+ * Handle user login
+ */
 function loginUser() {
-
     var regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
     var userEmail = $('#userEmail').val();
     var userPassword = $('#userPassword').val();
 
-    // check email and password in the correct format
+    // Check email and password in the correct format
     if (regexEmail.test(userEmail) && userPassword.length >= 3) {
-
         let userLogin = {
             "id": 0,
             "userName": "",
@@ -133,13 +162,12 @@ function loginUser() {
             "isAdmin": false,
             "isActive": true,
             "isLogIn": true
-        }
+        };
 
         ajaxCall("PUT", usersAPI + '/loginUser', JSON.stringify(userLogin), successLogin, error);
-    }
-    else {
+    } else {
         Swal.fire({
-            title: "Invalide email or password",
+            title: "Invalid email or password",
             text: "Please check email in the correct format & password is more than 2 digits."
         });
     }
@@ -147,41 +175,50 @@ function loginUser() {
     return false;
 }
 
+/**
+ * Success callback for login
+ * @param {Object} userDetails - User details object
+ */
 function successLogin(userDetails) {
     if (userDetails == -1) {
-        Swal.fire("you already registered");
-    }
-    else {
+        Swal.fire("You already registered");
+    } else {
         localStorage.setItem("loginUserDetails", JSON.stringify(userDetails));
 
         checkForLoginUser();
-
         showAllRequests();
-
         showBooks();
-
         closeLoginForm();
     }
 }
 
-function error(errorMassage) { console.log(errorMassage); Swal.fire("Incorrect email or password"); }
+/**
+ * Error callback for login
+ * @param {Object} errorMessage - Error message object
+ */
+function error(errorMessage) { 
+    console.log(errorMessage); 
+    Swal.fire("Incorrect email or password"); 
+}
 
 
-// signup new user
-
+/**
+ * Handle new user signup
+ */
 function signupNewUser() {
-
     var regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
     var userEmail = $('#userEmail').val();
     var userPassword = $('#userPassword').val();
     var userName = $('#userName').val();
 
-    if (userName == "") { Swal.fire("Please enter a user name"); return; }
+    if (userName == "") { 
+        Swal.fire("Please enter a user name"); 
+        return; 
+    }
 
-    // check email and password in the correct format
+    // Check email and password in the correct format
     if (regexEmail.test(userEmail) && userPassword.length >= 3) {
-
         let newUser = {
             "id": 0,
             "userName": userName,
@@ -190,13 +227,12 @@ function signupNewUser() {
             "isAdmin": false,
             "isActive": true,
             "isLogIn": true
-        }
+        };
 
-        ajaxCall("POST", usersAPI + "/signUpNewUser", JSON.stringify(newUser), successLogin, errorSignup)
-    }
-    else {
+        ajaxCall("POST", usersAPI + "/signUpNewUser", JSON.stringify(newUser), successLogin, errorSignup);
+    } else {
         Swal.fire({
-            title: "Invalide email or password",
+            title: "Invalid email or password",
             text: "Please check email in the correct format & password is more than 2 digits."
         });
     }
@@ -204,52 +240,68 @@ function signupNewUser() {
     return false;
 }
 
-function errorSignup(errorMassage) { console.log(errorMassage); }
-//--------------
-// logout user
-let resonToLogout;
-function logoutUser(reson) {
-    resonToLogout = reson;
-    let userIdToLogout = JSON.parse(localStorage.getItem("loginUserDetails")).userId
-
-    ajaxCall("PUT", usersAPI + "/logoutUser", JSON.stringify(userIdToLogout), successLogout, errorLogout)
+/**
+ * Error callback for signup
+ * @param {Object} errorMessage - Error message object
+ */
+function errorSignup(errorMessage) { 
+    console.log(errorMessage); 
 }
 
-function successLogout(status) {
+// Logout functionality
+let resonToLogout;
 
+/**
+ * Handle user logout
+ * @param {string} reason - Reason for logout
+ */
+function logoutUser(reason) {
+    resonToLogout = reason;
+    let userIdToLogout = JSON.parse(localStorage.getItem("loginUserDetails")).userId;
+
+    ajaxCall("PUT", usersAPI + "/logoutUser", JSON.stringify(userIdToLogout), successLogout, errorLogout);
+}
+
+/**
+ * Success callback for logout
+ * @param {boolean} status - Logout status
+ */
+function successLogout(status) {
     if (status && resonToLogout == 'endSession') {
         localStorage.setItem('logoutReason', 'endSession');
         localStorage.removeItem('loginUserDetails');
         window.location.href = "index.html";
-    }
-
-    else if (status) {
-
+    } else if (status) {
         Swal.fire({
             title: "See you later alligator",
             width: 600,
             padding: "3em",
             color: "#716add",
-            confirmButtonText: "Meet you in a while crocodail",
+            confirmButtonText: "Meet you in a while crocodile",
             background: "#fff url(/images/trees.png)",
             backdrop: `
-                                rgba(0,0,123,0.4)
-                                url("alligator.png")
-                                center top
-                                no-repeat
-                                `
+                rgba(0,0,123,0.4)
+                url("alligator.png")
+                center top
+                no-repeat
+            `
         }).then((result) => {
             if (result.isConfirmed) {
                 localStorage.clear();
                 checkForLoginUser();
                 window.location.href = "index.html";
             }
-        })
-
+        });
     }
 }
 
-function errorLogout(errorMassage) { console.log(errorMassage); }
+/**
+ * Error callback for logout
+ * @param {Object} errorMessage - Error message object
+ */
+function errorLogout(errorMessage) { 
+    console.log(errorMessage); 
+}
 //-----------------------
 
 function checkUserLogoutReason() {

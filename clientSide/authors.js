@@ -1,136 +1,179 @@
-﻿//    var usersAPI = "https://localhost:7225/api/IUsers";
-//    var booksAPI = "https://localhost:7225/api/Books";
-//var authorsAPI = "https://localhost:7225/api/Authors";
+﻿// API endpoints
+// var usersAPI = "https://localhost:7225/api/IUsers";
+// var booksAPI = "https://localhost:7225/api/Books";
+// var authorsAPI = "https://localhost:7225/api/Authors";
 var authorsAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Authors";
 var usersAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/IUsers";
 var booksAPI = "https://proj.ruppin.ac.il/cgroup76/test2/tar1/api/Books";
-    var allAuthors = '';
-    let messageCount = 0;
 
-    $(document).ready(function () {
+// Global variables
+var allAuthors = '';
+let messageCount = 0;
 
-        /*checkForLoginUser();*/
-
-        showAuthors();
-
-    /*  $('.logout').click(logoutUser);*/
-
+$(document).ready(function () {
+    /*checkForLoginUser();*/
+    showAuthors();
+    /* $('.logout').click(logoutUser);*/
     updateMessageCount(0);
-        });
-        // search author by name
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('authorsNamesInput');
+});
+// Search author by name
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('authorsNamesInput');
     var selectedAuthor = "";
 
-            searchInput.addEventListener('input', () => {
-                const selectedValue = searchInput.value;
-                allAuthors.forEach(author => {
-                    if (author.name === selectedValue) {
-        selectedAuthor = author;
-                    }
-                });
-    if (selectedAuthor == "") {$(".author-details").html(''); } // If no author name was selected
-    else {
-        showSearchedAuthor(selectedAuthor);
-    loadAthourBooks(selectedAuthor.id);
-    selectedAuthor = "";
-                }
-            });
+    searchInput.addEventListener('input', () => {
+        const selectedValue = searchInput.value;
+        allAuthors.forEach(author => {
+            if (author.name === selectedValue) {
+                selectedAuthor = author;
+            }
         });
-    //---------------
-    function showSearchedAuthor(author) {
-            var html = "";
+        
+        if (selectedAuthor == "") {
+            $(".author-details").html(''); // If no author name was selected
+        } else {
+            showSearchedAuthor(selectedAuthor);
+            loadAthourBooks(selectedAuthor.id);
+            selectedAuthor = "";
+        }
+    });
+});
+/**
+ * Display searched author information
+ * @param {Object} author - Author object with details
+ */
+function showSearchedAuthor(author) {
+    var html = "";
     html += `
     <div class=''>
         <div class='card-body'>
             <h2 class='card-text'>${author.name}</h2>`;
-            if (author.dateOfBirth == undefined || author.dateOfBirth == "") { }
-            else {
-                html += `<p class='card-text'><strong>Born:</strong> ${author.dateOfBirth}</p>`
-            }
-            if (author.dateOfDeath == undefined || author.dateOfDeath == "") { }
-            else {
-                html += `<p class='card-text'><strong>Died:</strong> ${author.dateOfDeath}</p>`
-            }
-            if (author.age == undefined || author.age == "") { }
-            else {
-                html += `<p class='card-text'><strong>Age:</strong> ${author.age}</p>`
-            }
-            if (author.nationality == undefined || author.nationality == "") { }
-            else {
-                html += `<p class='card-text'><strong>Nationality:</strong> ${author.nationality}</p>`
-            }
-            if (author.notableWork == undefined || author.notableWork == "") { }
-            else {
-                html += `<p class='card-text'><strong>Notable Work:</strong> ${author.notableWork}</p>`
-            }
-            if (author.awards == undefined || author.awards == "") { }
-            else {
-                html += `<p class='card-text'><strong>Awards:</strong> ${author.awards}</p>`
-            }
-            if (author.description == undefined || author.description == "") { }
-            else {
-                html += `<p class='card-text'><strong>Description:</strong> ${author.description}</p>`
-            }
-            html += `  <h4 class='authorBooksTitle'></h4>  <div class="row authour-books"></div> </div>
-    </div>`;
-    $(".author-details").html(html)
-        }
-    // load all the books by author
-    function loadAthourBooks(selectedAuthor) {
-
-        ajaxCall("GET", authorsAPI + `/findBookByAuthor/?authorId=${selectedAuthor}`, null, successToLoadBooks, errorToLoadAuthors)
+            
+    if (author.dateOfBirth == undefined || author.dateOfBirth == "") { 
+        // No birth date
+    } else {
+        html += `<p class='card-text'><strong>Born:</strong> ${author.dateOfBirth}</p>`;
     }
+    
+    if (author.dateOfDeath == undefined || author.dateOfDeath == "") { 
+        // No death date
+    } else {
+        html += `<p class='card-text'><strong>Died:</strong> ${author.dateOfDeath}</p>`;
+    }
+    
+    if (author.age == undefined || author.age == "") { 
+        // No age
+    } else {
+        html += `<p class='card-text'><strong>Age:</strong> ${author.age}</p>`;
+    }
+    
+    if (author.nationality == undefined || author.nationality == "") { 
+        // No nationality
+    } else {
+        html += `<p class='card-text'><strong>Nationality:</strong> ${author.nationality}</p>`;
+    }
+    
+    if (author.notableWork == undefined || author.notableWork == "") { 
+        // No notable work
+    } else {
+        html += `<p class='card-text'><strong>Notable Work:</strong> ${author.notableWork}</p>`;
+    }
+    
+    if (author.awards == undefined || author.awards == "") { 
+        // No awards
+    } else {
+        html += `<p class='card-text'><strong>Awards:</strong> ${author.awards}</p>`;
+    }
+    
+    if (author.description == undefined || author.description == "") { 
+        // No description
+    } else {
+        html += `<p class='card-text'><strong>Description:</strong> ${author.description}</p>`;
+    }
+    
+    html += `  <h4 class='authorBooksTitle'></h4>  <div class="row authour-books"></div> </div>
+    </div>`;
+    $(".author-details").html(html);
+}
+/**
+ * Load all books by a specific author
+ * @param {number} selectedAuthor - Author ID
+ */
+function loadAthourBooks(selectedAuthor) {
+    ajaxCall("GET", authorsAPI + `/findBookByAuthor/?authorId=${selectedAuthor}`, null, successToLoadBooks, errorToLoadAuthors);
+}
 
-    function successToLoadBooks(authorBooks) {
-            var html = "";
-            const rating = stars => '★★★★★☆☆☆☆☆'.slice(5 - stars, 10 - stars);
+/**
+ * Handle successful loading of author's books
+ * @param {Array} authorBooks - Array of book objects by the author
+ */
+function successToLoadBooks(authorBooks) {
+    var html = "";
+    const rating = stars => '★★★★★☆☆☆☆☆'.slice(5 - stars, 10 - stars);
 
     document.querySelector(".authorBooksTitle").innerHTML += 'Books By ' + authorBooks[0].FirstAuthorName + ':';
 
-            authorBooks.forEach((book) => {
-
+    authorBooks.forEach((book) => {
         html += `
-                                <div class='col-md-3'>
-                                    <div class='card mb-4 book-card'>
-                                        <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
-                                        <div class='card-body w-100'>
-                                            <h6 class='card-title'>${book.Title}</h6>
-                                            <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
-                                            <span class='card-text'>${book.Price}$</span></div></div></div>`;
-            })
+            <div class='col-md-3'>
+                <div class='card mb-4 book-card'>
+                    <img src='${book.SmallThumbnail}' class='card-img-top' alt='Book'>
+                    <div class='card-body w-100'>
+                        <h6 class='card-title'>${book.Title}</h6>
+                        <p id='pinkStars'>${rating(book.Rating)}  ${(book.Rating).toFixed(1)}</p>
+                        <span class='card-text'>${book.Price}$</span>
+                    </div>
+                </div>
+            </div>`;
+    });
     $(".authour-books").html(html);
-        }
+}
 
-    function showAuthors() {
-            if (allAuthors.length == 0) {
+/**
+ * Show all authors
+ */
+function showAuthors() {
+    if (allAuthors.length == 0) {
         ajaxCall("GET", authorsAPI, null, authorsToShow, errorToLoadAuthors);
-            } else {
+    } else {
         authorsToShow(allAuthors);
-            }
-        }
+    }
+}
 
-    function errorToLoadAuthors(err) {
-        console.log(err);
-        }
+/**
+ * Handle error when loading authors fails
+ * @param {Object} err - Error object
+ */
+function errorToLoadAuthors(err) {
+    console.log(err);
+}
 
-    function authorsToShow(authors) {
-            var authorNameSearchBar = "";
-
+/**
+ * Display authors in the search dropdown
+ * @param {Array} authors - Array of author objects
+ */
+function authorsToShow(authors) {
+    var authorNameSearchBar = "";
     allAuthors = authors;
 
-            allAuthors.forEach((author) => {authorNameSearchBar += `<option value='${author.name}'>`})
+    allAuthors.forEach((author) => {
+        authorNameSearchBar += `<option value='${author.name}'>`;
+    });
 
     $("#authorsNames").html(authorNameSearchBar);
-        }
-    function updateMessageCount(count) {
-            const badge = document.getElementById("message-count");
+}
 
+/**
+ * Update message count badge
+ * @param {number} count - Message count to display
+ */
+function updateMessageCount(count) {
+    const badge = document.getElementById("message-count");
     // Always show the count, even if it's 0
     badge.textContent = count;
-        }
+}
 
-    ///
-    function showBooks() { };
-    function showMyBooks() { };
-    function closeBookInfo() { };
+// Placeholder functions for compatibility
+function showBooks() { };
+function showMyBooks() { };
+function closeBookInfo() { };
